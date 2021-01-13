@@ -107,18 +107,14 @@
     "scripts": {}
   },
   "husky": {
-      "hooks": {
-        "pre-commit": "lint-staged"
-      }
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
-      "src/**/*.js": [
-        "eslint --fix",
-        "git add"
-      ],
-      "src/**/*.vue": [
-        "eslint --fix",
-        "git add"
-      ]
+    "src/**/*.{ts,tsx,js,jsx,vue}": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }
