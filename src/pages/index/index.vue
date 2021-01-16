@@ -9,21 +9,31 @@
         {{ title }}
       </text>
     </view>
+    <button @click="jumpToTest">
+      test
+    </button>
   </view>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { navigateTo } from "@/utils/helper";
+
 export default defineComponent({
   setup() {
+    const jumpToTest = () => {
+      navigateTo("/pages/test/index");
+    };
+
     return {
       title: "hello",
+      jumpToTest,
     };
   },
 });
 </script>
 
-<style>
+<style lang="scss" scoped>
 .content {
   text-align: center;
   height: 400upx;
