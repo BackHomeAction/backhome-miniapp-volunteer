@@ -30,6 +30,24 @@
       >
         T
       </view>
+      <view
+        class="map-action-button"
+        @click="handleTestOldManList(1)"
+      >
+        1
+      </view>
+      <view
+        class="map-action-button"
+        @click="handleTestOldManList(2)"
+      >
+        2
+      </view>
+      <view
+        class="map-action-button"
+        @click="handleTestOldManList(3)"
+      >
+        3
+      </view>
     </view>
   </view>
 </template>
@@ -106,7 +124,7 @@ const useMap = () => {
 };
 
 const useOldManSelector = () => {
-  const oldManList = reactive([
+  const testOldManList = [
     {
       id: 1,
       name: "张正和",
@@ -119,13 +137,31 @@ const useOldManSelector = () => {
       lostTime: "2021-01-15 23:50",
       avatarUrl: "https://i.loli.net/2021/01/16/7QL6jkX9IacSl4M.png",
     },
-  ]);
+    {
+      id: 3,
+      name: "赵肖云",
+      lostTime: "2021-01-16 22:39",
+      avatarUrl: "https://i.loli.net/2021/01/16/o6n3zEFtwOKsBQ5.jpg",
+    },
+  ];
+
+  const oldManList = reactive(testOldManList.slice(0));
 
   const handleManSelected = (man: any) => {
     showToast(`选中：${man.name}`);
   };
 
-  return { oldManList, handleManSelected };
+  const handleTestOldManList = (num: number) => {
+    oldManList.splice(0, oldManList.length);
+    console.log(testOldManList.slice(0, num));
+    testOldManList.slice(0, num).forEach((ele) => {
+      console.log(ele);
+      oldManList.push(ele);
+    });
+    console.log(oldManList);
+  };
+
+  return { oldManList, handleManSelected, handleTestOldManList };
 };
 
 export default defineComponent({
