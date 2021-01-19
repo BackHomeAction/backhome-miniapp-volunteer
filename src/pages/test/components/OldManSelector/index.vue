@@ -157,7 +157,7 @@ export default defineComponent({
   top: 0;
   left: 0;
   width: 100vw;
-  padding: 10vw;
+  padding: 10vw 10vw 0 10vw;
 }
 
 .list {

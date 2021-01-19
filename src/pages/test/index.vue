@@ -12,10 +12,12 @@
       enable-traffic
       show-location
       show-scale
-      subkey="PV7BZ-COYWP-LJKDK-V7W7V-OZQES-GYFWI"
+      :subkey="mapSettings.key"
       :circles="testCircles"
-      :markers="testMarkers"
+      :markers="markers"
       @updated="handleMapUpdated"
+      @regionchange="handleRegionChange"
+      @markertap="handleMarkerClick"
     />
     <view class="map-action">
       <view
@@ -49,13 +51,21 @@
         3
       </view>
     </view>
+
+    <place-info-modal
+      v-model:value="showPlaceInfoModal"
+      :place-data="placeInfoData"
+    />
   </view>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, Ref, ref } from "vue";
 import { navigateBack, showToast } from "@/utils/helper";
 import OldManSelector from "./components/OldManSelector/index.vue";
+import mapSettings from "@/config/map";
+import { searchPlacesNearby } from "@/api/tencentMap";
+import PlaceInfoModal from "./components/PlaceInfoModal/index.vue";
 
 const testCircles = [
   {
@@ -68,36 +78,38 @@ const testCircles = [
   },
 ];
 
-const testMarkers = [
-  {
-    id: 1,
-    latitude: 39.065677,
-    longitude: 117.111806,
-    title: "天津工业大学",
-    zIndex: "1",
-    iconPath: "/static/images/heart.png",
-    width: 40,
-    height: 40,
-    anchor: {
-      x: 0.5,
-      y: 1,
-    },
-    callout: {
-      content: "天津工业大学",
-      color: "#000000",
-      fontSize: 12,
-      borderRadius: 2,
-      bgColor: "#ffffff",
-      padding: 5,
-      display: "ALWAYS",
-    },
-  },
-];
+// const testMarkers = [
+//   {
+//     id: 1,
+//     latitude: 39.065677,
+//     longitude: 117.111806,
+//     title: "天津工业大学",
+//     zIndex: "1",
+//     iconPath: "/static/images/heart.png",
+//     width: 40,
+//     height: 40,
+//     anchor: {
+//       x: 0.5,
+//       y: 1,
+//     },
+//     callout: {
+//       content: "天津工业大学",
+//       color: "#000000",
+//       fontSize: 12,
+//       borderRadius: 2,
+//       bgColor: "#ffffff",
+//       padding: 5,
+//       display: "ALWAYS",
+//     },
+//   },
+// ];
 
 let mapContent: any;
 
 const useMap = () => {
   mapContent = uni.createMapContext("map");
+
+  const markers: Ref<any[]> = ref([]);
 
   const handleMapUpdated = async () => {
     console.info("map updated");
@@ -114,12 +126,70 @@ const useMap = () => {
     });
   };
 
+  let policeStations: Array<any> = [];
+
+  const searchPoliceStationsNearby = async (
+    latitude: number,
+    longitude: number
+  ) => {
+    try {
+      const res = await searchPlacesNearby({
+        keyword: "派出所",
+        latitude,
+        longitude,
+        radius: 5000,
+      });
+      policeStations = res.data.data;
+      markers.value = policeStations.map((ele: any, index) => {
+        return {
+          id: index,
+          latitude: ele.location.lat,
+          longitude: ele.location.lng,
+          title: ele.title,
+          zIndex: "1",
+          iconPath: "/static/images/police_station.png",
+          width: 30,
+          height: 30,
+          anchor: {
+            x: 0.5,
+            y: 1,
+          },
+        };
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleRegionChange = (e: any) => {
+    console.log(e);
+    if (e.type === "end") {
+      searchPoliceStationsNearby(
+        e.detail.centerLocation.latitude,
+        e.detail.centerLocation.longitude
+      );
+    }
+  };
+
+  const showPlaceInfoModal = ref(false);
+  const placeInfoData = ref(null);
+
+  const handleMarkerClick = (e: any) => {
+    placeInfoData.value = policeStations[e.detail.markerId];
+    console.log(placeInfoData.value);
+    showPlaceInfoModal.value = true;
+  };
+
   return {
     handleMapUpdated,
     handleBackToCurrentPosition,
     handleTestPosition,
     testCircles,
-    testMarkers,
+    markers,
+    handleRegionChange,
+    handleMarkerClick,
+    showPlaceInfoModal,
+    placeInfoData,
   };
 };
 
@@ -153,9 +223,7 @@ const useOldManSelector = () => {
 
   const handleTestOldManList = (num: number) => {
     oldManList.splice(0, oldManList.length);
-    console.log(testOldManList.slice(0, num));
     testOldManList.slice(0, num).forEach((ele) => {
-      console.log(ele);
       oldManList.push(ele);
     });
     console.log(oldManList);
@@ -167,6 +235,7 @@ const useOldManSelector = () => {
 export default defineComponent({
   components: {
     OldManSelector,
+    PlaceInfoModal,
   },
   setup() {
     uni.authorize({
@@ -175,7 +244,8 @@ export default defineComponent({
         navigateBack();
       },
     });
-    return { ...useMap(), ...useOldManSelector() };
+
+    return { ...useMap(), ...useOldManSelector(), mapSettings };
   },
   onReady() {
     uni.getLocation({
@@ -204,7 +274,7 @@ export default defineComponent({
   &-action {
     position: fixed;
     left: 50rpx;
-    bottom: 50rpx;
+    bottom: 80rpx;
     display: flex;
     justify-content: center;
     align-items: center;

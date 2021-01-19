@@ -51,11 +51,17 @@
         "usingComponents":true,
         "appid": "wx96991be46e2a21d1",
         "setting" : {
-        	"urlCheck" : true
+          "urlCheck" : true
         },
         "permission": {
           "scope.userLocation": {
-            "desc": "你的位置信息将用于显示你的实时位置"
+            "desc": "你的位置信息将用于小程序获取你的实时位置"
+          }
+        },
+        "plugins": {
+          "routePlan": {
+            "version": "1.0.11",
+            "provider": "wx50b5593e81dd937a"
           }
         }
     },
