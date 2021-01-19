@@ -9,20 +9,23 @@
         {{ title }}
       </text>
     </view>
-    <button @click="jumpToTest">
+    <button @click="jumpToTest('/pages/test/index')">
       test
+    </button>
+    <button @click="jumpToTest('/pages/me/index')">
+      test2
     </button>
   </view>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { navigateTo } from "@/utils/helper";
+import { switchTab } from "@/utils/helper";
 
 export default defineComponent({
   setup() {
-    const jumpToTest = () => {
-      navigateTo("/pages/test/index");
+    const jumpToTest = (url: string) => {
+      switchTab(url);
     };
 
     return {

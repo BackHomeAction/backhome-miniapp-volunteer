@@ -36,7 +36,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+/**
+ * button 按钮
+ * @description Button 按钮
+ * @tutorial https://www.uviewui.com/components/button.html
+ * @property {String} size 按钮的大小
+ * @property {String} type 按钮的样式类型
+ * @property {Boolean} plain 按钮是否镂空，背景色透明
+ * @property {Boolean} disabled 是否禁用
+ * @property {Boolean} hair-line 是否显示按钮的细边框(默认true)
+ * @property {Boolean} shape 按钮外观形状，见文档说明
+ * @property {Boolean} loading 按钮名称前是否带 loading 图标(App-nvue 平台，在 ios 上为雪花，Android上为圆圈)
+ * @property {String} form-type 用于 <form> 组件，点击分别会触发 <form> 组件的 submit/reset 事件
+ * @property {String} open-type 开放能力
+ * @property {String} data-name 额外传参参数，用于小程序的data-xxx属性，通过target.dataset.name获取
+ * @property {String} hover-class 指定按钮按下去的样式类。当 hover-class="none" 时，没有点击态效果(App-nvue 平台暂不支持)
+ * @property {Object} custom-style 对按钮的自定义样式，对象形式，见文档说明
+ * @event {Function} click 按钮点击
+ * @event {Function} getphonenumber open-type="getPhoneNumber"时有效
+ * @event {Function} getuserinfo 用户点击该按钮时，会返回获取到的用户信息，从返回参数的detail中获取到的值同uni.getUserInfo
+ * @event {Function} error 当使用开放能力时，发生错误的回调
+ * @event {Function} opensetting 在打开授权设置页并关闭后回调
+ * @event {Function} launchapp 打开 APP 成功的回调
+ * @example <u-button>月落</u-button>
+ */
+
+import { computed, defineComponent } from "vue";
 
 export default defineComponent({
   props: {
@@ -137,23 +162,6 @@ export default defineComponent({
       type: String,
       default: "",
     },
-    // 自定义样式，对象形式
-    customStyle: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-    // 额外传参参数，用于小程序的data-xxx属性，通过target.dataset.name获取
-    dataName: {
-      type: String,
-      default: "",
-    },
-    // 节流，一定时间内只能触发一次
-    throttleTime: {
-      type: [String, Number],
-      default: 1000,
-    },
   },
   emits: [
     "click",
@@ -183,6 +191,28 @@ export default defineComponent({
       emit("launchapp", res);
     };
 
+    // 当没有传bgColor变量时，按钮按下去的颜色类名
+    const getHoverClass = computed(() => {
+      if (props.loading || props.disabled || props.hoverClass) return "";
+      let hoverClass = "";
+      hoverClass = props.plain
+        ? "u-" + props.type + "-plain-hover"
+        : "u-" + props.type + "-hover";
+      return hoverClass;
+    });
+
+    // 在'primary', 'success', 'error', 'warning'类型下，不显示边框，否则会造成四角有毛刺现象
+    const showHairLineBorder = computed(() => {
+      if (
+        ["primary", "success", "error", "warning"].indexOf(props.type) >= 0 &&
+        !props.plain
+      ) {
+        return "";
+      } else {
+        return "u-hairline-border";
+      }
+    });
+
     return {
       click,
       getphonenumber,
@@ -190,6 +220,8 @@ export default defineComponent({
       error,
       opensetting,
       launchapp,
+      getHoverClass,
+      showHairLineBorder,
     };
   },
 });

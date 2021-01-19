@@ -14,3 +14,9 @@ export const showToast = (
 ): void => {
   uni.showToast({ title, icon });
 };
+
+export const switchTab = (url: string): void => {
+  uni.switchTab({
+    url,
+  });
+};
