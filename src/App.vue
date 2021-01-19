@@ -13,5 +13,17 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
-/*每个页面公共css */
+page {
+  background-color: $uni-bg-color;
+}
+
+.u-line-1 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.u-fix-ios-appearance {
+  -webkit-appearance: none;
+}
 </style>
