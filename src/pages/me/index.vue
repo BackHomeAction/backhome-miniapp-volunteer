@@ -1,6 +1,6 @@
 <template>
   <view>
-    <top />
+    <top :status="topStatus" />
     <view class="actions">
       <u-button
         v-if="logged"
@@ -34,7 +34,11 @@ export default defineComponent({
       authService.logout();
     };
 
-    return { logged, handleLogout };
+    const topStatus = computed(() => {
+      return logged.value ? "me" : "unlogin";
+    });
+
+    return { logged, handleLogout, topStatus };
   },
 });
 </script>

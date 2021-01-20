@@ -4,16 +4,24 @@
     <view class="box">
       <view class="left">
         <view class="avatar avatar--nologin" />
+        <view
+          v-if="status === 'unlogin'"
+          class="tag tag--nologin"
+        >
+          未登录
+        </view>
       </view>
       <view class="right">
         <view class="name">
-          {{ logged ? "xxx" : "志愿者" }}
-          <view class="tag tag--nologin">
-            未登录
-          </view>
+          {{ status !== 'unlogin' ? "赵肖云" : "志愿者" }}
+          <view
+            v-if="status !== 'unlogin'"
+            class="sex-icon"
+          />
         </view>
+        
         <button
-          v-if="!logged"
+          v-if="status === 'unlogin'"
           class="login-btn"
           hover-class="none"
           @click="handleLogin"
@@ -25,6 +33,18 @@
             />
           </view>
         </button>
+        <button
+          v-if="status !== 'unlogin'"
+          class="tel-btn"
+        >
+          <view class="tel-btn-text">
+            TEL: 18905950000
+            <text
+              class="iconfont icon-arrow-right"
+            />
+          </view>
+        </button>
+
         <view class="divider" />
         <view class="tasks">
           <view class="task">
@@ -58,12 +78,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import authService from "@/service/authService";
 
 const useLogin = () => {
-  const logged = false;
-
   const handleLogin = () => {
     authService.login();
   };
@@ -72,6 +90,12 @@ const useLogin = () => {
 };
 
 export default defineComponent({
+  props: {
+    status: {
+      type: String as PropType<"unlogin" | "me" | "user">,
+      default: "unlogin",
+    },
+  },
   setup() {
     return { ...useLogin() };
   },
@@ -97,6 +121,23 @@ export default defineComponent({
   }
 }
 
+.tag {
+  border-radius: 16rpx;
+  font-size: 16rpx;
+  font-weight: $uni-font-weight-base;
+  line-height: 32rpx;
+  padding: 0 24rpx;
+  text-align: center;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+
+  &--nologin {
+    background: #d0d0d0;
+  }
+}
+
 .box {
   margin: 120rpx auto 20rpx auto;
   width: 672rpx;
@@ -109,7 +150,8 @@ export default defineComponent({
   .left {
     box-sizing: border-box;
     width: 202rpx;
-    padding: 32rpx 0 0 42rpx;
+    padding: 32rpx 32rpx 0 42rpx;
+    text-align: center;
 
     .avatar {
       width: 128rpx;
@@ -119,6 +161,10 @@ export default defineComponent({
       &--nologin {
         background: #666666;
       }
+    }
+
+    .tag {
+      margin-top: 16rpx;
     }
   }
 
@@ -131,26 +177,18 @@ export default defineComponent({
       color: #000000;
       line-height: 44rpx;
 
-      .tag {
-        border-radius: 16rpx;
-        font-size: 16rpx;
-        font-weight: $uni-font-weight-base;
-        line-height: 32rpx;
-        padding: 0 24rpx;
-        text-align: center;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        margin-left: 14rpx;
-        vertical-align: middle;
-
-        &--nologin {
-          background: #d0d0d0;
-        }
+      .sex-icon {
+        display: inline-block;
+        margin-left: 10rpx;
+        width: 24rpx;
+        height: 24rpx;
+        background-image: url("@/static/images/profile/man.png");
+        background-size: cover;
       }
     }
 
-    .login-btn {
+    .login-btn,
+    .tel-btn {
       margin-top: 16rpx;
       padding: 0;
       border-radius: 10rpx;
