@@ -24,6 +24,6 @@ export const searchPlacesNearby = (data: {
       orderby: "_distance",
       key: mapSettings.key,
     },
-    custom: { auth: false },
+    custom: { noAuth: true },
   });
 };

@@ -13,6 +13,7 @@ export const requestLogin = (params: VolunteerLoginCode) => {
     method: "POST",
     params: {},
     data: params,
+    custom: { noAuth: true },
   });
 };
 

@@ -16,8 +16,7 @@
           v-if="!logged"
           class="login-btn"
           hover-class="none"
-          open-type="getUserInfo"
-          @getuserinfo="handleGetUserInfo"
+          @click="handleLogin"
         >
           <view class="login-btn-text">
             去登录
@@ -65,17 +64,11 @@ import authService from "@/service/authService";
 const useLogin = () => {
   const logged = false;
 
-  const handleGetUserInfo = (userInfo: any) => {
-    uni.login({
-      success: (res) => {
-        const { detail } = userInfo;
-        console.log(res.code, detail.encryptedData, detail.iv);
-        authService.login(res.code);
-      },
-    });
+  const handleLogin = () => {
+    authService.login();
   };
 
-  return { handleGetUserInfo };
+  return { handleLogin };
 };
 
 export default defineComponent({
