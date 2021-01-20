@@ -1,3 +1,4 @@
+import authService from "@/service/authService";
 import { showModalError } from "../helper";
 import Request from "./lib";
 
@@ -6,11 +7,16 @@ const http = new Request({
 });
 
 http.interceptors.request.use(
-  (config) => {
+  async (config) => {
     const noAuth = config.custom && config.custom.noAuth;
     const token = uni.getStorageSync("token");
 
     if (!noAuth) {
+      if (!token) {
+        // 如果接口需要登录但用户未登录，则请求登录
+        await authService.login();
+      }
+
       // 判断是否需要传 token
       if (token) {
         config.header = {
@@ -18,8 +24,6 @@ http.interceptors.request.use(
           Authorize: `Bearer ${token}`,
         };
       } else {
-        // 如果接口需要登录但用户未登录，则请求登录
-        // TODO: 登录逻辑
         // 如果 token 不存在，且该接口不是无需 token 的接口，且登录失败，则取消本次请求
         return Promise.reject(config);
       }

@@ -28,3 +28,13 @@ export const showModalError = (content = "未知错误") => {
     showCancel: false,
   });
 };
+
+export const showLoading = (title = "加载中") => {
+  uni.showLoading({
+    title,
+  });
+};
+
+export const hideLoading = () => {
+  uni.hideLoading();
+};
