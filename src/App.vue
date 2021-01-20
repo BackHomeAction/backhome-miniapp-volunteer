@@ -13,8 +13,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
-@import "./static/font/iconfont.scss";
-@import "./static/style/common.scss";
+@import "./styles/iconfont.scss";
+@import "./styles/common.scss";
 
 page {
   background-color: $uni-bg-color;
