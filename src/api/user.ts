@@ -1,10 +1,35 @@
 import http from "@/utils/request";
+import {
+  ResponseData,
+  Volunteer,
+  VolunteerLoginCode,
+  VolunteerRefreshToken,
+  volunteerUserInfo,
+} from "./types/models";
 
-// export const loginUsingPOST_1 = (params: login) => {
-//   return http.request<返回类<家属用户>>({
-//     url: `//family/login`,
-//     method: "POST",
-//     params: {},
-//     data: params,
-//   });
-// };
+export const requestLogin = (params: VolunteerLoginCode) => {
+  return http.request<ResponseData<Volunteer>>({
+    url: `volunteer/login`,
+    method: "POST",
+    params: {},
+    data: params,
+  });
+};
+
+export const requestRefreshToken = (params: VolunteerRefreshToken) => {
+  return http.request<ResponseData<object>>({
+    url: `volunteer/refresh`,
+    method: "POST",
+    params: {},
+    data: params,
+  });
+};
+
+export const requestUpdateInfo = (params: volunteerUserInfo) => {
+  return http.request<ResponseData<object>>({
+    url: `volunteer/userinfo`,
+    method: "POST",
+    params: {},
+    data: params,
+  });
+};

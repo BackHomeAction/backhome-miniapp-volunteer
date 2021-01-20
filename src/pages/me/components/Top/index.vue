@@ -12,20 +12,20 @@
             未登录
           </view>
         </view>
-        <view
+        <button
           v-if="!logged"
           class="login-btn"
+          hover-class="none"
+          open-type="getUserInfo"
+          @getuserinfo="handleGetUserInfo"
         >
           <view class="login-btn-text">
             去登录
+            <text
+              class="iconfont icon-arrow-right"
+            />
           </view>
-          <uni-icons
-            type="arrowright"
-            size="12"
-            color="#979797"
-            class="login-btn-arrow"
-          />
-        </view>
+        </button>
         <view class="divider" />
         <view class="tasks">
           <view class="task">
@@ -60,10 +60,27 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import authService from "@/service/authService";
+
+const useLogin = () => {
+  const logged = false;
+
+  const handleGetUserInfo = (userInfo: any) => {
+    uni.login({
+      success: (res) => {
+        const { detail } = userInfo;
+        console.log(res.code, detail.encryptedData, detail.iv);
+        authService.login(res.code);
+      },
+    });
+  };
+
+  return { handleGetUserInfo };
+};
+
 export default defineComponent({
   setup() {
-    const logged = false;
-    return { logged };
+    return { ...useLogin() };
   },
   options: {
     styleIsolation: "shared",
@@ -142,27 +159,30 @@ export default defineComponent({
 
     .login-btn {
       margin-top: 16rpx;
-      width: 96rpx;
-      height: 40rpx;
+      padding: 0;
       border-radius: 10rpx;
       border: 2rpx solid #979797;
       color: #000000;
       position: relative;
-      display: flex;
-      align-content: space-between;
-      position: relative;
+      display: inline-block;
+      background-color: #ffffff;
 
       &-text {
         font-size: 18rpx;
         font-weight: $uni-font-weight-base;
         line-height: 40rpx;
-        margin: 0 15rpx;
+        margin: 0 5rpx 0 15rpx;
+
+        .icon-arrow-right {
+          vertical-align: middle;
+          font-size: 26rpx;
+          line-height: 40rpx;
+          color: #979797;
+        }
       }
 
-      &-arrow {
-        position: absolute;
-        bottom: 0;
-        right: 5rpx;
+      &::after {
+        border: none;
       }
     }
   }
@@ -171,7 +191,7 @@ export default defineComponent({
     width: 416rpx;
     height: 2rpx;
     background-color: #979797;
-    margin: 24rpx 0;
+    margin: 20rpx 0;
   }
 
   .tasks {
