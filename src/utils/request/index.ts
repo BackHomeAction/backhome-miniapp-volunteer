@@ -3,11 +3,16 @@ import { showModalError } from "../helper";
 import Request from "./lib";
 
 const http = new Request({
-  baseURL: "http://101.200.120.207:8080/",
+  baseURL: "https://fwwb2020-app-volunteer.tgucsdn.com/",
 });
 
 http.interceptors.request.use(
   async (config) => {
+    const noInterceptor = config.custom && config.custom.noInterceptor;
+    if (noInterceptor) {
+      return config;
+    }
+
     const noAuth = config.custom && config.custom.noAuth;
     const token = uni.getStorageSync("token");
 
@@ -40,6 +45,11 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   (response: any) => {
     /* 对响应成功做点什么 可使用 async await 做异步操作 */
+    const noInterceptor =
+      response.config.custom && response.config.custom.noInterceptor;
+    if (noInterceptor) {
+      return response;
+    }
 
     const state = response.data.state;
     const message = response.data.message;
