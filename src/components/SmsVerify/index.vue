@@ -1,25 +1,21 @@
 <template>
   <view class="sms">
     <view class="phone">
-      <view class="district">
-        +86
-      </view>
       <u-input
         v-model="phone"
         type="number"
         placeholder="请输入手机号"
-        style="flex: 1"
       />
     </view>
     <view class="code">
       <message-input
         mode="bottomLine"
         :maxlength="6"
-        :width="60"
+        :width="65"
         :font-size="36"
         inactive-color="#C7C7CC"
         active-color="#799351"
-        style="margin-left: -5rpx"
+        style="margin-left: -3px"
       />
       <u-button
         size="medium"
@@ -46,17 +42,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.phone {
-  display: flex;
-
-  .district {
-    padding-top: 22rpx;
-    font-size: $uni-font-size-lg;
-    line-height: 88rpx;
-    margin-right: 40rpx;
-  }
-}
-
 .code {
   margin-top: 50rpx;
   display: flex;

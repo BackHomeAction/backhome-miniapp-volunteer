@@ -253,7 +253,7 @@ export default {
   position: relative;
   width: 90rpx;
   height: 90rpx;
-  margin: 5rpx;
+  // margin: 5rpx;
   font-size: 60rpx;
   font-weight: bold;
   color: $u-main-color;
