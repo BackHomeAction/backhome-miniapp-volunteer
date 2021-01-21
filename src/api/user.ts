@@ -2,11 +2,18 @@ import http from "@/utils/request";
 import {
   ResponseData,
   Volunteer,
+  VolunteerInformation,
   VolunteerLoginCode,
   VolunteerRefreshToken,
   volunteerUserInfo,
 } from "./types/models";
 
+/**
+ * 登录
+ *
+ * @param {VolunteerLoginCode} params
+ * @return {*}
+ */
 export const requestLogin = (params: VolunteerLoginCode) => {
   return http.request<ResponseData<Volunteer>>({
     url: `volunteer/login`,
@@ -17,6 +24,12 @@ export const requestLogin = (params: VolunteerLoginCode) => {
   });
 };
 
+/**
+ * 刷新 token
+ *
+ * @param {VolunteerRefreshToken} params
+ * @return {*}
+ */
 export const requestRefreshToken = (params: VolunteerRefreshToken) => {
   return http.request<ResponseData<object>>({
     url: `volunteer/refresh`,
@@ -26,11 +39,31 @@ export const requestRefreshToken = (params: VolunteerRefreshToken) => {
   });
 };
 
+/**
+ * 用微信的 userInfo 初始化个人信息（头像等）
+ *
+ * @param {volunteerUserInfo} params
+ * @return {*}
+ */
 export const requestUpdateInfo = (params: volunteerUserInfo) => {
   return http.request<ResponseData<object>>({
     url: `volunteer/userinfo`,
     method: "POST",
     params: {},
     data: params,
+  });
+};
+
+/**
+ * 获取志愿者信息
+ *
+ * @return {*}
+ */
+export const requestGetUserInfo = () => {
+  return http.request<ResponseData<VolunteerInformation>>({
+    url: `volunteer/information`,
+    method: "GET",
+    params: {},
+    data: {},
   });
 };

@@ -22,6 +22,10 @@ export interface Admin {
   roleId?: number; // 管理员角色ID
   userName?: string;
 }
+export interface BindVolunteerInformation {
+  IDCard?: string; // 身份证号
+  name?: string; // 姓名
+}
 export interface Case {
   address?: string;
   city?: string;
@@ -108,20 +112,24 @@ export interface Volunteer {
   information?: VolunteerInformation;
   iv?: string;
   nickName?: string; // 昵称
+  phone?: string; // 手机号
   state?: number; // 用户状态
 }
+export interface VolunteerBindPhone {
+  code?: string; // 验证码
+  phone?: string; // 手机号
+}
 export interface VolunteerInformation {
-  address?: string;
-  city?: string;
-  country?: string;
-  district?: string;
-  id?: number;
+  address?: string; // 详细地址
+  city?: string; // 城市
+  country?: string; // 国家
+  district?: string; // 区
+  id?: number; // ID
   idcard?: string;
-  name?: string;
-  phone?: string;
-  province?: string;
-  sex?: number;
-  volunteer?: Volunteer;
+  name?: string; // 姓名
+  province?: string; // 省份
+  sex?: number; // 性别
+  volunteerId?: number;
 }
 export interface VolunteerLoginCode {
   code?: string; // 从微信获取的code
@@ -130,6 +138,10 @@ export interface VolunteerRefreshToken {
   refreshToken?: string; // refreshToken
 }
 export interface volunteerUserInfo {
+  encryptedData?: string; // 加密字符串
+  iv?: string; // 从微信获取的iv
+}
+export interface zzzzzzzzzzzzzzz {
   encryptedData?: string; // 加密字符串
   iv?: string; // 从微信获取的iv
 }

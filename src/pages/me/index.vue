@@ -24,7 +24,6 @@ export default defineComponent({
   components: { UButton, Top },
   setup() {
     const store = useStore();
-    console.log(store);
 
     const logged = computed(() => {
       return store.getters.logged;
