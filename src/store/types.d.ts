@@ -5,7 +5,7 @@ export interface RootState {
 export interface UserState {
   logged: boolean;
   hasUserInfo: boolean;
-  userinfo?: null | {
+  userInfo?: null | {
     address?: string; // 详细地址
     city?: string; // 城市
     country?: string; // 国家

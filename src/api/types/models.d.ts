@@ -26,20 +26,6 @@ export interface BindVolunteerInformation {
   IDCard?: string; // 身份证号
   name?: string; // 姓名
 }
-export interface Case {
-  address?: string;
-  city?: string;
-  district?: string;
-  family?: Family;
-  id?: number;
-  latitude?: number;
-  longitude?: number;
-  oldMan?: OldMan;
-  others?: string;
-  place?: string;
-  time?: Timestamp;
-  volunteers?: Volunteer[];
-}
 export interface Family {
   avatarUrl?: string; // 头像
   city?: string; // 城市
@@ -67,49 +53,10 @@ export interface FamilyUserinfo {
   encryptedData?: string; // 加密字符串
   iv?: string; // 从微信获取的iv
 }
-export interface OldMan {
-  address?: string; // 详细地址
-  age?: number;
-  cases?: Case[];
-  city?: string; // 城市
-  disability?: string;
-  district?: string; // 区
-  family?: Family;
-  figure?: string;
-  height?: number;
-  id?: number;
-  idcard?: string;
-  identificationPhoto?: string;
-  lifePhoto?: string;
-  name?: string;
-  offerPlace?: string;
-  otherFeature?: string;
-  otherIllness?: string;
-  others?: string;
-  phone?: string;
-  province?: string; // 省份
-  senileDementia?: number;
-  sex?: number;
-  weight?: number;
-}
-export interface Timestamp {
-  date?: number;
-  day?: number;
-  hours?: number;
-  minutes?: number;
-  month?: number;
-  nanos?: number;
-  seconds?: number;
-  time?: number;
-  timezoneOffset?: number;
-  year?: number;
-}
 export interface Volunteer {
   avatarUrl?: string; // 头像
-  cases?: Case[];
   encryptedData?: string;
   id?: number; // 志愿者ID
-  information?: VolunteerInformation;
   iv?: string;
   nickName?: string; // 昵称
   phone?: string; // 手机号
@@ -129,6 +76,7 @@ export interface VolunteerInformation {
   name?: string; // 姓名
   province?: string; // 省份
   sex?: number; // 性别
+  volunteer?: Volunteer;
   volunteerId?: number;
 }
 export interface VolunteerLoginCode {

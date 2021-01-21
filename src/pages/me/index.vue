@@ -5,6 +5,7 @@
       <u-button
         v-if="logged"
         type="primary"
+        shadow
         @click="handleLogout"
       >
         退出登录

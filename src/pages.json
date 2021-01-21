@@ -22,6 +22,11 @@
       "style": {
         "navigationBarTitleText": "测试页"
       }
+    }, {
+      "path": "pages/register/index",
+      "style": {
+        "navigationBarTitleText": "完善个人信息"
+      }
     }
 	],
 	"globalStyle": {
@@ -66,9 +71,14 @@
         "query": "" //启动参数，在页面的onLoad函数里面得到。
       },
       {
-        "name": "个人页", //模式名称
-        "path": "pages/me/index", //启动页面，必选
-        "query": "" //启动参数，在页面的onLoad函数里面得到。
+        "name": "个人页",
+        "path": "pages/me/index",
+        "query": ""
+      },
+      {
+        "name": "完善个人信息",
+        "path": "pages/register/index",
+        "query": ""
       }
     ]
   }

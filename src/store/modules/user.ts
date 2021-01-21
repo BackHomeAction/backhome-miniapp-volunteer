@@ -14,7 +14,7 @@ const user: Module<UserState, RootState> = {
   state: {
     logged: false,
     hasUserInfo: false,
-    userinfo: null,
+    userInfo: null,
   },
 
   mutations: {
@@ -25,9 +25,9 @@ const user: Module<UserState, RootState> = {
       }
       console.log(state);
     },
-    [MutationTypes.SET_USER_INFO]: (state, userinfo: typeof state.userinfo) => {
+    [MutationTypes.SET_USER_INFO]: (state, userinfo: typeof state.userInfo) => {
       state.hasUserInfo = true;
-      state.userinfo = userinfo;
+      state.userInfo = userinfo;
       console.log(state);
     },
   },
@@ -65,7 +65,7 @@ const user: Module<UserState, RootState> = {
       return new Promise(async (resolve, reject) => {
         try {
           const res = await requestGetUserInfo();
-          if (res.data && res.data.data && res.data.data.volunteerId) {
+          if (res.data && res.data.data) {
             commit(MutationTypes.SET_USER_INFO, res.data.data);
           }
           resolve(res.data.data);
@@ -79,6 +79,7 @@ const user: Module<UserState, RootState> = {
   getters: {
     logged: (state) => state.logged,
     hasUserInfo: (state) => state.hasUserInfo,
+    userInfo: (state) => state.userInfo,
   },
 };
 
