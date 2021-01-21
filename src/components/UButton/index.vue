@@ -235,7 +235,7 @@ export default defineComponent({
 .u-btn {
   position: relative;
   border: 0;
-  //border-radius: 10rpx;
+  border-radius: 100rpx;
   /* #ifndef APP-NVUE */
   display: inline-flex;
   /* #endif */
@@ -246,10 +246,11 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 0 40rpx;
+  padding: 0 80rpx;
   z-index: 1;
   box-sizing: border-box;
   transition: all 0.15s;
+  box-shadow: 0rpx 4rpx 8rpx 0rpx rgba(0, 0, 0, 0.5);
 
   &--bold-border {
     border: 1px solid #ffffff;
