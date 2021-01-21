@@ -107,6 +107,7 @@ export default defineComponent({
   padding-top: 22rpx;
 
   &__input {
+    font-size: $uni-font-size-lg;
     margin: 22rpx 0;
   }
 

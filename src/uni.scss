@@ -24,11 +24,12 @@ $uni-color-error: #dd524d;
 $uni-text-color:#333; //基本色
 $uni-text-color-inverse:#fff; //反色
 $uni-text-color-grey:#999; //辅助灰色，如加载更多的提示信息
-$uni-text-color-placeholder: #808080;
+$uni-text-color-darkgrey:#666; //深灰
+$uni-text-color-placeholder:#c7c7cc;
 $uni-text-color-disable:#c0c0c0;
 
 /* 背景颜色 */
-$uni-bg-color:#f0f2f5;
+$uni-bg-color:#f8f8f8;
 $uni-bg-color-grey:#f8f8f8;
 $uni-bg-color-hover:#f1f1f1; //点击状态颜色
 $uni-bg-color-mask:rgba(0, 0, 0, 0.4); //遮罩颜色
@@ -39,9 +40,12 @@ $uni-border-color:#c8c7cc;
 /* 尺寸变量 */
 
 /* 文字尺寸 */
+$uni-font-size-xs:20rpx;
 $uni-font-size-sm:24rpx;
 $uni-font-size-base:28rpx;
 $uni-font-size-lg:32rpx;
+$uni-font-size-xl:36rpx;
+$uni-font-size-xxl:48rpx;
 
 /* 文字字重 */
 $uni-font-weight-thin:300;
@@ -83,20 +87,20 @@ $uni-font-size-paragraph:30rpx;
 // 此自定义uView主题生成于2021-01-19 19:35
 // 地址：http://www.uviewui.com/guide/theme.html
 
-$u-type-primary: #2979ff;
+$u-type-primary: #A20A0A;
 $u-type-error: #fa3534;
 $u-type-warning: #ff9900;
-$u-type-success: #19be6b;
+$u-type-success: #799351;
 $u-type-info: #909399;
 $u-type-primary-light: #ecf5ff;
 $u-type-error-light: #fef0f0;
 $u-type-warning-light: #fdf6ec;
 $u-type-success-light: #dbf1e1;
 $u-type-info-light: #f4f4f5;
-$u-type-primary-dark: #2b85e4;
+$u-type-primary-dark:#850909;
 $u-type-error-dark: #dd6161;
 $u-type-warning-dark: #f29100;
-$u-type-success-dark: #18b566;
+$u-type-success-dark: #5f7440;
 $u-type-info-dark: #82848a;
 $u-type-primary-disabled: #a0cfff;
 $u-type-error-disabled: #fab6b6;

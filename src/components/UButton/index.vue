@@ -5,10 +5,11 @@
       'u-size-' + size,
       plain ? 'u-btn--' + type + '--plain' : '',
       loading ? 'u-loading' : '',
+      shadow ? 'u-shadow' : '',
       shape == 'circle' ? 'u-round-circle' : '',
       hairLine ? showHairLineBorder : 'u-btn--bold-border',
       'u-btn--' + type,
-      disabled ? `u-btn--${type}--disabled` : '',
+      disabled ? `u-btn--${type}--disabled` : ''
     ]"
     :disabled="disabled"
     :form-type="formType"
@@ -69,6 +70,11 @@ export default defineComponent({
     hairLine: {
       type: Boolean,
       default: true,
+    },
+    // 是否加阴影
+    shadow: {
+      type: Boolean,
+      default: false,
     },
     // 按钮的预置样式，default，primary，error，warning，success
     type: {
@@ -173,6 +179,10 @@ export default defineComponent({
   ],
   setup(props, { emit }) {
     const click = (e: any) => {
+      if (props.loading) {
+        return;
+      }
+
       emit("click", e);
     };
     const getphonenumber = (res: any) => {
@@ -235,7 +245,7 @@ export default defineComponent({
 .u-btn {
   position: relative;
   border: 0;
-  border-radius: 100rpx;
+  border-radius: 10rpx;
   /* #ifndef APP-NVUE */
   display: inline-flex;
   /* #endif */
@@ -250,7 +260,6 @@ export default defineComponent({
   z-index: 1;
   box-sizing: border-box;
   transition: all 0.15s;
-  box-shadow: 0rpx 4rpx 8rpx 0rpx rgba(0, 0, 0, 0.5);
 
   &--bold-border {
     border: 1px solid #ffffff;
@@ -394,9 +403,9 @@ export default defineComponent({
   /* #endif */
   width: auto;
   font-size: 26rpx;
-  height: 70rpx;
-  line-height: 70rpx;
-  padding: 0 80rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  padding: 0 30rpx;
 }
 .u-size-mini {
   /* #ifndef APP-NVUE */
@@ -457,5 +466,8 @@ export default defineComponent({
 .u-error-hover {
   background: $u-type-error-dark !important;
   color: #fff;
+}
+.u-shadow {
+  box-shadow: 0rpx 4rpx 8rpx 0rpx rgba(0, 0, 0, 0.5);
 }
 </style>
