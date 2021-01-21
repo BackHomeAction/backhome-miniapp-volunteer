@@ -26,7 +26,7 @@ http.interceptors.request.use(
       if (token) {
         config.header = {
           ...config.header,
-          Authorize: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         };
       } else {
         // 如果 token 不存在，且该接口不是无需 token 的接口，且登录失败，则取消本次请求
