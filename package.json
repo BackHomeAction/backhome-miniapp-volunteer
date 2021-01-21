@@ -40,7 +40,8 @@
     "test:ios": "cross-env UNI_PLATFORM=app-plus UNI_OS_NAME=ios jest -i",
     "test:mp-baidu": "cross-env UNI_PLATFORM=mp-baidu jest -i",
     "test:mp-weixin": "cross-env UNI_PLATFORM=mp-weixin jest -i",
-    "new:page": "plop page"
+    "new:page": "plop page",
+    "new:component": "plop component"
   },
   "dependencies": {
     "@dcloudio/uni-app-plus": "^2.0.0-alpha-30820210112001",
