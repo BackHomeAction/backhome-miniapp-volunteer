@@ -1,4 +1,5 @@
 import authService from "@/service/authService";
+import { removeRefreshToken, removeToken } from "../auth";
 import { showModalError } from "../helper";
 import Request from "./lib";
 
@@ -58,7 +59,12 @@ http.interceptors.response.use(
       if (state !== 103) {
         /* 除了 token 过期以外的错误 */
         showModalError(message);
+      } else {
+        // TODO: 自动刷新 token 并重发请求
+        removeToken();
+        removeRefreshToken();
       }
+
       return Promise.reject(response);
     }
 

@@ -1,8 +1,14 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import authService from "./service/authService";
+import { getToken } from "./utils/auth";
+
 export default defineComponent({
   onLaunch() {
     console.log("App Launch");
+    if (getToken()) {
+      authService.login();
+    }
   },
   onShow() {
     console.log("App Show");
