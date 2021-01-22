@@ -66,18 +66,3 @@ export const requestGetUserInfo = () => {
     data: {},
   });
 };
-
-/**
- * 绑定志愿者手机号时获取验证码
- *
- * @param {{ phone: string }} params
- * @return {*}
- */
-export const requestGetCodeWhileRegister = (params: { phone: string }) => {
-  return http.request<ResponseData<object>>({
-    url: `volunteer/getBindCode`,
-    method: "GET",
-    params: params,
-    data: {},
-  });
-};
