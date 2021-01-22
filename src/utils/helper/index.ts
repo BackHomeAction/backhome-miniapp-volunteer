@@ -10,9 +10,10 @@ export const navigateBack = (delta: number = 1) => {
 
 export const showToast = (
   title: string,
-  icon: "success" | "loading" | "none" | undefined = "none"
+  icon: "success" | "loading" | "none" | undefined = "none",
+  duration = 1
 ) => {
-  uni.showToast({ title, icon });
+  uni.showToast({ title, icon, duration: duration * 1000 });
 };
 
 export const switchTab = (url: string) => {
