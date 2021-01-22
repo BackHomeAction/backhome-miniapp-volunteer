@@ -1,7 +1,10 @@
 import http from "@/utils/request";
 import {
+  BindVolunteerInformation,
   ResponseData,
   Volunteer,
+  VolunteerBindPhone,
+  VolunteerInformation,
   VolunteerLoginCode,
   VolunteerRefreshToken,
   volunteerUserInfo,
@@ -64,5 +67,52 @@ export const requestGetUserInfo = () => {
     method: "GET",
     params: {},
     data: {},
+  });
+};
+
+/**
+ * 绑定手机
+ *
+ * @param {VolunteerBindPhone} params
+ * @return {*}
+ */
+export const requestBindPhone = (params: VolunteerBindPhone) => {
+  return http.request<ResponseData<object>>({
+    url: `volunteer/bindPhone`,
+    method: "POST",
+    params: {},
+    data: params,
+  });
+};
+
+/**
+ * 绑定身份信息
+ *
+ * @param {BindVolunteerInformation} params
+ * @return {*}
+ */
+export const requestBindVolunteerInformation = (
+  params: BindVolunteerInformation
+) => {
+  return http.request<ResponseData<VolunteerInformation>>({
+    url: `volunteer/information`,
+    method: "POST",
+    params: {},
+    data: params,
+  });
+};
+
+/**
+ * 用微信用户信息初始化用户资料
+ *
+ * @param {volunteerUserInfo} params
+ * @return {*}
+ */
+export const requestUpdateWechatUserInfo = (params: volunteerUserInfo) => {
+  return http.request<ResponseData<object>>({
+    url: `volunteer/userinfo`,
+    method: "POST",
+    params: {},
+    data: params,
   });
 };

@@ -10,9 +10,9 @@
         绑定手机号
       </view>
       <sms-verify
-        :phone="form1.phone"
-        :code="form1.code"
-        :send-sms="handleSendSMS"
+        :phone="smsForm.phone"
+        :code="smsForm.code"
+        sms-api="volunteer/getBindCode"
         @phoneChange="handlePhoneChange"
         @codeChange="handleCodeChange"
       />
@@ -27,14 +27,15 @@
         绑定个人身份信息
       </view>
       <u-input
-        v-model="form2.name"
+        v-model="profileForm.name"
         placeholder="请输入姓名"
       />
       <u-input
-        v-model="form2.IDCard"
+        v-model="profileForm.IDCard"
         placeholder="请输入身份证号"
         type="idcard"
         description="姓名和身份证号确认后不可更改，请仔细核对"
+        maxlength="18"
       />
     </view>
 
@@ -43,7 +44,10 @@
         type="primary"
         shape="circle"
         shadow
-        @click="handleNextStep"
+        :disabled="!isAllowNextStep"
+        :loading="isLoading"
+        open-type="getUserInfo"
+        @getuserinfo="handleNextStep"
       >
         {{ step === 2 ? "确认提交" : "下一步" }}
       </u-button>
@@ -53,43 +57,129 @@
 
 <script lang="ts">
 import authService from "@/service/authService";
-import { defineComponent, reactive, ref } from "vue";
+import { computed, defineComponent, reactive, ref } from "vue";
 import UInput from "@/components/UInput/index.vue";
 import UButton from "@/components/UButton/index.vue";
 import SmsVerify from "@/components/SmsVerify/index.vue";
+import {
+  requestBindPhone,
+  requestBindVolunteerInformation,
+  requestUpdateWechatUserInfo,
+} from "@/api/user";
+import { navigateBack, showToast } from "@/utils/helper";
+import store from "@/store";
 
 const step = ref(1);
+
+const useSmsVerify = () => {
+  const smsForm = reactive({
+    phone: "",
+    code: "",
+  });
+
+  const handlePhoneChange = (val: string) => {
+    smsForm.phone = val;
+  };
+
+  const handleCodeChange = (val: string) => {
+    smsForm.code = val;
+  };
+
+  const verifyPhone = async () => {
+    await requestBindPhone({
+      phone: smsForm.phone,
+      code: smsForm.code,
+    });
+  };
+
+  return { smsForm, handlePhoneChange, handleCodeChange, verifyPhone };
+};
+
+const useProfileVerify = () => {
+  const profileForm = reactive({
+    name: "",
+    IDCard: "",
+  });
+
+  const verifyProfile = async (userInfo: UniApp.GetUserInfoRes) => {
+    await requestBindVolunteerInformation({
+      name: profileForm.name,
+      IDCard: profileForm.IDCard,
+    });
+    await requestUpdateWechatUserInfo({
+      encryptedData: userInfo.encryptedData,
+      iv: userInfo.iv,
+    });
+  };
+
+  return { profileForm, verifyProfile };
+};
 
 export default defineComponent({
   components: { UButton, UInput, SmsVerify },
   setup() {
-    const form1 = reactive({
-      phone: "",
-      code: "",
-    });
+    const smsVerify = useSmsVerify();
+    const profileVerify = useProfileVerify();
+    const isLoading = ref(false);
 
-    const form2 = reactive({
-      name: "",
-      IDCard: "",
-    });
+    const handleNextStep = async (userInfoRes: any) => {
+      const userInfo: UniApp.GetUserInfoRes = userInfoRes.detail;
 
-    const handleNextStep = () => {
+      isLoading.value = true;
       if (step.value === 1) {
-        step.value = 2;
+        try {
+          await smsVerify.verifyPhone();
+          step.value = 2;
+        } catch (e) {
+          console.log(e);
+        }
       } else if (step.value === 2) {
-        step.value = 1;
+        try {
+          await profileVerify.verifyProfile(userInfo);
+          showToast("验证成功", "success");
+          await authService.getUserInfo();
+          navigateBack();
+        } catch (e) {
+          console.log(e);
+        }
       }
+      isLoading.value = false;
     };
 
-    return { step, form1, form2, handleNextStep };
+    const isAllowNextStep = computed(() => {
+      if (step.value === 1) {
+        return (
+          smsVerify.smsForm.phone.length === 11 &&
+          smsVerify.smsForm.code.length === 6
+        );
+      } else if (step.value === 2) {
+        return (
+          profileVerify.profileForm.name.length >= 2 &&
+          profileVerify.profileForm.IDCard.length === 18
+        );
+      }
+    });
+
+    return {
+      step,
+      isAllowNextStep,
+      handleNextStep,
+      isLoading,
+      ...smsVerify,
+      ...profileVerify,
+    };
   },
   onLoad(query) {
     if (query && query.step === "2") {
       step.value = 2;
+    } else {
+      step.value = 1;
     }
   },
   onUnload() {
-    authService.logout();
+    if (!store.getters.hasVolunteerInfo) {
+      authService.logout();
+    }
   },
 });
 </script>
