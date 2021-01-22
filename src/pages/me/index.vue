@@ -1,11 +1,15 @@
 <template>
   <view>
-    <top :status="topStatus" />
+    <top
+      :status="topStatus"
+      with-title
+    />
     <view class="actions">
       <u-button
         v-if="logged"
         type="primary"
         shadow
+        round
         @click="handleLogout"
       >
         退出登录

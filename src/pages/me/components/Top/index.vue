@@ -1,7 +1,25 @@
 <template>
-  <view class="top">
-    <view class="background background--linear" />
-    <view class="box">
+  <view
+    class="top"
+    :class="{'top--title': withTitle}"
+    :style="{paddingTop: `${menuTop}px`}"
+  >
+    <view
+      class="background background--red"
+      :style="{
+        height: withTitle ? `calc(${menuTop}px + 500rpx)` : null,
+        clipPath: withTitle ? `circle(calc(${menuTop}px + 1600rpx) at 375rpx calc(-${menuTop}px + -1100rpx))` : null
+      }"
+    />
+    <view
+      class="title"
+      :style="{lineHeight: `${menuHeight}px`}"
+    >
+      个人中心
+    </view>
+    <view
+      class="box"
+    >
       <view class="left">
         <view class="avatar avatar--nologin" />
         <view
@@ -78,7 +96,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { computed, defineComponent, PropType } from "vue";
 import authService from "@/service/authService";
 
 const useLogin = () => {
@@ -95,9 +113,21 @@ export default defineComponent({
       type: String as PropType<"unlogin" | "me" | "user">,
       default: "unlogin",
     },
+    withTitle: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup() {
-    return { ...useLogin() };
+    const menuTop = computed(() => {
+      return uni.getMenuButtonBoundingClientRect().top;
+    });
+
+    const menuHeight = computed(() => {
+      return uni.getMenuButtonBoundingClientRect().height;
+    });
+
+    return { ...useLogin(), menuTop, menuHeight };
   },
   options: {
     styleIsolation: "shared",
@@ -106,6 +136,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.top--title {
+  .box {
+    margin-top: 80rpx;
+  }
+}
+
 .background {
   position: absolute;
   top: 0;
@@ -115,10 +151,15 @@ export default defineComponent({
   clip-path: circle(700rpx at 375rpx -250rpx);
   z-index: -1;
 
-  &--linear {
-    background: #a20a0a
-      linear-gradient(180deg, rgba(255, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%);
+  &--red {
+    background: $uni-color-primary;
   }
+}
+
+.title {
+  font-size: $uni-font-size-xxl;
+  color: #ffffff;
+  margin-left: 39rpx;
 }
 
 .tag {

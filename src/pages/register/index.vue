@@ -115,7 +115,7 @@ export default defineComponent({
 
 .step {
   opacity: 0;
-  transition: all 0.3s linear;
+  transition: all 0.2s linear;
   padding: 72rpx;
   position: absolute;
   top: 0;
