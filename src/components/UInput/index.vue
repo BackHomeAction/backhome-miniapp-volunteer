@@ -52,7 +52,7 @@ export default defineComponent({
     },
     maxlength: {
       type: [String, Number],
-      default: "",
+      default: "1000",
     },
   },
   emits: [
