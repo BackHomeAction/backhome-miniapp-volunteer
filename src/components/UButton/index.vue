@@ -296,31 +296,31 @@ export default defineComponent({
   }
 
   &--default--disabled {
-    color: #ffffff;
+    color: $u-button-text-disabled;
     border-color: #e4e7ed;
     background-color: #ffffff;
   }
 
   &--primary--disabled {
-    color: #ffffff !important;
+    color: $u-button-text-disabled !important;
     border-color: $u-type-primary-disabled !important;
     background-color: $u-type-primary-disabled !important;
   }
 
   &--success--disabled {
-    color: #ffffff !important;
+    color: $u-button-text-disabled !important;
     border-color: $u-type-success-disabled !important;
     background-color: $u-type-success-disabled !important;
   }
 
   &--error--disabled {
-    color: #ffffff !important;
+    color: $u-button-text-disabled !important;
     border-color: $u-type-error-disabled !important;
     background-color: $u-type-error-disabled !important;
   }
 
   &--warning--disabled {
-    color: #ffffff !important;
+    color: $u-button-text-disabled !important;
     border-color: $u-type-warning-disabled !important;
     background-color: $u-type-warning-disabled !important;
   }
