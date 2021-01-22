@@ -38,6 +38,9 @@ export interface Family {
   sex?: number; // 性别
   state?: number; // 账号状态
 }
+export interface FamilyAvatarUrl {
+  avatarUrl?: string; // 头像链接
+}
 export interface FamilyInformation {
   code?: string; // 短信验证码
   name?: string; // 姓名
@@ -55,12 +58,14 @@ export interface FamilyUserinfo {
 }
 export interface Volunteer {
   avatarUrl?: string; // 头像
-  encryptedData?: string;
   id?: number; // 志愿者ID
-  iv?: string;
   nickName?: string; // 昵称
   phone?: string; // 手机号
   state?: number; // 用户状态
+  volunteerInformation?: VolunteerInformation; // 志愿者信息
+}
+export interface VolunteerAvatarUrl {
+  avatarUrl?: string; // 头像链接
 }
 export interface VolunteerBindPhone {
   code?: string; // 验证码
@@ -76,7 +81,6 @@ export interface VolunteerInformation {
   name?: string; // 姓名
   province?: string; // 省份
   sex?: number; // 性别
-  volunteer?: Volunteer;
   volunteerId?: number;
 }
 export interface VolunteerLoginCode {

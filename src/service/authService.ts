@@ -12,11 +12,17 @@ const login = async () => {
   await store.dispatch(ActionTypes.login);
   await getUserInfo(); //获取个人信息
 
-  if (store.getters.hasUserInfo) {
+  if (store.getters.hasVolunteerInfo) {
     showToast("登录成功", "success");
   } else {
     hideLoading();
-    navigateTo("/pages/register/index");
+    if (store.getters.userInfo.phone) {
+      // 如果已绑定手机，则直接进入绑定个人信息页面
+      navigateTo("/pages/register/index?step=2");
+    } else {
+      // 如果否则先绑定手机
+      navigateTo("/pages/register/index");
+    }
   }
 };
 

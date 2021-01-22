@@ -2,7 +2,6 @@ import http from "@/utils/request";
 import {
   ResponseData,
   Volunteer,
-  VolunteerInformation,
   VolunteerLoginCode,
   VolunteerRefreshToken,
   volunteerUserInfo,
@@ -60,7 +59,7 @@ export const requestUpdateInfo = (params: volunteerUserInfo) => {
  * @return {*}
  */
 export const requestGetUserInfo = () => {
-  return http.request<ResponseData<VolunteerInformation>>({
+  return http.request<ResponseData<Volunteer>>({
     url: `volunteer/information`,
     method: "GET",
     params: {},

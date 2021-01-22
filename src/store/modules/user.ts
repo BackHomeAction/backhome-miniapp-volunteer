@@ -13,7 +13,7 @@ import {
 const user: Module<UserState, RootState> = {
   state: {
     logged: false,
-    hasUserInfo: false,
+    hasVolunteerInfo: false,
     userInfo: null,
   },
 
@@ -21,13 +21,14 @@ const user: Module<UserState, RootState> = {
     [MutationTypes.SET_LOGIN]: (state, logged: typeof state.logged) => {
       state.logged = logged;
       if (!logged) {
-        state.hasUserInfo = false;
+        state.hasVolunteerInfo = false;
       }
       console.log(state);
     },
-    [MutationTypes.SET_USER_INFO]: (state, userinfo: typeof state.userInfo) => {
-      state.hasUserInfo = true;
-      state.userInfo = userinfo;
+    [MutationTypes.SET_USER_INFO]: (state, userInfo: typeof state.userInfo) => {
+      state.hasVolunteerInfo =
+        userInfo && userInfo.volunteerInformation ? true : false;
+      state.userInfo = userInfo;
       console.log(state);
     },
   },
@@ -65,7 +66,7 @@ const user: Module<UserState, RootState> = {
       return new Promise(async (resolve, reject) => {
         try {
           const res = await requestGetUserInfo();
-          if (res.data && res.data.data) {
+          if (res.data && res.data.data && res.data.data) {
             commit(MutationTypes.SET_USER_INFO, res.data.data);
           }
           resolve(res.data.data);
@@ -78,7 +79,7 @@ const user: Module<UserState, RootState> = {
 
   getters: {
     logged: (state) => state.logged,
-    hasUserInfo: (state) => state.hasUserInfo,
+    hasVolunteerInfo: (state) => state.hasVolunteerInfo,
     userInfo: (state) => state.userInfo,
   },
 };
