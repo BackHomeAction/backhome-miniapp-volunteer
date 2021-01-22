@@ -9,7 +9,7 @@
         v-if="logged"
         type="primary"
         shadow
-        round
+        shape="circle"
         @click="handleLogout"
       >
         退出登录
