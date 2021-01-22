@@ -12,6 +12,7 @@
         class="u-input__input"
         :placeholder="placeholder"
         placeholder-class="u-input--placeholder"
+        :maxlength="maxlength"
         @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
@@ -47,6 +48,10 @@ export default defineComponent({
     },
     description: {
       type: String,
+      default: "",
+    },
+    maxlength: {
+      type: [String, Number],
       default: "",
     },
   },
