@@ -8,6 +8,12 @@ export const navigateBack = (delta: number = 1) => {
   uni.navigateBack({ delta });
 };
 
+export const reLaunch = (url: string) => {
+  uni.reLaunch({
+    url,
+  });
+};
+
 export const showToast = (
   title: string,
   icon: "success" | "loading" | "none" | undefined = "none",

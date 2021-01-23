@@ -1,7 +1,25 @@
+import { requestRefreshToken } from "./../../api/user";
 import authService from "@/service/authService";
-import { removeRefreshToken, removeToken } from "../auth";
-import { showModalError } from "../helper";
+import { getRefreshToken, setRefreshToken, setToken } from "../auth";
+import { reLaunch, showModalError } from "../helper";
 import Request from "./lib";
+import { ResponseDataStateTypes } from "@/enums/responseDataStateTypes";
+
+// 是否正在刷新的标记
+let isRefreshing = false;
+// 重试队列，每一项将是一个待执行的函数形式
+let requests: Function[] = [];
+
+// 刷新 token
+const refreshToken = async () => {
+  const res = await requestRefreshToken({
+    refreshToken: getRefreshToken(),
+  });
+  if (res.data.state !== ResponseDataStateTypes.OK) {
+    throw Error();
+  }
+  return res;
+};
 
 const http = new Request({
   baseURL: "https://fwwb2020-app-volunteer.tgucsdn.com/",
@@ -15,12 +33,13 @@ http.interceptors.request.use(
     }
 
     const noAuth = config.custom && config.custom.noAuth;
-    const token = uni.getStorageSync("token");
+    let token = uni.getStorageSync("token");
 
     if (!noAuth) {
       if (!token) {
         // 如果接口需要登录但用户未登录，则请求登录
         await authService.login();
+        token = uni.getStorageSync("token");
       }
 
       // 判断是否需要传 token
@@ -55,16 +74,80 @@ http.interceptors.response.use(
     const state = response.data.state;
     const message = response.data.message;
 
-    if (state !== 200) {
-      if (state !== 103) {
-        /* 除了 token 过期以外的错误 */
-        showModalError(message);
-      } else {
-        // TODO: 自动刷新 token 并重发请求
-        removeToken();
-        removeRefreshToken();
-      }
+    // 无感刷新 token
+    if (state === ResponseDataStateTypes.TOKEN_EXPIRED) {
+      const { config } = response;
+      if (!isRefreshing) {
+        isRefreshing = true;
+        return refreshToken()
+          .then((res) => {
+            const { token, refreshToken } = res.data;
+            if (token && refreshToken) {
+              setToken(token);
+              setRefreshToken(refreshToken);
+              console.log("[request] Refresh token success.");
+              config.header.Authorization = `Bearer ${token}`;
+              // 已经刷新了token，将所有队列中的请求进行重试
+              requests.forEach((cb) => cb(token));
+              requests = [];
+              return http.request(config);
+            } else {
+              throw new Error("刷新 token 失败");
+            }
+          })
+          .catch(async (res) => {
+            // 无法刷新 token，需要重新登录
+            console.error("[request] Refresh token error =>", res);
+            // 退出登录
+            authService.logout();
+            // 重定向到登录页面
+            uni.showModal({
+              title: "错误",
+              content: "请重新登录",
+              showCancel: false,
+              success: () => {
+                reLaunch("/pages/me/index");
+              },
+            });
 
+            // 抛出错误，阻止本次请求
+            const error = new Error("登录态过期");
+            // error.response = response
+            throw error;
+          })
+          .finally(() => {
+            isRefreshing = false;
+          });
+      }
+      // 正在刷新token，返回一个未执行resolve的promise
+      return new Promise((resolve) => {
+        // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
+        requests.push((token: string) => {
+          if (token) {
+            config.header.Authorization = `Bearer ${token}`;
+          }
+          resolve(http.request(config));
+        });
+      });
+    }
+
+    if (state !== ResponseDataStateTypes.OK) {
+      if (state === ResponseDataStateTypes.TOKEN_ERROR) {
+        // token 错误
+        // 退出登录
+        authService.logout();
+        // 重定向到登录页面
+        uni.showModal({
+          title: "错误",
+          content: "请重新登录",
+          showCancel: false,
+          success: () => {
+            reLaunch("/pages/me/index");
+          },
+        });
+      } else {
+        showModalError(message);
+      }
       return Promise.reject(response);
     }
 

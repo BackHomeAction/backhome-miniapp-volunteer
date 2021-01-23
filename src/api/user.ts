@@ -38,6 +38,7 @@ export const requestRefreshToken = (params: VolunteerRefreshToken) => {
     method: "POST",
     params: {},
     data: params,
+    custom: { noAuth: true },
   });
 };
 
