@@ -24,7 +24,7 @@
         <view
           class="avatar"
           :class="{'avatar--nologin': status === 'unlogin'}"
-          :style="{backgroundImage: status !== 'unlogin' ? `url(${avatarUrl})` : null}"
+          :style="{backgroundImage: status !== 'unlogin' && avatarUrl ? `url(${avatarUrl})` : null}"
         />
         <view
           v-if="status === 'unlogin'"
