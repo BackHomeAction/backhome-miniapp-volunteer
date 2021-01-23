@@ -21,7 +21,11 @@
       class="box"
     >
       <view class="left">
-        <view class="avatar avatar--nologin" />
+        <view
+          class="avatar"
+          :class="{'avatar--nologin': status === 'unlogin'}"
+          :style="{backgroundImage: status !== 'unlogin' ? `url(${avatarUrl})` : null}"
+        />
         <view
           v-if="status === 'unlogin'"
           class="tag tag--nologin"
@@ -31,20 +35,21 @@
       </view>
       <view class="right">
         <view class="name">
-          {{ status !== 'unlogin' ? "赵肖云" : "志愿者" }}
+          {{ status !== 'unlogin' && name ? name : "志愿者" }}
           <view
             v-if="status !== 'unlogin'"
             class="sex-icon"
+            :class="[sex === 1 ? 'sex-icon-man' : sex === 2 ? 'sex-icon-woman' : '']"
           />
         </view>
         
         <button
           v-if="status === 'unlogin'"
-          class="login-btn"
+          class="action-btn"
           hover-class="none"
           @click="handleLogin"
         >
-          <view class="login-btn-text">
+          <view class="action-btn-text">
             去登录
             <text
               class="iconfont icon-arrow-right"
@@ -52,11 +57,22 @@
           </view>
         </button>
         <button
-          v-if="status !== 'unlogin'"
-          class="tel-btn"
+          v-if="status === 'user'"
+          class="action-btn"
         >
-          <view class="tel-btn-text">
+          <view class="action-btn-text">
             TEL: 18905950000
+            <text
+              class="iconfont icon-arrow-right"
+            />
+          </view>
+        </button>
+        <button
+          v-if="status === 'me'"
+          class="action-btn"
+        >
+          <view class="action-btn-text">
+            修改个人信息
             <text
               class="iconfont icon-arrow-right"
             />
@@ -117,8 +133,12 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    userInfo: {
+      type: Object,
+      default: undefined,
+    },
   },
-  setup() {
+  setup(props) {
     const menuTop = computed(() => {
       return uni.getMenuButtonBoundingClientRect().top;
     });
@@ -127,7 +147,27 @@ export default defineComponent({
       return uni.getMenuButtonBoundingClientRect().height;
     });
 
-    return { ...useLogin(), menuTop, menuHeight };
+    const name = computed(() => {
+      return (
+        props.userInfo &&
+        props.userInfo.volunteerInformation &&
+        props.userInfo.volunteerInformation.name
+      );
+    });
+
+    const sex = computed(() => {
+      return (
+        props.userInfo &&
+        props.userInfo.volunteerInformation &&
+        props.userInfo.volunteerInformation.sex
+      );
+    });
+
+    const avatarUrl = computed(() => {
+      return props.userInfo && props.userInfo.avatarUrl;
+    });
+
+    return { ...useLogin(), menuTop, menuHeight, name, sex, avatarUrl };
   },
   options: {
     styleIsolation: "shared",
@@ -198,6 +238,7 @@ export default defineComponent({
       width: 128rpx;
       height: 128rpx;
       border-radius: 100%;
+      background-size: cover;
 
       &--nologin {
         background: #666666;
@@ -225,11 +266,17 @@ export default defineComponent({
         height: 24rpx;
         background-image: url("@/static/images/profile/man.png");
         background-size: cover;
+
+        &-man {
+          background-image: url("@/static/images/profile/man.png");
+        }
+        &-woman {
+          background-image: url("@/static/images/profile/woman.png");
+        }
       }
     }
 
-    .login-btn,
-    .tel-btn {
+    .action-btn {
       margin-top: 16rpx;
       padding: 0;
       border-radius: 10rpx;

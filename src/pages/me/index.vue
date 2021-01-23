@@ -2,6 +2,7 @@
   <view>
     <top
       :status="topStatus"
+      :user-info="myInfo"
       with-title
     />
     <view class="actions">
@@ -42,7 +43,11 @@ export default defineComponent({
       return logged.value ? "me" : "unlogin";
     });
 
-    return { logged, handleLogout, topStatus };
+    const myInfo = computed(() => {
+      return store.getters.userInfo;
+    });
+
+    return { logged, handleLogout, topStatus, myInfo };
   },
 });
 </script>
