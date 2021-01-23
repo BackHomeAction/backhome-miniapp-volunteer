@@ -32,6 +32,12 @@
         >
           未登录
         </view>
+        <view
+          v-if="status !== 'unlogin' && registerTimeFromNow"
+          class="tag tag--time"
+        >
+          {{ `加入 ${registerTimeFromNow}` }}
+        </view>
       </view>
       <view class="right">
         <view class="name">
@@ -114,6 +120,11 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
 import authService from "@/service/authService";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+import "dayjs/locale/zh-cn";
+dayjs.locale("zh-cn");
 
 const useLogin = () => {
   const handleLogin = () => {
@@ -163,11 +174,28 @@ export default defineComponent({
       );
     });
 
+    const registerTimeFromNow = computed(() => {
+      const time =
+        props.userInfo &&
+        props.userInfo.volunteerInformation &&
+        props.userInfo.volunteerInformation.registerTime;
+
+      return dayjs(time).fromNow(true);
+    });
+
     const avatarUrl = computed(() => {
       return props.userInfo && props.userInfo.avatarUrl;
     });
 
-    return { ...useLogin(), menuTop, menuHeight, name, sex, avatarUrl };
+    return {
+      ...useLogin(),
+      menuTop,
+      menuHeight,
+      name,
+      sex,
+      registerTimeFromNow,
+      avatarUrl,
+    };
   },
   options: {
     styleIsolation: "shared",
@@ -207,7 +235,7 @@ export default defineComponent({
   font-size: 16rpx;
   font-weight: $uni-font-weight-base;
   line-height: 32rpx;
-  padding: 0 24rpx;
+  padding: 0 16rpx;
   text-align: center;
   display: inline-flex;
   justify-content: center;
@@ -216,6 +244,10 @@ export default defineComponent({
 
   &--nologin {
     background: #d0d0d0;
+  }
+
+  &--time {
+    background: #f6eec9;
   }
 }
 
