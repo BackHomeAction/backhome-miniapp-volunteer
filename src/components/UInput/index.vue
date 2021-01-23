@@ -139,7 +139,7 @@ export default defineComponent({
     bottom: 0;
     height: 1px;
     transform: scaleY(0.5);
-    background-color: $uni-text-color-placeholder;
+    background-color: #f0f0f0;
 
     &--dynamic {
       background-color: $uni-text-color-darkgrey;
