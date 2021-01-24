@@ -27,6 +27,16 @@
       "style": {
         "navigationBarTitleText": "完善个人信息"
       }
+    }, {
+      "path": "pages/editProfile/index",
+      "style": {
+        "navigationBarTitleText": "修改个人信息"
+      }
+    }, {
+      "path": "pages/editPhoneNumber/index",
+      "style": {
+        "navigationBarTitleText": "修改手机号"
+      }
     }
 	],
 	"globalStyle": {
@@ -59,7 +69,7 @@
     ]
   },
   "condition": { //模式配置，仅开发期间生效
-    "current": 1, //当前激活的模式（list 的索引项）
+    "current": 0, //当前激活的模式（list 的索引项）
     "list": [
       {
         "name": "首页",
@@ -78,6 +88,15 @@
       {
         "name": "完善个人信息",
         "path": "pages/register/index",
+        "query": ""
+      },
+      {
+        "name": "修改个人信息",
+        "path": "pages/editProfile/index",
+        "query": ""
+      }, {
+        "name": "修改手机号",
+        "path": "pages/editPhoneNumber/index",
         "query": ""
       }
     ]

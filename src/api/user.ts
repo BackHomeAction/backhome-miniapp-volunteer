@@ -117,3 +117,18 @@ export const requestUpdateWechatUserInfo = (params: volunteerUserInfo) => {
     data: params,
   });
 };
+
+/**
+ * 更新志愿者个人信息
+ *
+ * @param {VolunteerInformation} params
+ * @return {*}
+ */
+export const requestUpdateInformation = (params: VolunteerInformation) => {
+  return http.request<ResponseData<object>>({
+    url: `volunteer/information`,
+    method: "PUT",
+    params: {},
+    data: params,
+  });
+};

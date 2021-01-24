@@ -76,6 +76,7 @@
         <button
           v-if="status === 'me'"
           class="action-btn"
+          @click="handleEditProfile"
         >
           <view class="action-btn-text">
             修改个人信息
@@ -120,11 +121,8 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
 import authService from "@/service/authService";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
-import "dayjs/locale/zh-cn";
-dayjs.locale("zh-cn");
+import dayjs from "@/utils/dayjs";
+import { navigateTo } from "@/utils/helper";
 
 const useLogin = () => {
   const handleLogin = () => {
@@ -187,6 +185,10 @@ export default defineComponent({
       return props.userInfo && props.userInfo.avatarUrl;
     });
 
+    const handleEditProfile = () => {
+      navigateTo("/pages/editProfile/index");
+    };
+
     return {
       ...useLogin(),
       menuTop,
@@ -195,6 +197,7 @@ export default defineComponent({
       sex,
       registerTimeFromNow,
       avatarUrl,
+      handleEditProfile,
     };
   },
   options: {
