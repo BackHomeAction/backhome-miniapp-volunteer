@@ -10,6 +10,7 @@
         绑定手机号
       </view>
       <sms-verify
+        v-if="step === 1"
         :phone="smsForm.phone"
         :code="smsForm.code"
         sms-api="volunteer/getBindCode"
@@ -27,10 +28,12 @@
         绑定个人身份信息
       </view>
       <u-input
+        v-if="step === 2"
         v-model="profileForm.name"
         placeholder="请输入姓名"
       />
       <u-input
+        v-if="step === 2"
         v-model="profileForm.IDCard"
         placeholder="请输入身份证号"
         type="idcard"
