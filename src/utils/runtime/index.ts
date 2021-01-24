@@ -1,3 +1,13 @@
+// These helpers produce better VM code in JS engines due to their
+// explicitness and function inlining.
+function isDef(v: any) {
+  return v !== undefined && v !== null;
+}
+
+function isObject(obj: any) {
+  return obj !== null && typeof obj === "object";
+}
+
 /**
  * Mix properties into target object.
  */
@@ -62,6 +72,59 @@ var hyphenate = cached(function (str: string) {
   return str.replace(hyphenateRE, "-$1").toLowerCase();
 });
 
+function renderClass(staticClass: any, dynamicClass: any) {
+  if (isDef(staticClass) || isDef(dynamicClass)) {
+    return concat(staticClass, stringifyClass(dynamicClass));
+  }
+  /* istanbul ignore next */
+  return "";
+}
+
+function concat(a: any, b: any) {
+  return a ? (b ? a + " " + b : a) : b || "";
+}
+
+function stringifyClass(value: any) {
+  if (Array.isArray(value)) {
+    return stringifyArray(value);
+  }
+  if (isObject(value)) {
+    return stringifyObject(value);
+  }
+  if (typeof value === "string") {
+    return value;
+  }
+  /* istanbul ignore next */
+  return "";
+}
+
+function stringifyArray(value: any) {
+  var res = "";
+  var stringified;
+  for (var i = 0, l = value.length; i < l; i++) {
+    if (isDef((stringified = stringifyClass(value[i]))) && stringified !== "") {
+      if (res) {
+        res += " ";
+      }
+      res += stringified;
+    }
+  }
+  return res;
+}
+
+function stringifyObject(value: any) {
+  var res = "";
+  for (var key in value) {
+    if (value[key]) {
+      if (res) {
+        res += " ";
+      }
+      res += key;
+    }
+  }
+  return res;
+}
+
 export function internalMixin(app: any) {
   app.config.globalProperties.__get_style = (
     dynamicStyle: any,
@@ -79,5 +142,22 @@ export function internalMixin(app: any) {
         return hyphenate(name) + ":" + styleObj[name];
       })
       .join(";");
+  };
+
+  app.config.globalProperties.__get_class = function (
+    dynamicClass: any,
+    staticClass: any
+  ) {
+    return renderClass(staticClass, dynamicClass);
+  };
+
+  app.config.errorHandler = function (err: any, vm: any, info: any) {
+    console.warn("Error in " + info + ': "' + err.toString() + '"', vm);
+    console.error(err);
+    /* eslint-disable no-undef */
+    var app = getApp();
+    if (app && app.onError) {
+      app.onError(err);
+    }
   };
 }
