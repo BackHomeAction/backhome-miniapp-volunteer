@@ -1,4 +1,5 @@
 export enum MutationTypes {
   SET_LOGIN = "SET_LOGIN",
   SET_USER_INFO = "SET_USER_INFO",
+  SET_AVATAR_PATH = "SET_AVATAR_PATH",
 }

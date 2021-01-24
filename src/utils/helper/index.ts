@@ -1,4 +1,9 @@
-export const navigateTo = (url: string) => {
+import mixinParam from "./route";
+
+export const navigateTo = (url: string, params: null | object = null) => {
+  if (params) {
+    url = mixinParam(url, params);
+  }
   uni.navigateTo({
     url,
   });

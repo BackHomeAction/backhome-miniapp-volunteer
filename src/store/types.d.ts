@@ -9,3 +9,7 @@ export interface UserState {
   hasVolunteerInfo: boolean;
   userInfo?: null | Volunteer;
 }
+
+export interface AvatarCropperState {
+  path: string;
+}

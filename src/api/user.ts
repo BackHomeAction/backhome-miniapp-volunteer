@@ -3,6 +3,7 @@ import {
   BindVolunteerInformation,
   ResponseData,
   Volunteer,
+  VolunteerAvatarUrl,
   VolunteerBindPhone,
   VolunteerInformation,
   VolunteerLoginCode,
@@ -127,6 +128,21 @@ export const requestUpdateWechatUserInfo = (params: volunteerUserInfo) => {
 export const requestUpdateInformation = (params: VolunteerInformation) => {
   return http.request<ResponseData<object>>({
     url: `volunteer/information`,
+    method: "PUT",
+    params: {},
+    data: params,
+  });
+};
+
+/**
+ * 更换头像
+ *
+ * @param {VolunteerAvatarUrl} params
+ * @return {*}
+ */
+export const requestUpdateAvatar = (params: VolunteerAvatarUrl) => {
+  return http.request<ResponseData<string>>({
+    url: `volunteer/avatar`,
     method: "PUT",
     params: {},
     data: params,

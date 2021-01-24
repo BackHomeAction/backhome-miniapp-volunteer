@@ -4,6 +4,7 @@
       <u-cell-item
         title="头像"
         :value-style="{display: 'flex', flexDirection:'row-reverse', alignItems: 'center'}"
+        @click="handleChooseAvatar"
       >
         <image
           :src="userInfo.avatarUrl"
@@ -84,15 +85,19 @@ import UCellGroup from "@/components/UCellGroup/index.vue";
 import UCellItem from "@/components/UCellItem/index.vue";
 import { useStore } from "vuex";
 import dayjs from "@/utils/dayjs";
-import { requestUpdateInformation } from "@/api/user";
+import { requestUpdateAvatar, requestUpdateInformation } from "@/api/user";
 import authService from "@/service/authService";
 import {
   hideLoading,
   navigateTo,
   showLoading,
+  showModalError,
   showToast,
 } from "@/utils/helper";
 import { VolunteerInformation } from "@/api/types/models";
+import store from "@/store";
+import { MutationTypes } from "@/enums/mutationTypes";
+import { requestUploadImage } from "@/api/common";
 
 const editUserInfo = async (params: VolunteerInformation) => {
   showLoading("请稍候");
@@ -228,6 +233,40 @@ const useEditAddress = () => {
   return { handleAddressPickerChange };
 };
 
+const useEditAvatar = () => {
+  const handleChooseAvatar = () => {
+    navigateTo("/pages/UAvatarCropper/index", {
+      // 输出图片宽度，高等于宽，单位px
+      destWidth: 200,
+      // 裁剪框宽度，高等于宽，单位px
+      rectWidth: 200,
+      // 输出的图片类型，如果'png'类型发现裁剪的图片太大，改成"jpg"即可
+      fileType: "jpg",
+    });
+  };
+
+  return { handleChooseAvatar };
+};
+
+const uploadAvatar = async (path: string) => {
+  showLoading("请稍候");
+  try {
+    const uploadRes = await requestUploadImage(path);
+    console.log(uploadRes);
+    if (uploadRes.data.state !== 200 || !uploadRes.data.data) {
+      throw Error("上传图片失败");
+    }
+    const avatarUrl = uploadRes.data.data;
+    await requestUpdateAvatar({ avatarUrl });
+    await authService.getUserInfo();
+    showToast("修改成功", "success");
+  } catch (e) {
+    console.log(e);
+    hideLoading();
+    showModalError("上传图片失败");
+  }
+};
+
 export default defineComponent({
   components: { UCellGroup, UCellItem },
   setup() {
@@ -239,8 +278,15 @@ export default defineComponent({
       ...useShowInfo(),
       ...useEditSex(),
       ...useEditAddress(),
+      ...useEditAvatar(),
       handleEditPhoneNumber,
     };
+  },
+  onShow() {
+    if (store.getters.avatarPath) {
+      uploadAvatar(store.getters.avatarPath);
+      store.commit(MutationTypes.SET_AVATAR_PATH, "");
+    }
   },
 });
 </script>

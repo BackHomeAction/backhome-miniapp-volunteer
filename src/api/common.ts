@@ -16,3 +16,16 @@ export const requestGetCode = (api: string, params: { phone: string }) => {
     data: {},
   });
 };
+
+/**
+ * 上传图片
+ *
+ * @param {FormData} params
+ * @return {*}
+ */
+export const requestUploadImage = (filePath: string) => {
+  return http.upload<ResponseData<string>>(`volunteer/photo`, {
+    filePath,
+    name: "photo",
+  });
+};
