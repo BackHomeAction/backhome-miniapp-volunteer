@@ -25,7 +25,9 @@
       >
         <u-cell-item
           title="性别"
-          :value="userInfo.volunteerInformation.sex && (userInfo.volunteerInformation.sex === 1 ? '男' : '女')"
+          :value="userInfo.volunteerInformation.sex &&
+            (userInfo.volunteerInformation.sex === 1 ? '男' :
+              userInfo.volunteerInformation.sex === 2 ? '女' : '')"
         />
       </picker>
       <u-cell-item

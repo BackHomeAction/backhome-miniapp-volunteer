@@ -23,7 +23,7 @@
       <view class="left">
         <view
           class="avatar"
-          :class="{'avatar--nologin': status === 'unlogin'}"
+          :class="{'avatar--nologin': status === 'unlogin' || !avatarUrl}"
           :style="{backgroundImage: status !== 'unlogin' && avatarUrl ? `url(${avatarUrl})` : null}"
         />
         <view
