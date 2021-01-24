@@ -7,8 +7,8 @@
     <view
       class="background background--red"
       :style="{
-        height: withTitle ? `calc(${menuTop}px + 500rpx)` : null,
-        clipPath: withTitle ? `circle(calc(${menuTop}px + 1600rpx) at 375rpx calc(-${menuTop}px + -1100rpx))` : null
+        height: `calc(${menuTop}px + 580rpx)`,
+        clipPath: `circle(calc(${menuTop}px + 1600rpx) at 375rpx calc(-${menuTop}px + -1100rpx))`
       }"
     />
     <view
