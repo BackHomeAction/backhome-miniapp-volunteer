@@ -1,54 +1,25 @@
 <template>
-  <view class="content">
-    <image
-      class="logo"
-      src="../../static/logo.png"
-    />
-    <view>
-      <text class="title">
-        {{ title }}
-      </text>
+  <view>
+    <top />
+    <view class="body">
+      <announcement />
+      <all-tasks style="margin-top: 64rpx;" />
+      <status style="margin-top: 96rpx;" />
     </view>
-    <button @click="jumpToTest('/pages/test/index')">
-      test
-    </button>
-    <button @click="jumpToTest('/pages/me/index')">
-      test2
-    </button>
-    <button @click="testGetInfo">
-      testGetInfo
-    </button>
   </view>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { showModalError, switchTab } from "@/utils/helper";
-import authService from "@/service/authService";
-import { useStore } from "vuex";
-import { requestGetUserInfo } from "@/api/user";
+import Top from "./components/Top/index.vue";
+import Announcement from "./components/Announcement/index.vue";
+import AllTasks from "./components/AllTasks/index.vue";
+import Status from "./components/Status/index.vue";
 
 export default defineComponent({
+  components: { Top, Announcement, AllTasks, Status },
   setup() {
-    const store = useStore();
-
-    const jumpToTest = (url: string) => {
-      switchTab(url);
-    };
-
-    const testGetInfo = async () => {
-      console.log(await requestGetUserInfo());
-      // console.log(await requestGetUserInfo());
-      // console.log(await requestGetUserInfo());
-      // console.log(await requestGetUserInfo());
-      // console.log(await requestGetUserInfo());
-    };
-
-    return {
-      title: "hello",
-      jumpToTest,
-      testGetInfo,
-    };
+    return {};
   },
 });
 </script>
@@ -68,5 +39,12 @@ export default defineComponent({
 .title {
   font-size: 36upx;
   color: #8f8f94;
+}
+
+.body {
+  margin-top: 64rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
