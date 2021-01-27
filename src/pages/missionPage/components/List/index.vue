@@ -219,10 +219,8 @@ export default defineComponent({
   }
   .buttons{
     width: 256rpx;
-    height: 60rpx;
-    background: #A20A0A;
-    box-shadow: 0rpx 4rpx 8rpx 0rpx rgba(0, 0, 0, 0.5);
-    border-radius: 30rpx;
+    height: 60rpx; 
+    border-radius: 30rpx;     
     margin-top: 80rpx;
     text-align: center;
     line-height: 60rpx;

@@ -60,7 +60,9 @@
     },{
        "path" : "pages/volList/index",
         "style":{
-         "navigationBarTitleText": "志愿者列表"
+         "navigationBarTitleText": "志愿者列表",
+         "navigationBarBackgroundColor":"#A20A0A",
+         "navigationBarTextStyle":"white"
       }
     }
     ],
