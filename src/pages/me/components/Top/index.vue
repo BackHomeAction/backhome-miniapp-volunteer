@@ -88,7 +88,10 @@
 
         <view class="divider" />
         <view class="tasks">
-          <view class="task">
+          <view
+            class="task"
+            @click="VolList()"
+          >
             <view class="task-number">
               {{ logged ? "xx" : "0" }}
             </view>
@@ -148,6 +151,23 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const store = useStore();
+    const logged = computed(() => {
+      return store.state.logged;
+    });
+    function VolList() {
+      if (logged) {
+        //这里要做一个阻拦，没有登陆不能查看
+        navigateTo("/pages/missionPage/index", { id: "xxx" }); //此处写的是志愿者ID
+        console.log(logged);
+      } else {
+        wx.showToast({
+          title: "请先登录",
+          icon: "error",
+          duration: 2000,
+        });
+      }
+    }
     const menuTop = computed(() => {
       return uni.getMenuButtonBoundingClientRect().top;
     });
@@ -198,6 +218,7 @@ export default defineComponent({
       registerTimeFromNow,
       avatarUrl,
       handleEditProfile,
+      VolList,
     };
   },
   options: {

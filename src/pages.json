@@ -58,11 +58,18 @@
           "navigationBarBackgroundColor": "#FFFFFF"
       }
     },{
-       "path" : "pages/volList/index",
+       "path" : "pages/volunteerList/index",
         "style":{
          "navigationBarTitleText": "志愿者列表",
          "navigationBarBackgroundColor":"#A20A0A",
          "navigationBarTextStyle":"white"
+      }
+    },{
+        "path" : "pages/oldManInformation/index",
+        "style":{
+          "navigationBarTitleText": "详细信息",
+         "enablePullDownRefresh": false,
+          "navigationBarBackgroundColor":"#FFFFFF"
       }
     }
     ],
