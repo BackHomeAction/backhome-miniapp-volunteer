@@ -1,7 +1,7 @@
 <template>
   <view
     class="box"
-    @click="announce"
+    @click="handleClickAnnounce"
   >
     <view class="border">
       <image
@@ -16,20 +16,20 @@
           :autoplay="true"
           :interval="3000"
           :duration="1000"
-          @change="pageChange"
+          @change="handleSwiperChange"
         >
           <swiper-item
-            v-for="(inf,index) in massage.inform"
+            v-for="(item,index) in message.inform"
             :key="index"
           >
             <view class="first-text">
               <view class="announce-text">
-                {{ inf.announce }}
+                {{ item.announce }}
               </view>
             </view>
-            <view class="sec-text">
+            <view class="second-text">
               <view class="abstract-text">
-                {{ inf.abstract }}
+                {{ item.abstract }}
               </view>
             </view> 
           </swiper-item> 
@@ -42,20 +42,24 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from "vue";
 import { navigateTo } from "@/utils/helper";
+
 export default defineComponent({
   setup() {
     const step = ref(0);
-    function announce() {
+
+    function handleClickAnnounce() {
       const num = ref(0);
       num.value = step.value;
       navigateTo("/pages/announce/index", { id: num.value });
     }
-    function pageChange(event: { detail: { current: number } }) {
-      console.log(event.detail.current);
+
+    function handleSwiperChange(event: { detail: { current: number } }) {
+      // console.log(event.detail.current);
       step.value = event.detail.current;
-      console.log(step.value);
+      // console.log(step.value);
     }
-    let massage = reactive({
+
+    const message = reactive({
       inform: [
         {
           announce: "关于申请成为志愿者的说明",
@@ -69,7 +73,8 @@ export default defineComponent({
         },
       ],
     });
-    return { announce, massage, pageChange };
+
+    return { handleClickAnnounce, message, handleSwiperChange };
   },
 });
 </script>
@@ -107,7 +112,7 @@ export default defineComponent({
         @include font(32rpx, #000000, 44rpx);
       }
     }
-    .sec-text {
+    .second-text {
       @include wh(384rpx, 34rpx, 16rpx, 0);
       display: flex;
       justify-content: center;

@@ -2,11 +2,11 @@
   <view class="body">
     <view
       class="block"
-      @click="volList()"
+      @click="handleToVolunteerList()"
     >
       <view class="num">
         <view style="height: 84rpx;">
-          {{ onlineVol }}
+          {{ onlineVolunteerNumber }}
         </view>
       </view>
       <view class="text">
@@ -22,7 +22,7 @@
     >
       <view class="num">
         <view style="height: 84rpx;">
-          {{ sumVol }}
+          {{ totalVolunteerNumber }}
         </view>
       </view>
       <view class="text">
@@ -38,7 +38,7 @@
     >
       <view class="num">
         <view style="height: 84rpx;">
-          {{ eventOn }}
+          {{ openingTasks }}
         </view>
       </view>
       <view class="text">
@@ -48,21 +48,28 @@
       </view>
     </view>
   </view>
-  </view>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { navigateTo } from "@/utils/helper";
+
 export default defineComponent({
   setup() {
-    function volList() {
+    function handleToVolunteerList() {
       navigateTo("/pages/volunteerList/index");
     }
-    const onlineVol = ref(556);
-    const sumVol = ref(56);
-    const eventOn = ref(5356);
-    return { onlineVol, sumVol, eventOn, volList };
+
+    const onlineVolunteerNumber = ref(556);
+    const totalVolunteerNumber = ref(56);
+    const openingTasks = ref(5356);
+
+    return {
+      onlineVolunteerNumber,
+      totalVolunteerNumber,
+      openingTasks,
+      handleToVolunteerList,
+    };
   },
 });
 </script>
@@ -72,8 +79,6 @@ export default defineComponent({
   width: 182rpx;
   height: 84rpx;
   font-size: $size;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
   color: #000000;
   line-height: 84rpx;
   display: flex;

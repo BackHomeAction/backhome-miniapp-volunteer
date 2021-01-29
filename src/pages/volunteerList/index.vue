@@ -53,10 +53,11 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from "vue";
 import Peop from "./components/Peop/index.vue";
+
 export default defineComponent({
   components: { Peop },
   setup() {
-    let city = reactive({
+    const city = reactive({
       list: [
         "北京",
         "成都",
@@ -70,7 +71,8 @@ export default defineComponent({
         "重庆",
       ],
     });
-    function selectCity(event) {
+
+    function selectCity(event: any) {
       console.log(event);
       wx.showModal({
         title: "城市选择",
@@ -84,11 +86,14 @@ export default defineComponent({
         },
       });
     }
+
     const show = ref(false);
+
     function showChange() {
       show.value = !show.value;
       console.log(show.value);
     }
+
     return { showChange, show, selectCity, city };
   },
 });
@@ -127,8 +132,6 @@ export default defineComponent({
         width: 220rpx;
         height: 140rpx;
         font-size: 40rpx;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
         color: #000000;
         line-height: 44rpx;
         text-align: center;
@@ -142,8 +145,6 @@ export default defineComponent({
   width: 142rpx;
   height: 40rpx;
   font-size: 32rpx;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
   color: #000000;
   line-height: 44rpx;
   line-height: 40rpx;
@@ -160,8 +161,6 @@ export default defineComponent({
     width: 400rpx;
     height: 56rpx;
     font-size: 40rpx;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
     color: #ffffff;
     line-height: 56rpx;
     margin-left: 176rpx;
@@ -170,13 +169,10 @@ export default defineComponent({
     width: 216rpx;
     height: 34rpx;
     font-size: 24rpx;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
     color: #ffffff;
     line-height: 34rpx;
     margin-left: 266rpx;
     margin-top: 32rpx;
-    // 这里本来是16rpx但是看着很不和谐所以改动为一个比较和谐的数值，如有需要就直接改回来就行了
   }
 }
 .body {

@@ -6,13 +6,13 @@
       "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
     }
   },
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		}, {
+  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    }, {
       "path": "pages/me/index",
       "style": {
         "navigationStyle": "custom"
@@ -43,69 +43,66 @@
         "navigationBarTitleText": "头像上传",
         "navigationBarBackgroundColor": "#000000"
       }
-    },{
-       "path" : "pages/announce/index",
-        "style":{
-         "navigationBarTitleText": "公告详情",
-         "enablePullDownRefresh": false,
-          "navigationBarBackgroundColor": "#FFFFFF"
+    }, {
+      "path": "pages/announce/index",
+      "style": {
+        "navigationBarTitleText": "公告详情",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#FFFFFF"
       }
-    },{
-       "path" : "pages/missionPage/index",
-       "style":{
-         "navigationBarTitleText": "我的任务",
-         "enablePullDownRefresh": false,
-          "navigationBarBackgroundColor": "#FFFFFF"
+    }, {
+      "path": "pages/missionPage/index",
+      "style": {
+        "navigationBarTitleText": "我的任务",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#FFFFFF"
       }
-    },{
-       "path" : "pages/volunteerList/index",
-        "style":{
-         "navigationBarTitleText": "志愿者列表",
-         "navigationBarBackgroundColor":"#A20A0A",
-         "navigationBarTextStyle":"white"
+    }, {
+      "path": "pages/volunteerList/index",
+      "style": {
+        "navigationBarTitleText": "志愿者列表",
+        "navigationBarBackgroundColor": "#A20A0A",
+        "navigationBarTextStyle": "white"
       }
-    },{
-        "path" : "pages/oldManInformation/index",
-        "style":{
-          "navigationBarTitleText": "详细信息",
-         "enablePullDownRefresh": false,
-          "navigationBarBackgroundColor":"#FFFFFF"
+    }, {
+      "path": "pages/oldManInformation/index",
+      "style": {
+        "navigationBarTitleText": "详细信息",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#FFFFFF"
       }
     }
-    ],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "归家行动志愿者端",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#f0f2f5"
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "归家行动志愿者端",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#f0f2f5"
   },
   "tabBar": {
     "color": "#666666",
     "selectedColor": "#000000",
     "backgroundColor": "#F8F8F8",
-    "list": [
-      {
-        "pagePath": "pages/index/index",
-        "text": "主页",
-        "iconPath": "static/images/tabbar/home.png",
-        "selectedIconPath": "static/images/tabbar/home-active.png"
-      }, {
-        "pagePath": "pages/test/index",
-        "text": "任务",
-        "iconPath": "static/images/tabbar/task.png",
-        "selectedIconPath": "static/images/tabbar/task-active.png"
-      }, {
-        "pagePath": "pages/me/index",
-        "text": "我的",
-        "iconPath": "static/images/tabbar/user.png",
-        "selectedIconPath": "static/images/tabbar/user-active.png"
-      }
-    ]
+    "list": [{
+      "pagePath": "pages/index/index",
+      "text": "主页",
+      "iconPath": "static/images/tabbar/home.png",
+      "selectedIconPath": "static/images/tabbar/home-active.png"
+    }, {
+      "pagePath": "pages/test/index",
+      "text": "任务",
+      "iconPath": "static/images/tabbar/task.png",
+      "selectedIconPath": "static/images/tabbar/task-active.png"
+    }, {
+      "pagePath": "pages/me/index",
+      "text": "我的",
+      "iconPath": "static/images/tabbar/user.png",
+      "selectedIconPath": "static/images/tabbar/user-active.png"
+    }]
   },
   "condition": { //模式配置，仅开发期间生效
     "current": 0, //当前激活的模式（list 的索引项）
-    "list": [
-      {
+    "list": [{
         "name": "首页",
         "path": "pages/index/index"
       },
@@ -131,6 +128,10 @@
       }, {
         "name": "修改手机号",
         "path": "pages/editPhoneNumber/index",
+        "query": ""
+      }, {
+        "name": "我的任务",
+        "path": "pages/missionPage/index",
         "query": ""
       }
     ]

@@ -107,8 +107,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from "vue";
-import { navigateTo } from "@/utils/helper";
+import { showToast, switchTab } from "@/utils/helper";
+import { defineComponent, ref } from "vue";
 import { inject } from "vue";
 export default defineComponent({
   setup() {
@@ -117,20 +117,13 @@ export default defineComponent({
     const confirms = ref(false);
     const rejects = ref(false);
     function reject() {
-      wx.showToast({
-        title: "已拒绝",
-        icon: "error",
-      });
+      showToast("已拒绝");
     }
     function confirm() {
-      wx.showToast({
-        title: "已接受",
-      });
+      showToast("已接受");
     }
     function navigate() {
-      uni.switchTab({
-        url: "/pages/me/index",
-      });
+      switchTab("/pages/me/index");
     }
     return { reject, confirm, show, confirms, rejects, navigate, infGet };
   },
