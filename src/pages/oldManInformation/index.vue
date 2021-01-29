@@ -9,6 +9,7 @@
           <image
             style="border-radius: 10rpx;margin-right: 8rpx;width: 308rpx;height: 196rpx;"
             :src="path"
+            @click="watchPhoto(indexs)"
           />
         </view>
       </view>
@@ -53,6 +54,18 @@ export default defineComponent({
         "../../static/images/oldman4.jpg",
       ],
     });
+    function watchPhoto(index) {
+      uni.previewImage({
+        urls: [
+          "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1158476907,3892787576&fm=15&gp=0.jpg",
+          "https://dpic.tiankong.com/8w/1f/QJ6110198657.jpg?x-oss-process=style/794ws",
+          "https://ss0.baidu.com/7Po3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/77094b36acaf2edde4c459a4861001e939019341.jpg",
+          "https://dpic.tiankong.com/7z/zd/QJ6882014636.jpg@!350h",
+        ],
+        current: index,
+      });
+    }
+
     let oldManInf = reactive({
       item: [
         "姓名",
@@ -83,7 +96,7 @@ export default defineComponent({
         "暂无",
       ],
     });
-    return { image, oldManInf };
+    return { image, oldManInf, watchPhoto };
   },
   onLoad(option) {
     console.log(option);
