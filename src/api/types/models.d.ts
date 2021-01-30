@@ -22,9 +22,20 @@ export interface Admin {
   roleId?: number; // 管理员角色ID
   userName?: string;
 }
+export interface Banner {
+  description?: string; // 公告描述
+  id?: number; // ID
+  noticeId?: number; // 公告ID
+  time?: string; // Banner生成时间
+  title?: string; // 公告标题
+  url?: string; // 图片地址
+}
 export interface BindVolunteerInformation {
   IDCard?: string; // 身份证号
   name?: string; // 姓名
+}
+export interface DeleteOldManId {
+  id?: string; // 老人信息ID
 }
 export interface Family {
   avatarUrl?: string; // 头像
@@ -56,6 +67,40 @@ export interface FamilyUserinfo {
   encryptedData?: string; // 加密字符串
   iv?: string; // 从微信获取的iv
 }
+export interface Notice {
+  content?: string; // 内容
+  description?: string; // 描述
+  display?: number; // 是否展示（1为展示，2为不展示）
+  id?: number; // ID
+  publisher?: string; // 发布人
+  publisherId?: number; // 发布人ID
+  roleId?: number; // 面向角色
+  time?: string; // 时间
+  title?: string; // 标题
+}
+export interface OldMan {
+  address?: string; // 详细地址
+  birthDate?: string; // 出生日期
+  city?: string; // 城市
+  disability?: string; // 残疾信息
+  district?: string; // 区
+  familyId?: number; // 家属ID
+  height?: number; // 身高
+  id?: number;
+  idcard?: string;
+  identificationPhoto?: string; // 证件照
+  lifePhoto?: string; // 生活照
+  name?: string; // 姓名
+  offerPlace?: string; // 常去地点
+  otherFeature?: string; // 其他体貌特征
+  otherIllness?: string; // 其他疾病史
+  others?: string; // 其他信息
+  phone?: string; // 联系电话
+  province?: string; // 省份
+  senileDementia?: number; // 是否老年痴呆
+  sex?: number; // 性别
+  weight?: number; // 体重
+}
 export interface Volunteer {
   avatarUrl?: string; // 头像
   id?: number; // 志愿者ID
@@ -80,6 +125,7 @@ export interface VolunteerInformation {
   idcard?: string;
   name?: string; // 姓名
   province?: string; // 省份
+  registerTime?: string; // 注册时间
   sex?: number; // 性别
   volunteerId?: number;
 }
@@ -88,6 +134,9 @@ export interface VolunteerLoginCode {
 }
 export interface VolunteerRefreshToken {
   refreshToken?: string; // refreshToken
+}
+export interface VolunteerUnbindCode {
+  code?: string; // 验证码
 }
 export interface volunteerUserInfo {
   encryptedData?: string; // 加密字符串

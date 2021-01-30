@@ -1,5 +1,6 @@
 <template>
   <view
+    v-if="announcements && announcements.length"
     class="box"
     @click="handleClickAnnounce"
   >
@@ -19,17 +20,18 @@
           @change="handleSwiperChange"
         >
           <swiper-item
-            v-for="(item,index) in message.inform"
-            :key="index"
+            v-for="item in announcements"
+            :key="item.id"
+            @click="handleSwiperItemClick(item.id)"
           >
             <view class="first-text">
               <view class="announce-text">
-                {{ item.announce }}
+                {{ item.title }}
               </view>
             </view>
             <view class="second-text">
               <view class="abstract-text">
-                {{ item.abstract }}
+                {{ item.description }}
               </view>
             </view> 
           </swiper-item> 
@@ -40,11 +42,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import { navigateTo } from "@/utils/helper";
+import { useStore } from "vuex";
+import { ActionTypes } from "@/enums/actionTypes";
 
 export default defineComponent({
   setup() {
+    const store = useStore();
     const step = ref(0);
 
     function handleClickAnnounce() {
@@ -54,27 +59,26 @@ export default defineComponent({
     }
 
     function handleSwiperChange(event: { detail: { current: number } }) {
-      // console.log(event.detail.current);
       step.value = event.detail.current;
-      // console.log(step.value);
     }
 
-    const message = reactive({
-      inform: [
-        {
-          announce: "关于申请成为志愿者的说明",
-          abstract: "申请者志愿者前必读",
-          id: 1,
-        },
-        {
-          announce: "关于合理解决XXX的问题",
-          abstract: "请仔细阅读并完成",
-          id: 2,
-        },
-      ],
+    store.dispatch(ActionTypes.getAnnouncements);
+
+    const announcements = computed(() => {
+      console.log(store.getters.announcements);
+      return store.getters.announcements;
     });
 
-    return { handleClickAnnounce, message, handleSwiperChange };
+    const handleSwiperItemClick = (id: number) => {
+      navigateTo("/pages/announcement/index", { id });
+    };
+
+    return {
+      handleClickAnnounce,
+      announcements,
+      handleSwiperChange,
+      handleSwiperItemClick,
+    };
   },
 });
 </script>

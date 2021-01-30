@@ -22,16 +22,44 @@
       indicator-dots
       autoplay
     >
-      <swiper-item class="swiper-item" />
-      <swiper-item class="swiper-item" />
-      <swiper-item class="swiper-item" />
-      <swiper-item class="swiper-item" />
+      <swiper-item
+        v-if="!banners || !banners.length"
+        class="swiper-item swiper-item-default"
+      />
+      <!-- TODO: 默认banner -->
+      <swiper-item
+        v-for="item in banners"
+        :key="item.id"
+        class="swiper-item"
+        :style="{backgroundImage: `url(${item.url})`}"
+        @click="handleClickBanner(item.noticeId)"
+      />
     </swiper>
   </view>
 </template>
 
 <script lang="ts">
+import { ActionTypes } from "@/enums/actionTypes";
+import { navigateTo } from "@/utils/helper";
 import { computed, defineComponent } from "vue";
+import { useStore } from "vuex";
+
+const useBanners = () => {
+  const store = useStore();
+
+  store.dispatch(ActionTypes.getBanners);
+
+  const banners = computed(() => {
+    console.log(store.getters.banners);
+    return store.getters.banners;
+  });
+
+  const handleClickBanner = (id: number) => {
+    navigateTo("/pages/announcement/index", { id });
+  };
+
+  return { banners, handleClickBanner };
+};
 
 export default defineComponent({
   props: {},
@@ -47,6 +75,7 @@ export default defineComponent({
     return {
       menuTop,
       menuHeight,
+      ...useBanners(),
     };
   },
   options: {
@@ -90,7 +119,12 @@ export default defineComponent({
   overflow: hidden;
 
   &-item {
-    background-color: azure;
+    background-size: cover;
+    background-position: 50% 50%;
+
+    &-default {
+      background-color: red;
+    }
   }
 }
 </style>

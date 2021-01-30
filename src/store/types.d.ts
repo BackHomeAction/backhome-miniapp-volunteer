@@ -1,4 +1,4 @@
-import { Volunteer } from "@/api/types/models"
+import { Volunteer, Notice, Banner } from "@/api/types/models"
 
 export interface RootState {
   version?: string;
@@ -12,4 +12,9 @@ export interface UserState {
 
 export interface AvatarCropperState {
   path: string;
+}
+
+export interface AnnouncementState {
+  announcements: Array<Notice>;
+  banners: Array<Banner>;
 }
