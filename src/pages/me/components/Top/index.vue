@@ -90,7 +90,6 @@
         <view class="tasks">
           <view
             class="task"
-            @click="VolList()"
           >
             <view class="task-number">
               {{ logged ? "xx" : "0" }}
@@ -151,23 +150,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
-    const logged = computed(() => {
-      return store.state.logged;
-    });
-    function VolList() {
-      if (logged) {
-        //这里要做一个阻拦，没有登陆不能查看
-        navigateTo("/pages/missionPage/index", { id: "xxx" }); //此处写的是志愿者ID
-        console.log(logged);
-      } else {
-        wx.showToast({
-          title: "请先登录",
-          icon: "error",
-          duration: 2000,
-        });
-      }
-    }
     const menuTop = computed(() => {
       return uni.getMenuButtonBoundingClientRect().top;
     });
@@ -177,32 +159,21 @@ export default defineComponent({
     });
 
     const name = computed(() => {
-      return (
-        props.userInfo &&
-        props.userInfo.volunteerInformation &&
-        props.userInfo.volunteerInformation.name
-      );
+      return props?.userInfo?.volunteerInformation?.name;
     });
 
     const sex = computed(() => {
-      return (
-        props.userInfo &&
-        props.userInfo.volunteerInformation &&
-        props.userInfo.volunteerInformation.sex
-      );
+      return props?.userInfo?.volunteerInformation?.sex;
     });
 
     const registerTimeFromNow = computed(() => {
-      const time =
-        props.userInfo &&
-        props.userInfo.volunteerInformation &&
-        props.userInfo.volunteerInformation.registerTime;
+      const time = props?.userInfo?.volunteerInformation?.registerTime;
 
       return dayjs(time).fromNow(true);
     });
 
     const avatarUrl = computed(() => {
-      return props.userInfo && props.userInfo.avatarUrl;
+      return props?.userInfo?.avatarUrl;
     });
 
     const handleEditProfile = () => {
@@ -218,7 +189,6 @@ export default defineComponent({
       registerTimeFromNow,
       avatarUrl,
       handleEditProfile,
-      VolList,
     };
   },
   options: {

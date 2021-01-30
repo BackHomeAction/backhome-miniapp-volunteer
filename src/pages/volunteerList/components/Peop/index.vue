@@ -29,11 +29,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from "vue";
+import { defineComponent, reactive } from "vue";
 export default defineComponent({
   setup() {
     //这里之后要做一个新页面的跳转！！！！
-    function checkinform(num) {
+    function checkinform(num: number) {
       wx.showToast({
         title: "您选中的ID是:" + num,
       });

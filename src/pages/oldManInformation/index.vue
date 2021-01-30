@@ -42,6 +42,7 @@
 </template>
 
 <script lang="ts">
+import { showToast } from "@/utils/helper";
 import { defineComponent, ref, reactive } from "vue";
 
 export default defineComponent({
@@ -54,7 +55,7 @@ export default defineComponent({
         "../../static/images/oldman4.jpg",
       ],
     });
-    function watchPhoto(index) {
+    function watchPhoto(index: string) {
       uni.previewImage({
         urls: [
           "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1158476907,3892787576&fm=15&gp=0.jpg",
@@ -84,7 +85,7 @@ export default defineComponent({
       inf: [
         "博西格尔斯·伊丽莎白·杰夫",
         "94",
-        "1(男)",
+        "男",
         "13520158651",
         "11050219000525045X",
         "182",
@@ -92,17 +93,14 @@ export default defineComponent({
         "暂无",
         "商业街附近",
         "中央公园",
-        "0(无)",
+        "无",
         "暂无",
       ],
     });
     return { image, oldManInf, watchPhoto };
   },
   onLoad(option) {
-    console.log(option);
-    wx.showToast({
-      title: "ID是：" + option.id,
-    });
+    showToast("ID是：" + option?.id);
   },
 });
 </script>

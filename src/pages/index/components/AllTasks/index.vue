@@ -1,7 +1,7 @@
 <template>
   <view
     class="box"
-    @click="missionRoom()"
+    @click="handleClickMissionRoom()"
   >
     <view class="border">
       <image
@@ -15,7 +15,7 @@
             任务大厅
           </view>
         </view>
-        <view class="sec-text">
+        <view class="second-text">
           <view style="height: 34rpx;">
             在这里查看目前所有任务信息
           </view>
@@ -30,10 +30,10 @@ import { defineComponent } from "vue";
 import { navigateTo } from "@/utils/helper";
 export default defineComponent({
   setup() {
-    function missionRoom() {
+    function handleClickMissionRoom() {
       navigateTo("/pages/oldManInformation/index", { id: 22 });
     }
-    return { missionRoom };
+    return { handleClickMissionRoom };
   },
 });
 </script>
@@ -70,7 +70,7 @@ export default defineComponent({
         display: flex;
         justify-content: center;
       }
-      .sec-text {
+      .second-text {
         width: 312rpx;
         height: 34rpx;
         margin-top: 16rpx;
