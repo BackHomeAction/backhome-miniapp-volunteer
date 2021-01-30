@@ -2,7 +2,7 @@
   <view
     v-if="announcements && announcements.length"
     class="box"
-    @click="handleClickAnnounce"
+    @click="handleSwiperClick()"
   >
     <view class="border">
       <image
@@ -17,12 +17,12 @@
           :autoplay="true"
           :interval="3000"
           :duration="1000"
+          circular
           @change="handleSwiperChange"
         >
           <swiper-item
             v-for="item in announcements"
             :key="item.id"
-            @click="handleSwiperItemClick(item.id)"
           >
             <view class="first-text">
               <view class="announce-text">
@@ -50,34 +50,32 @@ import { ActionTypes } from "@/enums/actionTypes";
 export default defineComponent({
   setup() {
     const store = useStore();
-    const step = ref(0);
-
-    function handleClickAnnounce() {
-      const num = ref(0);
-      num.value = step.value;
-      navigateTo("/pages/announce/index", { id: num.value });
-    }
+    const activeIndex = ref(0);
 
     function handleSwiperChange(event: { detail: { current: number } }) {
-      step.value = event.detail.current;
+      activeIndex.value = event.detail.current;
     }
 
     store.dispatch(ActionTypes.getAnnouncements);
 
     const announcements = computed(() => {
-      console.log(store.getters.announcements);
+      if (store.getters.announcements.length) {
+        // 初始化第一个 swiper 对应的公告 id
+        activeIndex.value = store.getters.announcements[0].id;
+      }
       return store.getters.announcements;
     });
 
-    const handleSwiperItemClick = (id: number) => {
-      navigateTo("/pages/announcement/index", { id });
+    const handleSwiperClick = () => {
+      if (!activeIndex.value) return;
+
+      navigateTo("/pages/announcement/index", { id: activeIndex.value });
     };
 
     return {
-      handleClickAnnounce,
       announcements,
       handleSwiperChange,
-      handleSwiperItemClick,
+      handleSwiperClick,
     };
   },
 });

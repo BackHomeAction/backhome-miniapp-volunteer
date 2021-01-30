@@ -50,7 +50,6 @@ const useBanners = () => {
   store.dispatch(ActionTypes.getBanners);
 
   const banners = computed(() => {
-    console.log(store.getters.banners);
     return store.getters.banners;
   });
 
