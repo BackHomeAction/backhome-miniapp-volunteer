@@ -45,7 +45,10 @@
         <view class="table-item table-item-name">
           {{ item.name }}
         </view>
-        <view class="table-item table-item-action red">
+        <view
+          class="table-item table-item-action red"
+          @click="handleClickItem(item.id)"
+        >
           查看详情
         </view>
       </view>
@@ -59,6 +62,7 @@ import { useStore } from "vuex";
 import { requestGetVolunteers } from "@/api/volunteer";
 import { JavaList, VolunteerInformation } from "@/api/types/models";
 import Empty from "@/components/Empty/index.vue";
+import { navigateTo } from "@/utils/helper";
 
 const useAddress = () => {
   const isLoading = ref(false);
@@ -113,7 +117,11 @@ const useAddress = () => {
 export default defineComponent({
   components: { Empty },
   setup() {
-    return { ...useAddress() };
+    const handleClickItem = (informationID: number) => {
+      navigateTo("/pages/volunteerInformation/index", { informationID });
+    };
+
+    return { ...useAddress(), handleClickItem };
   },
 });
 </script>

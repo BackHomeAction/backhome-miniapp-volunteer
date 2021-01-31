@@ -1,10 +1,27 @@
 <template>
-  <view>
-    <top
-      :status="topStatus"
-      :user-info="myInfo"
-      with-title
+  <view
+    class="top top--title"
+    :style="{paddingTop: `${menuTop}px`}"
+  >
+    <view
+      class="background background--red"
+      :style="{
+        height: `calc(${menuTop}px + 500rpx)` ,
+        clipPath: `circle(calc(${menuTop}px + 1600rpx) at 375rpx calc(-${menuTop}px + -1100rpx))` 
+      }"
     />
+    <view
+      class="title"
+      :style="{lineHeight: `${menuHeight}px`}"
+    >
+      个人中心
+    </view>
+    <view class="box">
+      <volunteer-information-box
+        :status="topStatus"
+        :user-info="myInfo"
+      />
+    </view>
     <view class="actions">
       <u-button
         v-if="logged"
@@ -22,12 +39,24 @@
 <script lang="ts">
 import { defineComponent, computed } from "vue";
 import UButton from "@/components/UButton/index.vue";
-import Top from "./components/Top/index.vue";
+import VolunteerInformationBox from "@/components/VolunteerInformationBox/index.vue";
 import { useStore } from "vuex";
 import authService from "@/service/authService";
 
+const useTop = () => {
+  const menuTop = computed(() => {
+    return uni.getMenuButtonBoundingClientRect().top;
+  });
+
+  const menuHeight = computed(() => {
+    return uni.getMenuButtonBoundingClientRect().height;
+  });
+
+  return { menuTop, menuHeight };
+};
+
 export default defineComponent({
-  components: { UButton, Top },
+  components: { UButton, VolunteerInformationBox },
   setup() {
     const store = useStore();
 
@@ -47,7 +76,7 @@ export default defineComponent({
       return store.getters.userInfo;
     });
 
-    return { logged, handleLogout, topStatus, myInfo };
+    return { ...useTop(), logged, handleLogout, topStatus, myInfo };
   },
 });
 </script>
@@ -56,5 +85,31 @@ export default defineComponent({
 .actions {
   margin-top: 60px;
   text-align: center;
+}
+
+.top--title {
+  .box {
+    margin-top: 80rpx;
+  }
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 750rpx;
+  height: 432rpx;
+  clip-path: circle(700rpx at 375rpx -250rpx);
+  z-index: -1;
+
+  &--red {
+    background: $uni-color-primary;
+  }
+}
+
+.title {
+  font-size: $uni-font-size-xxl;
+  color: #ffffff;
+  margin-left: 39rpx;
 }
 </style>

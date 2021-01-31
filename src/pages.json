@@ -67,9 +67,14 @@
     }, {
       "path": "pages/oldManInformation/index",
       "style": {
-        "navigationBarTitleText": "详细信息",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#FFFFFF"
+        "navigationBarTitleText": "详细信息", // 老人详细信息
+        "enablePullDownRefresh": false
+      }
+    }, {
+      "path": "pages/volunteerInformation/index",
+      "style": {
+        "navigationBarTitleText": "详细信息", // 志愿者详细信息
+        "enablePullDownRefresh": false
       }
     }
   ],
