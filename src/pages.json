@@ -133,6 +133,10 @@
         "name": "我的任务",
         "path": "pages/missionPage/index",
         "query": ""
+      }, {
+        "name": "志愿者列表",
+        "path": "pages/volunteerList/index",
+        "query": ""
       }
     ]
   }
