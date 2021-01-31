@@ -15,7 +15,7 @@ const refreshToken = async () => {
   const res = await requestRefreshToken({
     refreshToken: getRefreshToken(),
   });
-  if (res.data.state !== ResponseDataStateTypes.OK) {
+  if (res.data.status !== ResponseDataStateTypes.OK) {
     throw Error();
   }
   return res;
@@ -71,7 +71,7 @@ http.interceptors.response.use(
       return response;
     }
 
-    const state = response.data.state;
+    const state = response.data.status;
     const message = response.data.message;
 
     // 无感刷新 token

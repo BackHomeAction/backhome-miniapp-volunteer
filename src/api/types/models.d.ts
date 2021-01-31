@@ -9,7 +9,7 @@ export interface ResponseData<T> {
   data?: T; // 返回数据
   message?: string; // 状态信息
   refreshToken?: string; // refreshToken
-  state?: number; // 状态码
+  status?: number; // 状态码
   token?: string; // accessToken
 }
 export interface Admin {
@@ -107,6 +107,7 @@ export interface Volunteer {
   nickName?: string; // 昵称
   phone?: string; // 手机号
   state?: number; // 用户状态
+  userinfo?: object;
   volunteerInformation?: VolunteerInformation; // 志愿者信息
 }
 export interface VolunteerAvatarUrl {
@@ -127,6 +128,7 @@ export interface VolunteerInformation {
   province?: string; // 省份
   registerTime?: string; // 注册时间
   sex?: number; // 性别
+  volunteer?: Volunteer;
   volunteerId?: number;
 }
 export interface VolunteerLoginCode {
