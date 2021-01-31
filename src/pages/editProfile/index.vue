@@ -121,19 +121,13 @@ const useShowInfo = () => {
   });
 
   const registerTimeFromNow = computed(() => {
-    const time: string =
-      userInfo.value &&
-      userInfo.value.volunteerInformation &&
-      userInfo.value.volunteerInformation.registerTime;
+    const time: string = userInfo?.value?.volunteerInformation?.registerTime;
 
     return dayjs(time).fromNow(true);
   });
 
   const birthDay = computed(() => {
-    const IDCard: string =
-      userInfo.value &&
-      userInfo.value.volunteerInformation &&
-      userInfo.value.volunteerInformation.idcard;
+    const IDCard: string = userInfo?.value?.volunteerInformation?.idcard;
 
     return (
       IDCard &&
@@ -146,27 +140,15 @@ const useShowInfo = () => {
   });
 
   const IDCardWithoutLastFour = computed(() => {
-    const IDCard: string =
-      userInfo.value &&
-      userInfo.value.volunteerInformation &&
-      userInfo.value.volunteerInformation.idcard;
+    const IDCard: string = userInfo?.value?.volunteerInformation?.idcard;
 
     return IDCard && IDCard.slice(0, 14).padEnd(18, "*");
   });
 
   const address = computed(() => {
-    const province =
-      userInfo.value &&
-      userInfo.value.volunteerInformation &&
-      userInfo.value.volunteerInformation.province;
-    const city =
-      userInfo.value &&
-      userInfo.value.volunteerInformation &&
-      userInfo.value.volunteerInformation.city;
-    const district =
-      userInfo.value &&
-      userInfo.value.volunteerInformation &&
-      userInfo.value.volunteerInformation.district;
+    const province = userInfo?.value?.volunteerInformation?.province;
+    const city = userInfo?.value?.volunteerInformation?.city;
+    const district = userInfo?.value?.volunteerInformation?.district;
 
     return province && city && district
       ? `${province} ${city} ${district}`
@@ -174,18 +156,9 @@ const useShowInfo = () => {
   });
 
   const addressArray = computed(() => {
-    const province =
-      userInfo.value &&
-      userInfo.value.volunteerInformation &&
-      userInfo.value.volunteerInformation.province;
-    const city =
-      userInfo.value &&
-      userInfo.value.volunteerInformation &&
-      userInfo.value.volunteerInformation.city;
-    const district =
-      userInfo.value &&
-      userInfo.value.volunteerInformation &&
-      userInfo.value.volunteerInformation.district;
+    const province = userInfo?.value?.volunteerInformation?.province;
+    const city = userInfo?.value?.volunteerInformation?.city;
+    const district = userInfo?.value?.volunteerInformation?.district;
 
     return [province, city, district];
   });
@@ -255,7 +228,7 @@ const uploadAvatar = async (path: string) => {
   try {
     const uploadRes = await requestUploadImage(path);
     console.log(uploadRes);
-    if (uploadRes.data.state !== 200 || !uploadRes.data.data) {
+    if (uploadRes.data.status !== 200 || !uploadRes.data.data) {
       throw Error("上传图片失败");
     }
     const avatarUrl = uploadRes.data.data;
