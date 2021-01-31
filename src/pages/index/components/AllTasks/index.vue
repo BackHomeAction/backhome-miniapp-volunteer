@@ -6,7 +6,7 @@
     <view class="border">
       <image
         style="width: 100rpx;height: 100rpx;"
-        src="../../../../static/images/room.png"
+        src="../../../../static/images/home/room.png"
         mode=""
       />
       <view class="text">

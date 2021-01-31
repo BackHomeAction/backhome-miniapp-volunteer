@@ -7,7 +7,7 @@
     <view class="border">
       <image
         style="width: 100rpx;height: 100rpx;"
-        src="../../../../static/images/announce.png"
+        src="../../../../static/images/home/announce.png"
       />
       <view class="text">
         <swiper
