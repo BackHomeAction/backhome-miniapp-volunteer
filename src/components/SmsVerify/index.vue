@@ -6,6 +6,7 @@
         type="number"
         placeholder="请输入手机号"
         maxlength="11"
+        label="手机号"
       />
     </view>
     <view class="code">

@@ -6,19 +6,28 @@
         state.focus ? 'u-input--focus' : '',
       ]"
     >
-      <input
-        v-model="inputValue"
-        :type="type"
-        class="u-input__input"
-        :placeholder="placeholder"
-        placeholder-class="u-input--placeholder"
-        :maxlength="maxlength"
-        @input="handleInput"
-        @focus="handleFocus"
-        @blur="handleBlur"
-        @confirm="handleConfirm"
-        @keyboardheightchange="handleKeyBoardHeightChange"
-      >
+      <view class="u-input__row">
+        <view
+          v-if="label"
+          class="u-input__label"
+          :style="{width: `${labelWidth}rpx`}"
+        >
+          {{ label }}
+        </view>
+        <input
+          v-model="inputValue"
+          :type="type"
+          class="u-input__input"
+          :placeholder="placeholder"
+          placeholder-class="u-input--placeholder"
+          :maxlength="maxlength"
+          @input="handleInput"
+          @focus="handleFocus"
+          @blur="handleBlur"
+          @confirm="handleConfirm"
+          @keyboardheightchange="handleKeyBoardHeightChange"
+        >
+      </view>
       <span class="u-input__outline" />
       <span class="u-input__outline u-input__outline--dynamic" />
     </view>
@@ -53,6 +62,14 @@ export default defineComponent({
     maxlength: {
       type: [String, Number],
       default: "1000",
+    },
+    label: {
+      type: String,
+      default: "",
+    },
+    labelWidth: {
+      type: [String, Number],
+      default: "150",
     },
   },
   emits: [
@@ -111,9 +128,19 @@ export default defineComponent({
   position: relative;
   padding-top: 22rpx;
 
+  &__row {
+    display: flex;
+  }
+
+  &__label {
+    font-size: $uni-font-size-lg;
+    margin: 22rpx 0;
+  }
+
   &__input {
     font-size: $uni-font-size-lg;
     margin: 22rpx 0;
+    flex: 1;
   }
 
   &--placeholder {

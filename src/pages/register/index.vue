@@ -31,6 +31,8 @@
         v-if="step === 2"
         v-model="profileForm.name"
         placeholder="请输入姓名"
+        label="姓名"
+        label-width="180"
       />
       <u-input
         v-if="step === 2"
@@ -39,6 +41,8 @@
         type="idcard"
         description="姓名和身份证号确认后不可更改，请仔细核对"
         maxlength="18"
+        label="身份证号"
+        label-width="180"
       />
     </view>
 
