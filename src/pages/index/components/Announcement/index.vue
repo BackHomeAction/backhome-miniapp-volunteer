@@ -59,17 +59,13 @@ export default defineComponent({
     store.dispatch(ActionTypes.getAnnouncements);
 
     const announcements = computed(() => {
-      if (store.getters.announcements.length) {
-        // 初始化第一个 swiper 对应的公告 id
-        activeIndex.value = store.getters.announcements[0].id;
-      }
       return store.getters.announcements;
     });
 
     const handleSwiperClick = () => {
-      if (!activeIndex.value) return;
-
-      navigateTo("/pages/announcement/index", { id: activeIndex.value });
+      navigateTo("/pages/announcement/index", {
+        id: announcements.value[activeIndex.value].id,
+      });
     };
 
     return {
