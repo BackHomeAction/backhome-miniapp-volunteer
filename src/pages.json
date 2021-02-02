@@ -46,16 +46,12 @@
     }, {
       "path": "pages/announcement/index",
       "style": {
-        "navigationBarTitleText": "公告详情",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#FFFFFF"
+        "navigationBarTitleText": "公告详情"
       }
     }, {
       "path": "pages/missionPage/index",
       "style": {
-        "navigationBarTitleText": "我的任务",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#FFFFFF"
+        "navigationBarTitleText": "我的任务"
       }
     }, {
       "path": "pages/volunteerList/index",
@@ -67,14 +63,17 @@
     }, {
       "path": "pages/oldManInformation/index",
       "style": {
-        "navigationBarTitleText": "详细信息", // 老人详细信息
-        "enablePullDownRefresh": false
+        "navigationBarTitleText": "详细信息" // 老人详细信息
       }
     }, {
       "path": "pages/volunteerInformation/index",
       "style": {
-        "navigationBarTitleText": "详细信息", // 志愿者详细信息
-        "enablePullDownRefresh": false
+        "navigationBarTitleText": "详细信息" // 志愿者详细信息
+      }
+    }, {
+      "path": "pages/missionHall/index",
+      "style": {
+        "navigationBarTitleText": "任务大厅"
       }
     }
   ],
@@ -141,6 +140,10 @@
       }, {
         "name": "志愿者列表",
         "path": "pages/volunteerList/index",
+        "query": ""
+      }, {
+        "name": "任务大厅",
+        "path": "pages/missionHall/index",
         "query": ""
       }
     ]

@@ -31,7 +31,7 @@ import { navigateTo } from "@/utils/helper";
 export default defineComponent({
   setup() {
     function handleClickMissionRoom() {
-      navigateTo("/pages/oldManInformation/index", { id: 22 });
+      navigateTo("/pages/missionHall/index");
     }
     return { handleClickMissionRoom };
   },
