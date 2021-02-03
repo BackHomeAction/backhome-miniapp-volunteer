@@ -67,7 +67,7 @@
       </view>
       <view
         class="divider"
-        style="margin-bottom: 6rpx"
+        style="margin-bottom: 0"
       />
       <view class="action">
         <view
@@ -280,15 +280,17 @@ export default defineComponent({
 
       &-distance {
         color: #666666;
+        margin-left: 16rpx;
       }
     }
   }
 
   .action {
-    margin: 6rpx 0 6rpx 10rpx;
+    padding: 6rpx 0 6rpx 10rpx;
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    height: 48rpx;
 
     &-text {
       font-size: 24rpx;
