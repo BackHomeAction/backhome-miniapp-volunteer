@@ -43,6 +43,7 @@ import { ActionTypes } from "@/enums/actionTypes";
 import { navigateTo } from "@/utils/helper";
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
+import { useTop } from "@/uses/useTop";
 
 const useBanners = () => {
   const store = useStore();
@@ -63,17 +64,8 @@ const useBanners = () => {
 export default defineComponent({
   props: {},
   setup() {
-    const menuTop = computed(() => {
-      return uni.getMenuButtonBoundingClientRect().top;
-    });
-
-    const menuHeight = computed(() => {
-      return uni.getMenuButtonBoundingClientRect().height;
-    });
-
     return {
-      menuTop,
-      menuHeight,
+      ...useTop(),
       ...useBanners(),
     };
   },

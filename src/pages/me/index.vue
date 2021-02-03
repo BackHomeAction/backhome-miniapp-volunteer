@@ -42,18 +42,7 @@ import UButton from "@/components/UButton/index.vue";
 import VolunteerInformationBox from "@/components/VolunteerInformationBox/index.vue";
 import { useStore } from "vuex";
 import authService from "@/service/authService";
-
-const useTop = () => {
-  const menuTop = computed(() => {
-    return uni.getMenuButtonBoundingClientRect().top;
-  });
-
-  const menuHeight = computed(() => {
-    return uni.getMenuButtonBoundingClientRect().height;
-  });
-
-  return { menuTop, menuHeight };
-};
+import { useTop } from "@/uses/useTop";
 
 export default defineComponent({
   components: { UButton, VolunteerInformationBox },

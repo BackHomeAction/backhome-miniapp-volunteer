@@ -49,11 +49,6 @@
         "navigationBarTitleText": "公告详情"
       }
     }, {
-      "path": "pages/missionPage/index",
-      "style": {
-        "navigationBarTitleText": "我的任务"
-      }
-    }, {
       "path": "pages/volunteerList/index",
       "style": {
         "navigationBarTitleText": "志愿者列表",
@@ -75,6 +70,11 @@
       "style": {
         "navigationBarTitleText": "任务大厅"
       }
+    }, {
+      "path": "pages/myMissions/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
     }
   ],
   "globalStyle": {
@@ -93,7 +93,7 @@
       "iconPath": "static/images/tabbar/home.png",
       "selectedIconPath": "static/images/tabbar/home-active.png"
     }, {
-      "pagePath": "pages/test/index",
+      "pagePath": "pages/myMissions/index",
       "text": "任务",
       "iconPath": "static/images/tabbar/task.png",
       "selectedIconPath": "static/images/tabbar/task-active.png"
@@ -144,6 +144,10 @@
       }, {
         "name": "任务大厅",
         "path": "pages/missionHall/index",
+        "query": ""
+      }, {
+        "name": "我的任务",
+        "path": "pages/myMissions/index",
         "query": ""
       }
     ]

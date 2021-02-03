@@ -168,6 +168,11 @@ export default defineComponent({
       type: String,
       default: "",
     },
+    // 自定义样式
+    customStyle: {
+      type: [String, Object, Array],
+      default: "",
+    },
   },
   emits: [
     "click",
