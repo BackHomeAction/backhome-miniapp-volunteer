@@ -9,7 +9,7 @@
       show-location
       show-scale
       :subkey="mapSettings.key"
-      :circles="testCircles"
+      :circles="circles"
       :markers="markers"
       @updated="handleMapUpdated"
       @regionchange="handleRegionChange"
@@ -46,26 +46,37 @@ import { IPlaceInfo } from "@/types/placeInfo";
 
 const POLICE_STATION_MARKER_SIZE = 30;
 const POLICE_STATION_MARKER_ID_START = 20000000;
+const LOST_PLACE_MARKER_SIZE = 35;
+const LOST_PLACE_MARKER_ID_START = 30000000;
 const OFFEN_PLACE_MARKER_SIZE = 35;
-const OFFEN_PLACE_MARKER_ID_START = 30000000;
+const OFFEN_PLACE_MARKER_ID_START = 40000000;
 
-const testCircles = [
-  {
-    latitude: 39.065677,
-    longitude: 117.111806,
-    radius: 1000,
-    strokeWidth: 2,
-    color: "#0099ff",
-    fillColor: "#00448025",
-  },
-];
 const testOffenPlacesString = `[{"name":"泉州市鲤城区人民政府","latitude":24.90776719,"longitude":118.586915069,"address":"福建省泉州市鲤城区庄府巷24","province":"福建省","city":"泉州市","district":"鲤城区"},
 {"name":"泉州市第五中学(城东校区)-西南门","latitude":24.905981438,"longitude":118.649490641,"address":"福建省泉州市丰泽区毓才街北50米","province":"福建省","city":"泉州市","district":"丰泽区"},
 {"name":"泉州实验中学圣湖校区","latitude":24.903847698,"longitude":118.615859839,"address":"福建省泉州市丰泽区圣湖路106号","province":"福建省","city":"泉州市","district":"丰泽区"}]`;
 
 let mapContent: any;
-let policeStations: Ref<Array<any>> = ref([]);
-let offenPlaces: Ref<Array<any>> = ref(JSON.parse(testOffenPlacesString));
+const policeStations: Ref<Array<any>> = ref([]);
+const offenPlaces: Ref<Array<any>> = ref(JSON.parse(testOffenPlacesString));
+const lostPlace: Ref<any> = ref({
+  name: "圣湖小区",
+  latitude: 24.902521349,
+  longitude: 118.616191184,
+  address: "福建省泉州市丰泽区圣湖路与丰泽街交界口旁",
+  province: "福建省",
+  city: "泉州市",
+  district: "丰泽区",
+});
+const circles: Ref<Array<any>> = ref([
+  {
+    latitude: 24.902521349,
+    longitude: 118.616191184,
+    radius: 5000,
+    strokeWidth: 2,
+    color: "#0099ff",
+    fillColor: "#00448015",
+  },
+]);
 
 const useMap = () => {
   mapContent = uni.createMapContext("map");
@@ -79,9 +90,10 @@ const useMap = () => {
   };
 
   const handleTestPosition = () => {
+    // 设置视野中心为走失位置
     mapContent.moveToLocation({
-      longitude: 117.111806,
-      latitude: 39.065677,
+      longitude: lostPlace.value.longitude,
+      latitude: lostPlace.value.latitude,
     });
   };
 
@@ -114,6 +126,23 @@ const useMap = () => {
 
   const markers = computed(() => {
     let res: any[] = [];
+    // 加入走失地点
+    res = res.concat([
+      {
+        id: LOST_PLACE_MARKER_ID_START,
+        latitude: lostPlace.value.latitude,
+        longitude: lostPlace.value.longitude,
+        title: lostPlace.value.name,
+        zIndex: 100,
+        iconPath: "/static/images/map/lost_place.png",
+        width: LOST_PLACE_MARKER_SIZE,
+        height: LOST_PLACE_MARKER_SIZE,
+        anchor: {
+          x: 0.5,
+          y: 1,
+        },
+      },
+    ]);
     // 加入派出所
     res = res.concat(
       policeStations.value.map((ele: any, index) => {
@@ -200,13 +229,31 @@ const useMap = () => {
       console.log(placeInfoData.value);
       showPlaceInfoModal.value = true;
     }
+    // 判断是否为老人走失地点
+    if (
+      markerId >= LOST_PLACE_MARKER_ID_START &&
+      markerId < LOST_PLACE_MARKER_ID_START + 10000000
+    ) {
+      const placeData = lostPlace.value;
+      placeInfoData.value = {
+        address: placeData.address,
+        location: {
+          lat: placeData.latitude,
+          lng: placeData.longitude,
+        },
+        title: placeData.name,
+        type: "lostPlace",
+      };
+      console.log(placeInfoData.value);
+      showPlaceInfoModal.value = true;
+    }
   };
 
   return {
     handleMapUpdated,
     handleBackToCurrentPosition,
     handleTestPosition,
-    testCircles,
+    circles,
     markers,
     handleRegionChange,
     handleMarkerClick,
@@ -222,19 +269,13 @@ export default defineComponent({
   setup() {
     return { ...useMap(), mapSettings };
   },
-  // onReady() {
-  //   uni.getLocation({
-  //     type: "gcj02",
-  //     altitude: true,
-  //     success: (data) => {
-  //       console.log(data);
-  //       mapContent.moveToLocation({
-  //         longitude: data.longitude,
-  //         latitude: data.latitude,
-  //       });
-  //     },
-  //   });
-  // },
+  onReady() {
+    // 初始化视野中心为走失位置
+    mapContent.moveToLocation({
+      longitude: lostPlace.value.longitude,
+      latitude: lostPlace.value.latitude,
+    });
+  },
 });
 </script>
 
