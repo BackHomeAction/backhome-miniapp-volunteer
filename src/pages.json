@@ -75,6 +75,11 @@
       "style": {
         "navigationStyle": "custom"
       }
+    }, {
+      "path": "pages/mission/index",
+      "style": {
+        "navigationBarTitleText": "寻人"
+      }
     }
   ],
   "globalStyle": {
@@ -149,6 +154,10 @@
         "name": "我的任务",
         "path": "pages/myMissions/index",
         "query": ""
+      }, {
+        "name": "寻人",
+        "path": "pages/mission/index",
+        "query": "id=1"
       }
     ]
   }

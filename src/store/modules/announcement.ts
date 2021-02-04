@@ -16,11 +16,11 @@ const Announcement: Module<AnnouncementState, RootState> = {
       announcements: typeof state.announcements
     ) => {
       state.announcements = announcements;
-      console.log(state);
+      console.debug(state);
     },
     [MutationTypes.SET_BANNER_LIST]: (state, banners: typeof state.banners) => {
       state.banners = banners;
-      console.log(state);
+      console.debug(state);
     },
   },
 

@@ -1,3 +1,4 @@
+import { MutationTypes } from "@/enums/mutationTypes";
 import store from "@/store";
 import Ws from "../utils/websocket";
 
@@ -29,6 +30,10 @@ export default class LocationReporter {
     if (!logged) return;
 
     const location = await getLocation();
+    store.commit(MutationTypes.SET_LOCATION, {
+      longitude: location.longitude,
+      latitude: location.latitude,
+    });
     this.sendMessage({
       longitude: location.longitude,
       latitude: location.latitude,

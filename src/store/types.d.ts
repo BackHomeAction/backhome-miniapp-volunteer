@@ -18,3 +18,10 @@ export interface AnnouncementState {
   announcements: Array<Notice>;
   banners: Array<Banner>;
 }
+
+export interface LocationState {
+  location: {
+    longitude: number;
+    latitude: number;
+  };
+}

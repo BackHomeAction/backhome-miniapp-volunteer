@@ -10,7 +10,7 @@ const avatarCropper: Module<AvatarCropperState, RootState> = {
   mutations: {
     [MutationTypes.SET_AVATAR_PATH]: (state, path: string) => {
       state.path = path;
-      console.log(state);
+      console.debug(state);
     },
   },
 

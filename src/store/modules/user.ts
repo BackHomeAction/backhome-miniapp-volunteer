@@ -23,13 +23,13 @@ const user: Module<UserState, RootState> = {
       if (!logged) {
         state.hasVolunteerInfo = false;
       }
-      console.log(state);
+      console.debug(state);
     },
     [MutationTypes.SET_USER_INFO]: (state, userInfo: typeof state.userInfo) => {
       state.hasVolunteerInfo =
         userInfo && userInfo.volunteerInformation ? true : false;
       state.userInfo = userInfo;
-      console.log(state);
+      console.debug(state);
     },
   },
 

@@ -4,4 +4,5 @@ export enum ActionTypes {
   getUserInfo = "getUserInfo",
   getAnnouncements = "getAnnouncements",
   getBanners = "getBanners",
+  getLocation = "getLocation",
 }

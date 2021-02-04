@@ -3,6 +3,7 @@ import { createStore } from "vuex";
 import user from "./modules/user";
 import avatarCropper from "./modules/avatarCropper";
 import announcement from "./modules/announcement";
+import location from "./modules/location";
 
 export default createStore({
   state: {},
@@ -12,5 +13,6 @@ export default createStore({
     user,
     avatarCropper,
     announcement,
+    location,
   },
 });

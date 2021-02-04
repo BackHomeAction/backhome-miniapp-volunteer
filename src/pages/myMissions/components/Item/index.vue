@@ -73,6 +73,7 @@
         <view
           v-if="data.status === 2"
           class="action-text"
+          @click="handleClickEnterMission"
         >
           进入搜救
           <text
@@ -123,7 +124,11 @@ export default defineComponent({
       navigateTo("/pages/oldManInformation/index", { id: props.data.id });
     };
 
-    return { ...useTime(), handleClickShowmore };
+    const handleClickEnterMission = () => {
+      navigateTo("/pages/mission/index", { id: props.data.id });
+    };
+
+    return { ...useTime(), handleClickShowmore, handleClickEnterMission };
   },
 });
 </script>
