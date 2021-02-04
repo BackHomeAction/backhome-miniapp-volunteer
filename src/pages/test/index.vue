@@ -22,6 +22,12 @@
     <view class="map-action">
       <view
         class="map-action-button"
+        @click="handleChooseLocation"
+      >
+        S
+      </view>
+      <view
+        class="map-action-button"
         @click="handleBackToCurrentPosition"
       >
         B
@@ -147,7 +153,7 @@ const useMap = () => {
           longitude: ele.location.lng,
           title: ele.title,
           zIndex: "1",
-          iconPath: "/static/images/police_station.png",
+          iconPath: "/static/images/map/police_station.png",
           width: 30,
           height: 30,
           anchor: {
@@ -175,6 +181,7 @@ const useMap = () => {
   const placeInfoData = ref(null);
 
   const handleMarkerClick = (e: any) => {
+    console.log(e);
     placeInfoData.value = policeStations[e.detail.markerId];
     console.log(placeInfoData.value);
     showPlaceInfoModal.value = true;
@@ -245,7 +252,20 @@ export default defineComponent({
       },
     });
 
-    return { ...useMap(), ...useOldManSelector(), mapSettings };
+    const handleChooseLocation = () => {
+      let key = mapSettings.key; //使用在腾讯位置服务申请的key
+      let referer = mapSettings.appName; //调用插件的app的名称
+      wx.navigateTo({
+        url: "plugin://chooseLocation/index?key=" + key + "&referer=" + referer,
+      });
+    };
+
+    return {
+      ...useMap(),
+      ...useOldManSelector(),
+      mapSettings,
+      handleChooseLocation,
+    };
   },
   onReady() {
     uni.getLocation({
@@ -259,6 +279,17 @@ export default defineComponent({
         });
       },
     });
+  },
+  onShow() {
+    const chooseLocation = requirePlugin("chooseLocation");
+    const location = chooseLocation.getLocation();
+    if (location) {
+      console.log(location, JSON.stringify(location));
+    }
+  },
+  onUnload() {
+    const chooseLocation = requirePlugin("chooseLocation");
+    chooseLocation.setLocation(null);
   },
 });
 </script>

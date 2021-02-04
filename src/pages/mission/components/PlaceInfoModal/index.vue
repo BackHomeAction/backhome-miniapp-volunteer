@@ -43,26 +43,7 @@ import { defineComponent, PropType } from "vue";
 import sPopup from "@/components/s-popup/index.vue";
 import mapSettings from "@/config/map";
 import { useLocation } from "@/uses/useLocation";
-
-interface PlaceData {
-  ad_info: {
-    adcode: number;
-    province: string;
-    city: string;
-    district: string;
-  };
-  address: string;
-  category: string;
-  id: string;
-  location: {
-    lat: number;
-    lng: number;
-  };
-  tel: string;
-  title: string;
-  type: number;
-  _distance: number;
-}
+import { IPlaceInfo } from "@/types/placeInfo";
 
 export default defineComponent({
   components: {
@@ -75,7 +56,7 @@ export default defineComponent({
       default: false,
     },
     placeData: {
-      type: Object as PropType<PlaceData>,
+      type: Object as PropType<IPlaceInfo>,
       require: true,
       default: null,
     },

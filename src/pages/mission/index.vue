@@ -38,12 +38,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from "vue";
+import { computed, defineComponent, Ref, ref } from "vue";
 import mapSettings from "@/config/map";
 import { searchPlacesNearby } from "@/api/tencentMap";
 import PlaceInfoModal from "./components/PlaceInfoModal/index.vue";
+import { IPlaceInfo } from "@/types/placeInfo";
 
-const POLICE_STATION_SIZE = 30;
+const POLICE_STATION_MARKER_SIZE = 30;
+const POLICE_STATION_MARKER_ID_START = 20000000;
+const OFFEN_PLACE_MARKER_SIZE = 35;
+const OFFEN_PLACE_MARKER_ID_START = 30000000;
 
 const testCircles = [
   {
@@ -55,13 +59,16 @@ const testCircles = [
     fillColor: "#00448025",
   },
 ];
+const testOffenPlacesString = `[{"name":"泉州市鲤城区人民政府","latitude":24.90776719,"longitude":118.586915069,"address":"福建省泉州市鲤城区庄府巷24","province":"福建省","city":"泉州市","district":"鲤城区"},
+{"name":"泉州市第五中学(城东校区)-西南门","latitude":24.905981438,"longitude":118.649490641,"address":"福建省泉州市丰泽区毓才街北50米","province":"福建省","city":"泉州市","district":"丰泽区"},
+{"name":"泉州实验中学圣湖校区","latitude":24.903847698,"longitude":118.615859839,"address":"福建省泉州市丰泽区圣湖路106号","province":"福建省","city":"泉州市","district":"丰泽区"}]`;
 
 let mapContent: any;
+let policeStations: Ref<Array<any>> = ref([]);
+let offenPlaces: Ref<Array<any>> = ref(JSON.parse(testOffenPlacesString));
 
 const useMap = () => {
   mapContent = uni.createMapContext("map");
-
-  const markers: Ref<any[]> = ref([]);
 
   const handleMapUpdated = async () => {
     console.info("map updated");
@@ -78,8 +85,6 @@ const useMap = () => {
     });
   };
 
-  let policeStations: Array<any> = [];
-
   const searchPoliceStationsNearby = async (
     latitude: number,
     longitude: number
@@ -91,30 +96,14 @@ const useMap = () => {
         longitude,
         radius: 5000,
       });
-      policeStations = res.data.data;
-      markers.value = policeStations.map((ele: any, index) => {
-        return {
-          id: index,
-          latitude: ele.location.lat,
-          longitude: ele.location.lng,
-          title: ele.title,
-          zIndex: "1",
-          iconPath: "/static/images/map/police_station.png",
-          width: POLICE_STATION_SIZE,
-          height: POLICE_STATION_SIZE,
-          anchor: {
-            x: 0.5,
-            y: 1,
-          },
-        };
-      });
+      policeStations.value = res.data.data;
     } catch (e) {
       console.log(e);
     }
   };
 
   const handleRegionChange = (e: any) => {
-    console.log(e);
+    console.debug(e);
     if (e.type === "end") {
       searchPoliceStationsNearby(
         e.detail.centerLocation.latitude,
@@ -123,13 +112,94 @@ const useMap = () => {
     }
   };
 
+  const markers = computed(() => {
+    let res: any[] = [];
+    // 加入派出所
+    res = res.concat(
+      policeStations.value.map((ele: any, index) => {
+        return {
+          id: POLICE_STATION_MARKER_ID_START + index,
+          latitude: ele.location.lat,
+          longitude: ele.location.lng,
+          title: ele.title,
+          zIndex: 1,
+          iconPath: "/static/images/map/police_station.png",
+          width: POLICE_STATION_MARKER_SIZE,
+          height: POLICE_STATION_MARKER_SIZE,
+          anchor: {
+            x: 0.5,
+            y: 1,
+          },
+        };
+      })
+    );
+    // 加入老人常去地点
+    res = res.concat(
+      offenPlaces.value.map((ele: any, index) => {
+        return {
+          id: OFFEN_PLACE_MARKER_ID_START + index,
+          latitude: ele.latitude,
+          longitude: ele.longitude,
+          title: ele.name,
+          zIndex: 2,
+          iconPath: "/static/images/map/offen_place.png",
+          width: OFFEN_PLACE_MARKER_SIZE,
+          height: OFFEN_PLACE_MARKER_SIZE,
+          anchor: {
+            x: 0.5,
+            y: 1,
+          },
+        };
+      })
+    );
+    console.debug(res);
+    return res;
+  });
+
   const showPlaceInfoModal = ref(false);
-  const placeInfoData = ref(null);
+  const placeInfoData: Ref<null | IPlaceInfo> = ref(null);
 
   const handleMarkerClick = (e: any) => {
-    placeInfoData.value = policeStations[e.detail.markerId];
-    console.log(placeInfoData.value);
-    showPlaceInfoModal.value = true;
+    const markerId = e.detail.markerId;
+    // 判断是否为派出所
+    if (
+      markerId >= POLICE_STATION_MARKER_ID_START &&
+      markerId < POLICE_STATION_MARKER_ID_START + 10000000
+    ) {
+      const index = markerId % POLICE_STATION_MARKER_ID_START;
+      const placeData = policeStations.value[index];
+      placeInfoData.value = {
+        address: placeData.address,
+        location: {
+          lat: placeData.location.lat,
+          lng: placeData.location.lng,
+        },
+        tel: placeData.tel,
+        title: placeData.title,
+        type: "policeStation",
+      };
+      console.log(placeInfoData.value);
+      showPlaceInfoModal.value = true;
+    }
+    // 判断是否为老人常去地点
+    if (
+      markerId >= OFFEN_PLACE_MARKER_ID_START &&
+      markerId < OFFEN_PLACE_MARKER_ID_START + 10000000
+    ) {
+      const index = markerId % OFFEN_PLACE_MARKER_ID_START;
+      const placeData = offenPlaces.value[index];
+      placeInfoData.value = {
+        address: placeData.address,
+        location: {
+          lat: placeData.latitude,
+          lng: placeData.longitude,
+        },
+        title: placeData.name,
+        type: "policeStation",
+      };
+      console.log(placeInfoData.value);
+      showPlaceInfoModal.value = true;
+    }
   };
 
   return {

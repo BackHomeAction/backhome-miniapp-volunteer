@@ -45,7 +45,7 @@ export const useLocation = () => {
     isLocation1GCJ02 = false,
     isLocation2GCJ02 = false
   ) => {
-    console.log(location1, location2);
+    // console.log(location1, location2);
 
     const toRadians = (d: number) => {
       return (d * Math.PI) / 180;
@@ -94,7 +94,7 @@ export const useLocation = () => {
       dis = dis / 1000;
     }
 
-    console.log(dis * 6378137);
+    // console.log(dis * 6378137);
 
     return dis * 6378137;
   };
