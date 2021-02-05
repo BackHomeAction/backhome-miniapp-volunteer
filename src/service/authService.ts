@@ -1,3 +1,4 @@
+import templateMessageSettings from "@/config/templateMessage";
 import { ActionTypes } from "@/enums/actionTypes";
 import store from "@/store";
 import {
@@ -12,14 +13,19 @@ import LocationReporter from "./locationService";
 const locationReporter = new LocationReporter();
 
 const login = async () => {
-  await requestLocationPermission();
   showLoading("登录中");
   await store.dispatch(ActionTypes.login);
   await getUserInfo(); //获取个人信息
+  await requestLocationPermission(); // 申请定位权限
 
   if (store.getters.hasVolunteerInfo) {
     showToast("登录成功", "success");
-    locationReporter.start();
+    try {
+      checkPermissions(); // 检查权限
+      locationReporter.start();
+    } catch (e) {
+      console.log(e);
+    }
   } else {
     hideLoading();
     if (store.getters.userInfo.phone) {
@@ -62,6 +68,31 @@ const requestLocationPermission = () => {
       },
       fail() {
         showModalError("请授予本程序定位权限");
+        reject();
+      },
+    });
+  });
+};
+
+const checkPermissions = () => {
+  return new Promise<void>((resolve, reject) => {
+    uni.getSetting({
+      withSubscriptions: true,
+      success(res) {
+        console.log(res.subscriptionsSetting);
+        if (
+          !res.subscriptionsSetting.mainSwitch ||
+          !res.subscriptionsSetting.itemSettings ||
+          res.subscriptionsSetting.itemSettings[
+            templateMessageSettings.tmplIds[0]
+          ] !== "accept"
+        ) {
+          navigateTo("/pages/requestSubscribeMessage/index");
+        }
+
+        resolve();
+      },
+      fail() {
         reject();
       },
     });

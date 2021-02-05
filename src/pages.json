@@ -80,6 +80,11 @@
       "style": {
         "navigationBarTitleText": "寻人"
       }
+    }, {
+      "path": "pages/requestSubscribeMessage/index",
+      "style": {
+        "navigationBarTitleText": "设置订阅"
+      }
     }
   ],
   "globalStyle": {
