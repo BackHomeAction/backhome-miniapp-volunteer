@@ -43,16 +43,16 @@
 
 <script lang="ts">
 import { showToast } from "@/utils/helper";
-import { defineComponent, ref, reactive } from "vue";
+import { defineComponent, reactive } from "vue";
 
 export default defineComponent({
   setup() {
     let image = reactive({
       path: [
-        "../../static/images/oldman1.jpg",
-        "../../static/images/oldman2.jpg",
-        "../../static/images/oldman3.jpg",
-        "../../static/images/oldman4.jpg",
+        "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1158476907,3892787576&fm=15&gp=0.jpg",
+        "https://dpic.tiankong.com/8w/1f/QJ6110198657.jpg?x-oss-process=style/794ws",
+        "https://ss0.baidu.com/7Po3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/77094b36acaf2edde4c459a4861001e939019341.jpg",
+        "https://dpic.tiankong.com/7z/zd/QJ6882014636.jpg@!350h",
       ],
     });
     function watchPhoto(index: string) {
