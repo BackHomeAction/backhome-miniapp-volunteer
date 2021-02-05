@@ -15,11 +15,16 @@ import Top from "./components/Top/index.vue";
 import Announcement from "./components/Announcement/index.vue";
 import AllTasks from "./components/AllTasks/index.vue";
 import Status from "./components/Status/index.vue";
+import store from "@/store";
+import { ActionTypes } from "@/enums/actionTypes";
 
 export default defineComponent({
   components: { Top, Announcement, AllTasks, Status },
   setup() {
     return {};
+  },
+  onShow() {
+    store.dispatch(ActionTypes.getCount);
   },
 });
 </script>

@@ -25,3 +25,11 @@ export interface LocationState {
     latitude: number;
   };
 }
+
+export interface CommonState {
+  count: {
+    onlineVolunteerNumber: number;
+    totalVolunteerNumber: number;
+    openingTaskNumber: number;
+  };
+}

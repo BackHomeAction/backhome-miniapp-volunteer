@@ -4,6 +4,7 @@ import user from "./modules/user";
 import avatarCropper from "./modules/avatarCropper";
 import announcement from "./modules/announcement";
 import location from "./modules/location";
+import common from "./modules/common";
 
 export default createStore({
   state: {},
@@ -14,5 +15,6 @@ export default createStore({
     avatarCropper,
     announcement,
     location,
+    common,
   },
 });

@@ -5,4 +5,5 @@ export enum ActionTypes {
   getAnnouncements = "getAnnouncements",
   getBanners = "getBanners",
   getLocation = "getLocation",
+  getCount = "getCount",
 }

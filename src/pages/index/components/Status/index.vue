@@ -6,7 +6,7 @@
     >
       <view class="num">
         <view style="height: 84rpx;">
-          {{ onlineVolunteerNumber }}
+          {{ counts.onlineVolunteerNumber }}
         </view>
       </view>
       <view class="text">
@@ -23,7 +23,7 @@
     >
       <view class="num">
         <view style="height: 84rpx;">
-          {{ totalVolunteerNumber }}
+          {{ counts.totalVolunteerNumber }}
         </view>
       </view>
       <view class="text">
@@ -40,7 +40,7 @@
     >
       <view class="num">
         <view style="height: 84rpx;">
-          {{ openingTasksNumber }}
+          {{ counts.openingTaskNumber }}
         </view>
       </view>
       <view class="text">
@@ -53,64 +53,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent } from "vue";
 import { navigateTo } from "@/utils/helper";
-import {
-  requestGetOnlineVolunteerNumber,
-  requestGetVolunteerNumber,
-} from "@/api/volunteer";
-import { requestGetOpenCaseNumber } from "@/api/mission";
-
-const onlineVolunteerNumber = ref(0);
-const totalVolunteerNumber = ref(0);
-const openingTasksNumber = ref(0);
+import { useStore } from "vuex";
 
 const useCount = () => {
-  const getVolunteerNumber = async () => {
-    try {
-      const res = (await requestGetVolunteerNumber()).data.data;
-      if (res) {
-        totalVolunteerNumber.value = res;
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const getOnlineVolunteerNumber = async () => {
-    try {
-      const res = (await requestGetOnlineVolunteerNumber()).data.data;
-      if (res) {
-        onlineVolunteerNumber.value = res;
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const getOpenTaskNumber = async () => {
-    try {
-      const res = (await requestGetOpenCaseNumber()).data.data;
-      if (res) {
-        openingTasksNumber.value = res;
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const store = useStore();
 
-  const getCount = () => {
-    getVolunteerNumber();
-    getOnlineVolunteerNumber();
-    getOpenTaskNumber();
-  };
-
-  onMounted(() => {
-    getCount();
+  const counts = computed(() => {
+    return store.getters.count;
   });
 
   return {
-    onlineVolunteerNumber,
-    totalVolunteerNumber,
-    openingTasksNumber,
+    counts,
   };
 };
 
