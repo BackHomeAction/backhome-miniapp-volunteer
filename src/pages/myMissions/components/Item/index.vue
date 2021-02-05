@@ -15,6 +15,7 @@
         <image
           class="man-photo"
           :src="data.photoUrl"
+          mode="aspectFill"
         />
         <view class="man-info">
           <view class="man-info-row">
@@ -186,7 +187,6 @@ export default defineComponent({
       width: 100rpx;
       height: 100rpx;
       border-radius: 100%;
-      object-fit: fill;
     }
 
     &-info {

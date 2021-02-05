@@ -8,7 +8,8 @@
       >
         <image
           :src="userInfo.avatarUrl"
-          style="object-fit: cover; width: 96rpx; height: 96rpx; border-radius: 100%;"
+          mode="aspectFill"
+          style="width: 96rpx; height: 96rpx; border-radius: 100%;"
         />
       </u-cell-item>
       <u-cell-item
