@@ -138,7 +138,6 @@ export default defineComponent({
 .box {
   box-sizing: border-box;
   width: 686rpx;
-  height: 320rpx;
   background: #ffffff;
   box-shadow: 0rpx 4rpx 8rpx 0rpx rgba(0, 0, 0, 0.5);
   border-radius: 10rpx;
@@ -291,7 +290,7 @@ export default defineComponent({
   }
 
   .action {
-    padding: 6rpx 0 6rpx 10rpx;
+    padding: 8rpx 0 10rpx 10rpx;
     display: flex;
     justify-content: flex-end;
     align-items: center;
