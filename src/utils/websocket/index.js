@@ -120,9 +120,10 @@ class Ws {
       return;
     } else if (this.client && this.client.connected) {
       // 已连接：调用订阅，缓存订阅信息
-      let subscribe = this.client.subscribe(destination, (res) =>
-        callback(res)
-      );
+      let subscribe = this.client.subscribe(destination, (res) => {
+        console.debug("Websocket receive message:", destination, res);
+        callback(res);
+      });
       this.subscribes[destination] = {
         callback: callback,
         subscribed: true,
@@ -154,6 +155,7 @@ class Ws {
    */
   send(destination, message) {
     if (this.client) {
+      console.debug("Websocket send message:", destination, message);
       this.client.send(destination, null, message);
     }
   }

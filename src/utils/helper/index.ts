@@ -41,6 +41,18 @@ export const showModalError = (content = "未知错误") => {
   });
 };
 
+export const showModal = (
+  title = "提示",
+  content = "未知错误",
+  showCancel = false
+) => {
+  uni.showModal({
+    title: title,
+    content,
+    showCancel,
+  });
+};
+
 export const showLoading = (title = "加载中") => {
   uni.showLoading({
     title,

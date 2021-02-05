@@ -118,9 +118,16 @@ class UniWebSocket {
    * @param {Object} data
    */
   send(data) {
-    uni.sendSocketMessage({
-      data: data,
-    });
+    try {
+      uni.sendSocketMessage({
+        data: data,
+      });
+    } catch (e) {
+      this.onerror(res);
+      for (let i in this.errorListener) {
+        this.errorListener[i](res);
+      }
+    }
   }
 
   /**

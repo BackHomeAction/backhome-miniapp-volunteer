@@ -8,9 +8,9 @@ import {
   showModalError,
   showToast,
 } from "@/utils/helper";
-import LocationReporter from "./locationService";
+import WebsocketService from "./websocketService";
 
-const locationReporter = new LocationReporter();
+const websocketService = new WebsocketService();
 
 const login = async () => {
   showLoading("登录中");
@@ -22,7 +22,7 @@ const login = async () => {
     showToast("登录成功", "success");
     try {
       checkPermissions(); // 检查权限
-      locationReporter.start();
+      websocketService.start();
     } catch (e) {
       console.log(e);
     }
@@ -43,7 +43,7 @@ const logout = async () => {
 
   try {
     await store.dispatch(ActionTypes.logout);
-    locationReporter.end();
+    websocketService.end();
     showToast("退出成功", "success");
   } catch (e) {
     hideLoading();
@@ -79,7 +79,7 @@ const checkPermissions = () => {
     uni.getSetting({
       withSubscriptions: true,
       success(res) {
-        console.log(res.subscriptionsSetting);
+        console.debug(res.subscriptionsSetting);
         if (
           !res.subscriptionsSetting.mainSwitch ||
           !res.subscriptionsSetting.itemSettings ||
