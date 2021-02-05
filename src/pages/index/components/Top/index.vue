@@ -24,16 +24,20 @@
     >
       <swiper-item
         v-if="!banners || !banners.length"
-        class="swiper-item swiper-item-default"
-      />
+      >
+        <view class="swiper-item swiper-item-default" />
+      </swiper-item>
       <!-- TODO: 默认banner -->
       <swiper-item
         v-for="item in banners"
         :key="item.id"
-        class="swiper-item"
-        :style="{backgroundImage: `url(${item.url})`}"
-        @click="handleClickBanner(item.noticeId)"
-      />
+      >
+        <view
+          class="swiper-item"
+          :style="{backgroundImage: `url(${item.url})`}"
+          @click="handleClickBanner(item.noticeId)"
+        />
+      </swiper-item>
     </swiper>
   </view>
 </template>
@@ -110,6 +114,8 @@ export default defineComponent({
   overflow: hidden;
 
   &-item {
+    width: 672rpx;
+    height: 320rpx;
     background-size: cover;
     background-position: 50% 50%;
 
