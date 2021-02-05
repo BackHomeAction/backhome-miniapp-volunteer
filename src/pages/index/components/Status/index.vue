@@ -19,6 +19,7 @@
     <view
       class="block"
       style="margin-left: 30rpx;"
+      @click="handleToVolunteerList()"
     >
       <view class="num">
         <view style="height: 84rpx;">
@@ -35,10 +36,11 @@
     <view
       class="block"
       style="margin-left: 30rpx;"
+      @click="handleToMissionsHall()"
     >
       <view class="num">
         <view style="height: 84rpx;">
-          {{ openingTasks }}
+          {{ openingTasksNumber }}
         </view>
       </view>
       <view class="text">
@@ -51,8 +53,66 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { navigateTo } from "@/utils/helper";
+import {
+  requestGetOnlineVolunteerNumber,
+  requestGetVolunteerNumber,
+} from "@/api/volunteer";
+import { requestGetOpenCaseNumber } from "@/api/mission";
+
+const onlineVolunteerNumber = ref(0);
+const totalVolunteerNumber = ref(0);
+const openingTasksNumber = ref(0);
+
+const useCount = () => {
+  const getVolunteerNumber = async () => {
+    try {
+      const res = (await requestGetVolunteerNumber()).data.data;
+      if (res) {
+        totalVolunteerNumber.value = res;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const getOnlineVolunteerNumber = async () => {
+    try {
+      const res = (await requestGetOnlineVolunteerNumber()).data.data;
+      if (res) {
+        onlineVolunteerNumber.value = res;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const getOpenTaskNumber = async () => {
+    try {
+      const res = (await requestGetOpenCaseNumber()).data.data;
+      if (res) {
+        openingTasksNumber.value = res;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getCount = () => {
+    getVolunteerNumber();
+    getOnlineVolunteerNumber();
+    getOpenTaskNumber();
+  };
+
+  onMounted(() => {
+    getCount();
+  });
+
+  return {
+    onlineVolunteerNumber,
+    totalVolunteerNumber,
+    openingTasksNumber,
+  };
+};
 
 export default defineComponent({
   setup() {
@@ -60,14 +120,13 @@ export default defineComponent({
       navigateTo("/pages/volunteerList/index");
     }
 
-    const onlineVolunteerNumber = ref(556);
-    const totalVolunteerNumber = ref(56);
-    const openingTasks = ref(5356);
+    function handleToMissionsHall() {
+      navigateTo("/pages/missionHall/index");
+    }
 
     return {
-      onlineVolunteerNumber,
-      totalVolunteerNumber,
-      openingTasks,
+      ...useCount(),
+      handleToMissionsHall,
       handleToVolunteerList,
     };
   },

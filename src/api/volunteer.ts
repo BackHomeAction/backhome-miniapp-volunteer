@@ -39,3 +39,31 @@ export const requestGetVolunteerByID = (params: { informationId: number }) => {
     data: {},
   });
 };
+
+/**
+ * 获取志愿者总数
+ *
+ * @return {*}
+ */
+export const requestGetVolunteerNumber = () => {
+  return http.request<ResponseData<number>>({
+    url: `volunteer/number`,
+    method: "GET",
+    params: {},
+    data: {},
+  });
+};
+
+/**
+ * 获取在线志愿者数
+ *
+ * @return {*}
+ */
+export const requestGetOnlineVolunteerNumber = () => {
+  return http.request<ResponseData<number>>({
+    url: `volunteer/onlineNumber`,
+    method: "GET",
+    params: {},
+    data: {},
+  });
+};
