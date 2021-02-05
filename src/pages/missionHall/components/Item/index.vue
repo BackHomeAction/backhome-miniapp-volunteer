@@ -5,7 +5,8 @@
   >
     <image
       class="item-image"
-      :src="data.imageUrl"
+      :src="data.oldMan.identificationPhoto"
+      mode="aspectFill"
     />
     <view class="item-info">
       <view class="item-info-first">
@@ -13,11 +14,11 @@
           {{ data.district }}走失老人
         </view>
         <view class="item-info-first-distance">
-          距离 1.0 km
+          距离 {{ (data.distance/1000).toFixed(1) }} km
         </view>
       </view>
       <view class="item-info-second">
-        发布于：{{ data.postTime }}
+        发布于：{{ data.time }}
       </view>
     </view>
   </view>
@@ -59,7 +60,6 @@ export default defineComponent({
     width: 308rpx;
     height: 392rpx;
     border-radius: 10rpx 10rpx 0 0;
-    object-fit: fill;
   }
 
   &-info {

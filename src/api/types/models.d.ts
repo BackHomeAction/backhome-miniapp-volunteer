@@ -34,6 +34,24 @@ export interface BindVolunteerInformation {
   IDCard?: string; // 身份证号
   name?: string; // 姓名
 }
+export interface Case {
+  address?: string; // 详细地址
+  city?: string; // 市
+  distance?: number; // 案件发生地距自己的距离
+  district?: string; // 区
+  familyId?: number; // 家属ID
+  id?: number; // 案件ID
+  latitude?: number; // 走失点纬度
+  longitude?: number; // 走失点经度
+  oldMan?: OldMan;
+  oldManId?: number; // 老人信息ID
+  others?: string; // 其它信息
+  place?: string; // 位置名
+  province?: string; // 省
+  state?: number; // 案件状态
+  time?: string; // 走失时间
+  volunteerCase?: VolunteerCase; // 志愿者-案件信息
+}
 export interface DeleteOldManId {
   id?: string; // 老人信息ID
 }
@@ -116,6 +134,15 @@ export interface VolunteerAvatarUrl {
 export interface VolunteerBindPhone {
   code?: string; // 验证码
   phone?: string; // 手机号
+}
+export interface VolunteerCase {
+  caseId?: number; // 案件ID
+  equipment?: number; // 装备是否齐全，1为齐全，2为不齐全
+  id?: number; // 关联表ID
+  state?: number; // 状态（1为接受，2为拒绝，3为退出）
+  traffic?: string; // 交通工具
+  volunteer?: Volunteer; // 志愿者
+  volunteerId?: number; // 志愿者ID
 }
 export interface VolunteerInformation {
   address?: string; // 详细地址

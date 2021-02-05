@@ -11,6 +11,7 @@
         headerIndex: 1,
         index: 4
       }]"
+      @select="handleDropDownChange"
     />
     <view class="content">
       <item
@@ -23,10 +24,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, reactive, Ref, ref } from "vue";
 import DropDown from "@/components/DropDown/index.vue";
 import Item from "./components/Item/index.vue";
+import { requestGetOpenMissions } from "@/api/mission";
+import { Case } from "@/api/types/models";
 
+// 下拉菜单选项
 const dropdownOptions = [
   {
     header: "距离",
@@ -37,45 +41,45 @@ const dropdownOptions = [
     contents: ["6 小时内", "12 小时内", "1 天内", "2 天内", "3 天内"],
   },
 ];
-
-const testList = [
-  {
-    id: 1,
-    imageUrl: "https://i.loli.net/2021/02/03/sT8SQbqOgKcVGjw.png",
-    district: "西青区",
-    postTime: "2021-01-25 14:43",
-  },
-  {
-    id: 2,
-    imageUrl: "https://i.loli.net/2021/02/03/TEqU169A3wjKPDx.png",
-    district: "南开区",
-    postTime: "2021-01-25 14:43",
-  },
-  {
-    id: 3,
-    imageUrl: "https://i.loli.net/2021/02/03/sT8SQbqOgKcVGjw.png",
-    district: "西青区",
-    postTime: "2021-01-25 14:43",
-  },
-  {
-    id: 4,
-    imageUrl: "https://i.loli.net/2021/02/03/TEqU169A3wjKPDx.png",
-    district: "南开区",
-    postTime: "2021-01-25 14:43",
-  },
-  {
-    id: 5,
-    imageUrl: "https://i.loli.net/2021/02/03/sT8SQbqOgKcVGjw.png",
-    district: "西青区",
-    postTime: "2021-01-25 14:43",
-  },
+// 下拉菜单对应的值
+const optionsMap = [
+  [500, 1000, 3000, 5000, 10000],
+  [6, 12, 24, 48, 72],
 ];
+// 当前选中的选项
+const options = reactive({
+  distance: 5000,
+  timeDiff: 72,
+});
+// 任务列表
+const taskList: Ref<Array<Case>> = ref([]);
+
+// 搜索
+const search = async () => {
+  uni.showNavigationBarLoading();
+  try {
+    const res = await requestGetOpenMissions(options);
+    if (res.data.data) {
+      taskList.value = res.data.data;
+    }
+  } catch (e) {}
+  uni.hideNavigationBarLoading();
+};
 
 export default defineComponent({
   components: { DropDown, Item },
   setup() {
-    const taskList = ref(testList.slice(0));
-    return { dropdownOptions, taskList };
+    // 下拉菜单改变时触发事件
+    const handleDropDownChange = (e: any) => {
+      options.distance = optionsMap[0][e.contentActiveIndexList[0].index];
+      options.timeDiff = optionsMap[1][e.contentActiveIndexList[1].index];
+      search();
+    };
+
+    return { dropdownOptions, taskList, handleDropDownChange };
+  },
+  onShow() {
+    search();
   },
 });
 </script>

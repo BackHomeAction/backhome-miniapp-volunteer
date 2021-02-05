@@ -1,5 +1,5 @@
 import http from "@/utils/request";
-import { ResponseData } from "./types/models";
+import { Case, JavaList, ResponseData } from "./types/models";
 
 /**
  * 获取开启的案件数量
@@ -11,6 +11,27 @@ export const requestGetOpenCaseNumber = () => {
     url: `case/number`,
     method: "GET",
     params: {},
+    data: {},
+  });
+};
+
+/**
+ * 通过距离、发布时间查找任务
+ *
+ * @param {{
+ *   distance?: number;
+ *   timeDiff?: number;
+ * }} params
+ * @return {*}
+ */
+export const requestGetOpenMissions = (params: {
+  distance?: number;
+  timeDiff?: number;
+}) => {
+  return http.request<ResponseData<JavaList<Case>>>({
+    url: `case/ing`,
+    method: "GET",
+    params: params,
     data: {},
   });
 };
