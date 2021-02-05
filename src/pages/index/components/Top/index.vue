@@ -118,6 +118,8 @@ export default defineComponent({
     height: 320rpx;
     background-size: cover;
     background-position: 50% 50%;
+    border-radius: 20rpx;
+    overflow: hidden;
 
     &-default {
       background-color: red;
