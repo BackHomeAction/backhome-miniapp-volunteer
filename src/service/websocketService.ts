@@ -1,3 +1,4 @@
+import { ActionTypes } from "@/enums/actionTypes";
 import { MutationTypes } from "@/enums/mutationTypes";
 import { SocketStateTypes } from "@/enums/socketStateTypes";
 import store from "@/store";
@@ -83,6 +84,9 @@ export default class WebsocketService {
       this.newUserInfoCallback
     );
     setTimeout(this.intervalFunction, 2000); // 2s 后先发一次位置
+    setTimeout(() => {
+      store.dispatch(ActionTypes.getCount);
+    }, 5000); // 5s 后刷新首页数量统计
     this.interval = setInterval(this.intervalFunction, 10000);
 
     console.log("WebSocket service started.");
