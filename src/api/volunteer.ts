@@ -51,6 +51,7 @@ export const requestGetVolunteerNumber = () => {
     method: "GET",
     params: {},
     data: {},
+    custom: { noAuth: true },
   });
 };
 
@@ -65,5 +66,6 @@ export const requestGetOnlineVolunteerNumber = () => {
     method: "GET",
     params: {},
     data: {},
+    custom: { noAuth: true },
   });
 };

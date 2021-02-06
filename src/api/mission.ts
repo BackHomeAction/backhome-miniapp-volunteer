@@ -12,6 +12,7 @@ export const requestGetOpenCaseNumber = () => {
     method: "GET",
     params: {},
     data: {},
+    custom: { noAuth: true },
   });
 };
 
@@ -30,6 +31,21 @@ export const requestGetOpenMissions = (params: {
 }) => {
   return http.request<ResponseData<JavaList<Case>>>({
     url: `case/ing`,
+    method: "GET",
+    params: params,
+    data: {},
+  });
+};
+
+/**
+ * 获取案件列表
+ *
+ * @param {{ id?: number }} params
+ * @return {*}
+ */
+export const requestGetCases = (params: { id?: number }) => {
+  return http.request<ResponseData<JavaList<Case>>>({
+    url: `case`,
     method: "GET",
     params: params,
     data: {},

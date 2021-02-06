@@ -10,9 +10,9 @@ import {
 } from "@/utils/helper";
 import WebsocketService from "./websocketService";
 
-const websocketService = new WebsocketService();
+let websocketService: WebsocketService | null = null;
 
-const login = async () => {
+const login = async (triggeredByButton = false) => {
   showLoading("登录中");
   await store.dispatch(ActionTypes.login);
   await getUserInfo(); //获取个人信息
@@ -21,7 +21,10 @@ const login = async () => {
   if (store.getters.hasVolunteerInfo) {
     showToast("登录成功", "success");
     try {
-      checkPermissions(); // 检查权限
+      checkPermissions(triggeredByButton); // 检查权限
+      if (!websocketService) {
+        websocketService = new WebsocketService();
+      }
       websocketService.start();
     } catch (e) {
       console.log(e);
@@ -43,7 +46,7 @@ const logout = async () => {
 
   try {
     await store.dispatch(ActionTypes.logout);
-    websocketService.end();
+    websocketService && websocketService.end();
     showToast("退出成功", "success");
   } catch (e) {
     hideLoading();
@@ -74,7 +77,7 @@ const requestLocationPermission = () => {
   });
 };
 
-const checkPermissions = () => {
+const checkPermissions = (triggeredByButton = false) => {
   return new Promise<void>((resolve, reject) => {
     uni.getSetting({
       withSubscriptions: true,
@@ -88,6 +91,13 @@ const checkPermissions = () => {
           ] !== "accept"
         ) {
           navigateTo("/pages/requestSubscribeMessage/index");
+        } else if (triggeredByButton) {
+          // 如果用户已永久授权并通过点击登录按钮登录，则申请一次订阅权限
+          try {
+            uni.requestSubscribeMessage({
+              tmplIds: templateMessageSettings.tmplIds,
+            });
+          } catch (e) {}
         }
 
         resolve();
