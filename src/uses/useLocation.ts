@@ -5,22 +5,22 @@ import gcoord from "gcoord";
 export const useLocation = () => {
   const store = useStore();
 
-  const currentLocationWGS84 = computed(() => {
+  const currentLocation = computed(() => {
     return store.getters.location;
   });
 
-  const currentLocationGCJ02 = computed(() => {
-    const res = <[number, number]>(
-      transformWGS84ToGCJ02([
-        currentLocationWGS84.value.longitude,
-        currentLocationWGS84.value.latitude,
-      ])
-    );
-    return {
-      longitude: res[0],
-      latitude: res[1],
-    };
-  });
+  // const currentLocationGCJ02 = computed(() => {
+  //   const res = <[number, number]>(
+  //     transformWGS84ToGCJ02([
+  //       currentLocationWGS84.value.longitude,
+  //       currentLocationWGS84.value.latitude,
+  //     ])
+  //   );
+  //   return {
+  //     longitude: res[0],
+  //     latitude: res[1],
+  //   };
+  // });
 
   const transformWGS84ToGCJ02 = (location: [number, number]) => {
     return gcoord.transform(
@@ -106,18 +106,15 @@ export const useLocation = () => {
   ) => {
     return getDistance(
       location,
-      [
-        currentLocationWGS84.value.longitude,
-        currentLocationWGS84.value.latitude,
-      ],
+      [currentLocation.value.longitude, currentLocation.value.latitude],
       unit,
       isGCJ02
     );
   };
 
   return {
-    currentLocationWGS84,
-    currentLocationGCJ02,
+    currentLocationWGS84: currentLocation,
+    // currentLocationGCJ02,
     transformWGS84ToGCJ02,
     transformGCJ02ToWGS84,
     getDistance,

@@ -8,7 +8,7 @@ import Ws from "../utils/websocket";
 const getLocation = () => {
   return new Promise<UniApp.GetLocationSuccess>((resolve, reject) => {
     uni.getLocation({
-      type: "wgs84",
+      type: "gcj02",
       altitude: true,
       success: (data) => {
         resolve(data);
