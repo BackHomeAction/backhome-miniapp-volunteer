@@ -1,9 +1,11 @@
 <template>
   <view class="modal">
-    <s-popup
+    <u-popup
       v-model:value="showModal"
       custom-class="place-info-popup"
-      position="bottom"
+      mode="bottom"
+      :border-radius="20"
+      closeable
     >
       <view
         v-if="placeData"
@@ -13,8 +15,7 @@
           {{ placeData.title }}
         </view>
         <view class="address">
-          <!-- TODO: 目前距离计算原点为地图中心点，后续需改成实时位置 -->
-          距你 {{ (placeData._distance/1000).toFixed(2) }} 公里 <span class="divider">|</span> {{ placeData.address }}
+          距你 {{ (getDistanceFromMe([placeData.location.lng,placeData.location.lat], "km")).toFixed(1) }} 公里 <span class="divider">|</span> {{ placeData.address }}
         </view>
         <view
           v-if="placeData.tel && placeData.tel.length"
@@ -35,38 +36,20 @@
           </button>
         </view>
       </view>
-    </s-popup>
+    </u-popup>
   </view>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, ref } from "vue";
-import sPopup from "@/components/s-popup/index.vue";
+import { defineComponent, PropType } from "vue";
+import UPopup from "@/components/UPopup/index.vue";
 import mapSettings from "@/config/map";
-
-interface PlaceData {
-  ad_info: {
-    adcode: number;
-    province: string;
-    city: string;
-    district: string;
-  };
-  address: string;
-  category: string;
-  id: string;
-  location: {
-    lat: number;
-    lng: number;
-  };
-  tel: string;
-  title: string;
-  type: number;
-  _distance: number;
-}
+import { useLocation } from "@/uses/useLocation";
+import { IPlaceInfo } from "@/types/placeInfo";
 
 export default defineComponent({
   components: {
-    sPopup,
+    UPopup,
   },
   props: {
     value: {
@@ -75,12 +58,15 @@ export default defineComponent({
       default: false,
     },
     placeData: {
-      type: Object as PropType<PlaceData>,
+      type: Object as PropType<IPlaceInfo>,
       require: true,
       default: null,
     },
   },
   emits: ["input"],
+  setup() {
+    return { ...useLocation() };
+  },
   data() {
     return {
       showModal: false,
@@ -104,7 +90,7 @@ export default defineComponent({
       });
     },
     handleClickRoutePlan() {
-      let plugin = requirePlugin("routePlan");
+      // let plugin = requirePlugin("routePlan");
       let key = mapSettings.key; //使用在腾讯位置服务申请的key
       let referer = mapSettings.appName; //调用插件的app的名称
       let endPoint = JSON.stringify({
@@ -141,9 +127,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.modal ::v-deep .s-popup-wrap {
-  border-radius: 20rpx 20rpx 0 0;
-}
+// .modal ::v-deep .s-popup-wrap {
+//   border-radius: 20rpx 20rpx 0 0;
+// }
 
 .wrapper {
   $gap: ($uni-font-size-sm / 2);
