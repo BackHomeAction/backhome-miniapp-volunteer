@@ -122,7 +122,7 @@ export default defineComponent({
   },
   setup(props) {
     const handleClickShowmore = () => {
-      navigateTo("/pages/oldManInformation/index", { id: props.data.id });
+      navigateTo("/pages/missionInformation/index", { id: props.data.id });
     };
 
     const handleClickEnterMission = () => {

@@ -56,9 +56,9 @@
         "navigationBarTextStyle": "white"
       }
     }, {
-      "path": "pages/oldManInformation/index",
+      "path": "pages/missionInformation/index",
       "style": {
-        "navigationBarTitleText": "详细信息" // 老人详细信息
+        "navigationBarTitleText": "详细信息" // 案件详细信息
       }
     }, {
       "path": "pages/volunteerInformation/index",
@@ -163,6 +163,10 @@
         "name": "寻人",
         "path": "pages/mission/index",
         "query": "id=1"
+      }, {
+        "name": "案件信息",
+        "path": "pages/missionInformation/index",
+        "query": "id=3"
       }
     ]
   }

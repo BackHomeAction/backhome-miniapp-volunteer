@@ -65,7 +65,7 @@ import Empty from "@/components/Empty/index.vue";
 import { navigateTo } from "@/utils/helper";
 
 const useAddress = () => {
-  const isLoading = ref(false);
+  const isLoading = ref(true);
   const store = useStore();
 
   const userInfo = computed(() => {
@@ -107,7 +107,7 @@ const useAddress = () => {
   };
 
   onMounted(() => {
-    console.log(myAddressArray.value);
+    console.debug(myAddressArray.value);
     getVolunteerList();
   });
 

@@ -113,7 +113,7 @@ import { navigateTo } from "@/utils/helper";
 
 const useLogin = () => {
   const handleLogin = () => {
-    authService.login();
+    authService.login(true);
   };
 
   return { handleLogin };

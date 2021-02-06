@@ -259,7 +259,7 @@ export default {
   padding: 26rpx 32rpx;
   font-size: 28rpx;
   line-height: 54rpx;
-  color: $u-content-color;
+  color: $uni-text-color;
   background-color: #fff;
   text-align: left;
 }

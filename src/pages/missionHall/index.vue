@@ -14,10 +14,18 @@
       @select="handleDropDownChange"
     />
     <view class="content">
+      <view style="width: 100vw">
+        <empty
+          v-if="!isLoading && (!taskList || !taskList.length)"
+          message="没有搜索结果"
+        />
+      </view>
+      
       <item
         v-for="item in taskList"
         :key="item.id"
         :data="item"
+        @tap="handleClickItem(item.id)"
       />
     </view>
   </view>
@@ -29,6 +37,8 @@ import DropDown from "@/components/DropDown/index.vue";
 import Item from "./components/Item/index.vue";
 import { requestGetOpenMissions } from "@/api/mission";
 import { Case } from "@/api/types/models";
+import Empty from "@/components/Empty/index.vue";
+import { navigateTo } from "@/utils/helper";
 
 // 下拉菜单选项
 const dropdownOptions = [
@@ -53,10 +63,13 @@ const options = reactive({
 });
 // 任务列表
 const taskList: Ref<Array<Case>> = ref([]);
+// 是否加载中
+const isLoading = ref(true);
 
 // 搜索
 const search = async () => {
   uni.showNavigationBarLoading();
+  isLoading.value = true;
   try {
     const res = await requestGetOpenMissions(options);
     if (res.data.data) {
@@ -64,10 +77,11 @@ const search = async () => {
     }
   } catch (e) {}
   uni.hideNavigationBarLoading();
+  isLoading.value = false;
 };
 
 export default defineComponent({
-  components: { DropDown, Item },
+  components: { DropDown, Item, Empty },
   setup() {
     // 下拉菜单改变时触发事件
     const handleDropDownChange = (e: any) => {
@@ -76,7 +90,12 @@ export default defineComponent({
       search();
     };
 
-    return { dropdownOptions, taskList, handleDropDownChange };
+    // 跳转到详情页面
+    const handleClickItem = (id: number) => {
+      navigateTo("/pages/missionInformation/index", { id });
+    };
+
+    return { dropdownOptions, taskList, handleDropDownChange, handleClickItem };
   },
   onShow() {
     search();
