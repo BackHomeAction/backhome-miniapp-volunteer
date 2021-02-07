@@ -18,7 +18,7 @@
         </view>
       </view>
       <view class="item-info-second">
-        发布于：{{ data.time }}
+        发布于：{{ parseDateTime(data.startTime) }}
       </view>
     </view>
   </view>
@@ -26,6 +26,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { useTime } from "@/uses/useTime";
 
 export default defineComponent({
   props: {
@@ -35,7 +36,9 @@ export default defineComponent({
     },
   },
   setup() {
-    return {};
+    return {
+      ...useTime(),
+    };
   },
 });
 </script>

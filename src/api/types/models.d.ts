@@ -43,17 +43,29 @@ export interface Case {
   id?: number; // 案件ID
   latitude?: number; // 走失点纬度
   longitude?: number; // 走失点经度
+  lostTime?: string; // 走失时间
   oldMan?: OldMan;
   oldManId?: number; // 老人信息ID
   others?: string; // 其它信息
   place?: string; // 位置名
   province?: string; // 省
-  state?: number; // 案件状态
-  time?: string; // 走失时间
+  startTime?: string; // 案件开始时间
+  state?: number; // 案件状态（1为正在进行，2为已找到，3为已超时）
   volunteerCase?: VolunteerCase; // 志愿者-案件信息
 }
 export interface DeleteOldManId {
   id?: string; // 老人信息ID
+}
+export interface Face {
+  caseId?: number; // 案件ID
+  id?: number; // ID
+  imgUrl?: string; // 照片地址
+  result?: number; // 比对结果
+  time?: Timestamp; // 时间
+}
+export interface FaceIdentification {
+  caseId?: string; // 案件ID
+  imgUrl?: string; // 照片地址
 }
 export interface Family {
   avatarUrl?: string; // 头像
@@ -119,10 +131,25 @@ export interface OldMan {
   sex?: number; // 性别
   weight?: number; // 体重
 }
+export interface Timestamp {
+  date?: number;
+  day?: number;
+  hours?: number;
+  minutes?: number;
+  month?: number;
+  nanos?: number;
+  seconds?: number;
+  time?: number;
+  timezoneOffset?: number;
+  year?: number;
+}
 export interface Volunteer {
   avatarUrl?: string; // 头像
   id?: number; // 志愿者ID
+  latitude?: number; // 位置所在纬度
+  longitude?: number; // 位置所在经度
   nickName?: string; // 昵称
+  online?: number; // 是否在线
   phone?: string; // 手机号
   state?: number; // 用户状态
   userinfo?: object;
