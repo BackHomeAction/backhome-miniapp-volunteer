@@ -12,5 +12,14 @@ export const useTime = () => {
     });
   };
 
-  return { getCalendarTime };
+  const parseDate = (time: string) => {
+    return dayjs(time).format("YYYY-MM-DD");
+  };
+
+  const parseDateTime = (time: string, withSecond = true) => {
+    const template = withSecond ? "YYYY-MM-DD HH:mm:ss" : "YYYY-MM-DD HH:mm";
+    return dayjs(time).format(template);
+  };
+
+  return { getCalendarTime, parseDate, parseDateTime };
 };

@@ -1,4 +1,4 @@
-import { Volunteer, Notice, Banner } from "@/api/types/models"
+import { Volunteer, Notice, Banner, Case } from "@/api/types/models"
 
 export interface RootState {
   version?: string;
@@ -32,4 +32,11 @@ export interface CommonState {
     totalVolunteerNumber: number;
     openingTaskNumber: number;
   };
+}
+
+export interface MissionState {
+  myMissions: Array<Case>;
+  myMissionIDs: Set<number>;
+  myUncheckedMissions: Array<Case>;
+  currentMission: any;
 }

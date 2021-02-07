@@ -5,6 +5,7 @@ import avatarCropper from "./modules/avatarCropper";
 import announcement from "./modules/announcement";
 import location from "./modules/location";
 import common from "./modules/common";
+import mission from "./modules/mission";
 
 export default createStore({
   state: {},
@@ -16,5 +17,6 @@ export default createStore({
     announcement,
     location,
     common,
+    mission,
   },
 });

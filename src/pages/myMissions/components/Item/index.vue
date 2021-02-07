@@ -4,26 +4,29 @@
       class="header"
     >
       <view
-        v-if="data.status === 2"
+        v-if="status === 'checked'"
         class="badge"
       >
         进行中
       </view>
     </view>
-    <view class="content">
+    <view
+      v-if="data.oldMan"
+      class="content"
+    >
       <view class="man">
         <image
           class="man-photo"
-          :src="data.photoUrl"
+          :src="data.oldMan.identificationPhoto"
           mode="aspectFill"
         />
         <view class="man-info">
           <view class="man-info-row">
             <view class="man-info-row-name">
-              {{ data.name }}
+              {{ data.oldMan.name }}
             </view>
             <view class="man-info-row-age">
-              {{ data.age }} 岁
+              {{ manAge }} 岁
             </view>
           </view>
           <view
@@ -50,7 +53,7 @@
         <view class="description-row">
           <view class="description-row-icon icon-time" />
           <view class="description-row-time">
-            {{ getCalendarTime(data.time) }}
+            {{ data.startTime && getCalendarTime(data.startTime) }}
           </view>
         </view>
         <view
@@ -59,10 +62,13 @@
         >
           <view class="description-row-icon icon-point" />
           <view class="description-row-address">
-            走失于 {{ data.lostAaddress }}
+            走失于 {{ data.place }}
           </view>
-          <view class="description-row-distance">
-            距离 1.0 km
+          <view
+            v-if="data.distance"
+            class="description-row-distance"
+          >
+            距离 {{ (data.distance/1000).toFixed(1) }} km
           </view>
         </view>
       </view>
@@ -72,7 +78,7 @@
       />
       <view class="action">
         <view
-          v-if="data.status === 2"
+          v-if="status === 'checked'"
           class="action-text"
           @click="handleClickEnterMission"
         >
@@ -82,42 +88,161 @@
           />
         </view>
         <u-button
-          v-if="data.status === 1"
+          v-if="status === 'unchecked'"
           type="primary"
           size="mini"
           shape="circle"
           class="action-button"
           custom-style="height: 42rpx; line-height: 42rpx; padding: 0 30rpx"
+          @click="showRefuseModal = true"
         >
           拒绝
         </u-button>
         <u-button
-          v-if="data.status === 1"
+          v-if="status === 'unchecked'"
           type="success"
           size="mini"
           shape="circle"
           class="action-button"
           custom-style="height: 42rpx; line-height: 42rpx; padding: 0 30rpx"
+          @click="showAcceptModal = true"
         >
           接受
         </u-button>
       </view>
     </view>
+
+    <u-modal
+      v-model="showAcceptModal"
+      title="请补充信息"
+      :async-close="true"
+      show-cancel-button
+      @confirm="handleAccept"
+    >
+      <form-item
+        label="装备"
+        :label-width="70"
+      >
+        <data-checkbox
+          v-model="acceptForm.equipment"
+          :localdata="equipmentStatusRange"
+        />
+      </form-item>
+      <form-item
+        label="交通"
+        :label-width="70"
+      >
+        <data-checkbox
+          v-model="acceptForm.traffic"
+          :localdata="trafficStatusRange"
+        />
+      </form-item>
+    </u-modal>
+    <u-modal
+      v-model="showRefuseModal"
+      title="请确认"
+      content="是否确认拒绝该任务？"
+      :async-close="true"
+      show-cancel-button
+      @confirm="handleRefuse"
+    />
   </view>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent, PropType, reactive, ref } from "vue";
 import { useTime } from "@/uses/useTime";
 import UButton from "@/components/UButton/index.vue";
-import { navigateTo } from "@/utils/helper";
+import { navigateTo, showToast } from "@/utils/helper";
+import { Case } from "@/api/types/models";
+import dayjs from "@/utils/dayjs";
+import UModal from "@/components/UModal/index.vue";
+import { ActionTypes } from "@/enums/actionTypes";
+import { useStore } from "vuex";
+import DataCheckbox from "@/components/DataCheckbox/index.vue";
+import FormItem from "@/components/FormItem/index.vue";
+
+const equipmentStatusRange = [
+  {
+    value: 1,
+    text: "齐全",
+  },
+  {
+    value: 2,
+    text: "不齐全",
+  },
+];
+
+const trafficStatusRange = [
+  {
+    value: "驾车",
+    text: "驾车",
+  },
+  {
+    value: "骑行",
+    text: "骑行",
+  },
+  {
+    value: "步行",
+    text: "步行",
+  },
+];
+
+const useTask = (item: Case) => {
+  const store = useStore();
+  const showAcceptModal = ref(false);
+  const showRefuseModal = ref(false);
+
+  const acceptForm = reactive({
+    equipment: 1,
+    traffic: "驾车",
+  });
+
+  const handleAccept = async () => {
+    try {
+      await store.dispatch(ActionTypes.acceptMission, {
+        item,
+        equipment: acceptForm.equipment,
+        traffic: acceptForm.traffic,
+      });
+      showToast("接受成功", "success");
+    } catch (e) {
+      console.log(e);
+    }
+    showAcceptModal.value = false;
+  };
+
+  const handleRefuse = async () => {
+    try {
+      await store.dispatch(ActionTypes.refuseMission, { item });
+      showToast("拒绝成功", "success");
+    } catch (e) {
+      console.log(e);
+    }
+    showRefuseModal.value = false;
+  };
+
+  return {
+    showAcceptModal,
+    showRefuseModal,
+    handleAccept,
+    handleRefuse,
+    acceptForm,
+    equipmentStatusRange,
+    trafficStatusRange,
+  };
+};
 
 export default defineComponent({
-  components: { UButton },
+  components: { UButton, UModal, DataCheckbox, FormItem },
   props: {
     data: {
-      type: Object,
+      type: Object as PropType<Case>,
       default: undefined,
+    },
+    status: {
+      type: String as PropType<"checked" | "unchecked">,
+      default: "unchecked",
     },
   },
   setup(props) {
@@ -129,7 +254,18 @@ export default defineComponent({
       navigateTo("/pages/mission/index", { id: props.data.id });
     };
 
-    return { ...useTime(), handleClickShowmore, handleClickEnterMission };
+    // 计算年龄
+    const manAge = computed(() => {
+      return parseInt(dayjs(props?.data?.oldMan?.birthDate).fromNow(), 10);
+    });
+
+    return {
+      ...useTime(),
+      handleClickShowmore,
+      handleClickEnterMission,
+      manAge,
+      ...useTask(props.data),
+    };
   },
 });
 </script>

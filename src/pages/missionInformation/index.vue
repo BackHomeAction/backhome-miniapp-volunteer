@@ -18,6 +18,8 @@ const caseInfo: Ref<Case | null> = ref({});
 const isLoading = ref(true);
 
 const getCaseInfo = async (id: number) => {
+  uni.showNavigationBarLoading();
+  isLoading.value = true;
   try {
     const res = await requestGetCases({ id });
     if (res.data.data) {
@@ -27,9 +29,6 @@ const getCaseInfo = async (id: number) => {
   } catch (e) {
     console.log(e);
   }
-
-  uni.showNavigationBarLoading();
-  isLoading.value = true;
   uni.hideNavigationBarLoading();
   isLoading.value = false;
 };

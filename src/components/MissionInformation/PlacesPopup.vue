@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import UPopup from "@/components/UPopup/index.vue";
 import UCellGroup from "@/components/UCellGroup/index.vue";
 import UCellItem from "@/components/UCellItem/index.vue";
@@ -32,7 +32,7 @@ export default defineComponent({
   components: { UPopup, UCellGroup, UCellItem },
   props: {
     data: {
-      type: Array,
+      type: Array as PropType<Array<any>>,
       default: () => [],
     },
     value: {

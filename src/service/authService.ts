@@ -22,6 +22,7 @@ const login = async (triggeredByButton = false) => {
     showToast("登录成功", "success");
     try {
       checkPermissions(triggeredByButton); // 检查权限
+      // 启动 WebSocket 服务
       if (!websocketService) {
         websocketService = new WebsocketService();
       }

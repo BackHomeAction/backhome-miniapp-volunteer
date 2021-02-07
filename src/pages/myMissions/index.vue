@@ -24,64 +24,55 @@
         无进行中的任务
       </view>
       <item
-        v-for="item in taskList"
+        v-for="item in myUncheckedTaskList"
         :key="item.id"
         :data="item"
+        status="unchecked"
+      />
+      <item
+        v-for="item in myTaskList"
+        :key="item.id"
+        :data="item"
+        status="checked"
       />
     </view>
   </view>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent } from "vue";
 import { useTop } from "@/uses/useTop";
 import Item from "./components/Item/index.vue";
+import store from "@/store";
+import { ActionTypes } from "@/enums/actionTypes";
+import { useStore } from "vuex";
 
-const testList = [
-  {
-    id: 1,
-    photoUrl:
-      "https://home-action.oss-cn-shanghai.aliyuncs.com/volunteer/4/9603feb5-96cc-49ca-b464-396e65321d52.jpg",
-    name: "张正和",
-    age: 75,
-    city: "天津市",
-    district: "西青区",
-    lostAaddress: "天津市水上公园",
-    time: "2021-02-03 17:23:00",
-    status: 1, // 待接受
-  },
-  {
-    id: 2,
-    photoUrl:
-      "https://home-action.oss-cn-shanghai.aliyuncs.com/volunteer/4/9603feb5-96cc-49ca-b464-396e65321d52.jpg",
-    name: "张正和",
-    age: 75,
-    city: "天津市",
-    district: "西青区",
-    lostAaddress: "天津市水上公园",
-    time: "2021-02-02 17:23:00",
-    status: 2, // 进行中
-  },
-  {
-    id: 3,
-    photoUrl:
-      "https://home-action.oss-cn-shanghai.aliyuncs.com/volunteer/4/9603feb5-96cc-49ca-b464-396e65321d52.jpg",
-    name: "张正和",
-    age: 75,
-    city: "天津市",
-    district: "西青区",
-    lostAaddress: "天津市水上公园",
-    time: "2021-02-01 17:23:00",
-    status: 2, // 进行中
-  },
-];
+const useTaskList = () => {
+  const store = useStore();
+
+  const myUncheckedTaskList = computed(() => {
+    return store.getters.myUncheckedMissions;
+  });
+
+  const myTaskList = computed(() => {
+    return store.getters.myMissions;
+  });
+
+  const taskList = computed(() => {
+    return [...myUncheckedTaskList.value, ...myTaskList.value];
+  });
+
+  return { myUncheckedTaskList, myTaskList, taskList };
+};
 
 export default defineComponent({
   components: { Item },
   setup() {
-    const taskList = ref(testList.slice(0));
-
-    return { ...useTop(), taskList };
+    return { ...useTop(), ...useTaskList() };
+  },
+  onShow() {
+    store.dispatch(ActionTypes.getMyUncheckedMissions);
+    store.dispatch(ActionTypes.getMyMissions);
   },
 });
 </script>
