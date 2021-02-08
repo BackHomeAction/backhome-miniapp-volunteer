@@ -65,10 +65,10 @@
             走失于 {{ data.place }}
           </view>
           <view
-            v-if="data.distance"
+            v-if="data.longitude && data.latitude"
             class="description-row-distance"
           >
-            距离 {{ (data.distance/1000).toFixed(1) }} km
+            距离 {{ (getDistanceFromMe([data.longitude, data.latitude], "km")).toFixed(1) }} km
           </view>
         </view>
       </view>
@@ -161,6 +161,7 @@ import { ActionTypes } from "@/enums/actionTypes";
 import { useStore } from "vuex";
 import DataCheckbox from "@/components/DataCheckbox/index.vue";
 import FormItem from "@/components/FormItem/index.vue";
+import { useLocation } from "@/uses/useLocation";
 
 const equipmentStatusRange = [
   {
@@ -265,6 +266,7 @@ export default defineComponent({
       handleClickEnterMission,
       manAge,
       ...useTask(props.data),
+      ...useLocation(),
     };
   },
 });

@@ -28,6 +28,8 @@ export const requestGetOpenCaseNumber = () => {
 export const requestGetOpenMissions = (params: {
   distance?: number;
   timeDiff?: number;
+  latitude: number;
+  longitude: number;
 }) => {
   return http.request<ResponseData<JavaList<Case>>>({
     url: `case/ing`,

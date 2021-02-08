@@ -25,20 +25,21 @@
         v-for="item in taskList"
         :key="item.id"
         :data="item"
-        @tap="handleClickItem(item.id)"
+        @tap="item.id && handleClickItem(item.id)"
       />
     </view>
   </view>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, Ref, ref } from "vue";
+import { defineComponent, reactive, Ref, ref, computed } from "vue";
 import DropDown from "@/components/DropDown/index.vue";
 import Item from "./components/Item/index.vue";
 import { requestGetOpenMissions } from "@/api/mission";
 import { Case } from "@/api/types/models";
 import Empty from "@/components/Empty/index.vue";
 import { navigateTo } from "@/utils/helper";
+import { useStore } from "vuex";
 
 // 下拉菜单选项
 const dropdownOptions = [
@@ -68,14 +69,25 @@ const isLoading = ref(true);
 
 // 搜索
 const search = async () => {
+  const store = useStore();
+
   uni.showNavigationBarLoading();
   isLoading.value = true;
+
+  const currentLocation = computed(() => {
+    return store.getters.location;
+  });
+
   try {
-    const res = await requestGetOpenMissions(options);
+    const res = await requestGetOpenMissions({
+      ...options,
+      ...currentLocation.value,
+    });
     if (res.data.data) {
       taskList.value = res.data.data;
     }
   } catch (e) {}
+
   uni.hideNavigationBarLoading();
   isLoading.value = false;
 };
@@ -95,7 +107,13 @@ export default defineComponent({
       navigateTo("/pages/missionInformation/index", { id });
     };
 
-    return { dropdownOptions, taskList, handleDropDownChange, handleClickItem };
+    return {
+      dropdownOptions,
+      taskList,
+      handleDropDownChange,
+      handleClickItem,
+      isLoading,
+    };
   },
   onShow() {
     search();
