@@ -27,6 +27,9 @@ const login = async (triggeredByButton = false) => {
         websocketService = new WebsocketService();
       }
       websocketService.start();
+      // 获取我的任务
+      store.dispatch(ActionTypes.getMyUncheckedMissions);
+      store.dispatch(ActionTypes.getMyMissions);
     } catch (e) {
       console.log(e);
     }
