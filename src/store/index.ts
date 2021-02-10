@@ -6,6 +6,7 @@ import announcement from "./modules/announcement";
 import location from "./modules/location";
 import common from "./modules/common";
 import mission from "./modules/mission";
+import websocket from "./modules/websocket";
 
 export default createStore({
   state: {},
@@ -18,5 +19,6 @@ export default createStore({
     location,
     common,
     mission,
+    websocket,
   },
 });

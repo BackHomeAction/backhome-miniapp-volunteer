@@ -58,8 +58,10 @@ import { useStore } from "vuex";
 import { ICurrentMission } from "@/store/types";
 import store from "@/store";
 import { ActionTypes } from "@/enums/actionTypes";
-import { navigateBack, showModalError } from "@/utils/helper";
+import { navigateBack, showModal, showModalError } from "@/utils/helper";
 import { Volunteer } from "@/api/types/models";
+import { SocketStateTypes } from "@/enums/socketStateTypes";
+import { MutationTypes } from "@/enums/mutationTypes";
 
 let mapContext: any;
 
@@ -94,9 +96,13 @@ const useMap = () => {
       ? JSON.parse(currentMissionInfo.value?.oldMan?.offerPlace)
       : [];
   });
+  // 志愿者列表
+  const volunteers: ComputedRef<Array<Volunteer>> = computed(() => {
+    return currentMission.value.teamMembers;
+  });
   // 在线志愿者列表
   const onlineVolunteers: ComputedRef<Array<Volunteer>> = computed(() => {
-    return currentMission.value.teamMembers;
+    return currentMission.value.onlineTeamMembers;
   });
 
   // 老人走失位置
@@ -341,6 +347,37 @@ const useMap = () => {
   };
 };
 
+/**
+ * 案件订阅回调处理
+ *
+ * @param {string} res
+ * @memberof WebsocketService
+ */
+const newCaseInfoCallback = async (res: any) => {
+  const data = JSON.parse(res.body);
+  console.log("Websocket case subscription callback data:", data);
+  if (data.status === SocketStateTypes.MISSION_INFO_CHANGED) {
+    await store.dispatch(ActionTypes.initCurrentMission, {
+      id: caseId.value,
+    });
+    showModal("提示", "案件信息发生变化，请您留意！");
+  } else if (data.status === SocketStateTypes.VOLUNTEER_LOCATION_CHANGED) {
+    store.commit(MutationTypes.UPDATE_MISSION_VOLUNTEER_LOCATION, data.data);
+  } else if (data.status === SocketStateTypes.VOLUNTEER_OFFLINE) {
+    store.commit(MutationTypes.UPDATE_MISSION_VOLUNTEER_OFFLINE, data.data);
+  } else if (data.status === SocketStateTypes.MISSION_TIMEOUT) {
+    showModal("提示", "案件已超时！");
+    navigateBack();
+  } else if (
+    data.status === SocketStateTypes.VOLUNTEER_JOIN_MISSION ||
+    data.status === SocketStateTypes.VOLUNTEER_QUIT_MISSION
+  ) {
+    await store.dispatch(ActionTypes.getCurrentMissionMembers, {
+      id: caseId.value,
+    });
+  }
+};
+
 export default defineComponent({
   components: {
     PlaceInfoModal,
@@ -363,7 +400,8 @@ export default defineComponent({
         longitude: store.getters.currentMission.missionInfo.longitude,
         latitude: store.getters.currentMission.missionInfo.latitude,
       });
-      //TODO: 启动 socket 订阅
+      // 启动 socket 订阅
+      store.getters.ws.subscribe(`/case/${caseId.value}`, newCaseInfoCallback);
     } catch (e) {
       console.log(e);
       showModalError("加载任务信息失败");
@@ -374,7 +412,8 @@ export default defineComponent({
   onUnload() {
     console.debug("map unload");
     store.dispatch(ActionTypes.clearCurrentMission);
-    //TODO: 取消 socket 订阅
+    // 取消 socket 订阅
+    store.getters.ws.unsubscribe(`/case/${caseId.value}`);
   },
 });
 </script>

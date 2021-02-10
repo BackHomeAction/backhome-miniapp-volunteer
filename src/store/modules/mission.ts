@@ -64,8 +64,59 @@ const Mission: Module<MissionState, RootState> = {
     ) => {
       state.currentMission.teamMembers = currentMissionMembers;
       state.currentMission.onlineTeamMembers = currentMissionMembers.filter(
-        (item) => item?.online
+        (item) => item?.online === 1
       );
+      console.debug(state);
+    },
+    [MutationTypes.UPDATE_MISSION_VOLUNTEER_LOCATION]: (
+      state,
+      params: { volunteerId: number; latitude: number; longitude: number }
+    ) => {
+      // 更新 teamMembers
+      const index1 = state.currentMission.teamMembers.findIndex(
+        (item) => item.id === params.volunteerId
+      );
+      if (index1 >= 0) {
+        state.currentMission.teamMembers[index1].latitude = params.latitude;
+        state.currentMission.teamMembers[index1].longitude = params.longitude;
+        // 更新 onlineTeamMembers
+        const index2 = state.currentMission.onlineTeamMembers.findIndex(
+          (item) => item.id === params.volunteerId
+        );
+        if (index2 >= 0) {
+          state.currentMission.onlineTeamMembers[index2].latitude =
+            params.latitude;
+          state.currentMission.onlineTeamMembers[index2].longitude =
+            params.longitude;
+        } else {
+          // 如果没在 onlineTeamMembers 里找到，说明这个志愿者是新上线的，需要把他加入 onlineTeamMembers 中
+          state.currentMission.onlineTeamMembers.push(
+            state.currentMission.teamMembers[index1]
+          );
+        }
+      }
+      console.debug(state);
+    },
+    [MutationTypes.UPDATE_MISSION_VOLUNTEER_OFFLINE]: (
+      state,
+      volunteerId: number
+    ) => {
+      // 更新 teamMembers
+      const index1 = state.currentMission.teamMembers.findIndex(
+        (item) => item.id === volunteerId
+      );
+      if (index1 >= 0) {
+        state.currentMission.teamMembers[index1].latitude = 0;
+        state.currentMission.teamMembers[index1].longitude = 0;
+        state.currentMission.teamMembers[index1].online = 2;
+        // 更新 onlineTeamMembers
+        const index2 = state.currentMission.onlineTeamMembers.findIndex(
+          (item) => item.id === volunteerId
+        );
+        if (index2 >= 0) {
+          state.currentMission.onlineTeamMembers.splice(index2);
+        }
+      }
       console.debug(state);
     },
   },

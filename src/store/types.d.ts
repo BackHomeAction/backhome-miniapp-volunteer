@@ -1,4 +1,5 @@
 import { Volunteer, Notice, Banner, Case } from "@/api/types/models"
+import Ws from "../utils/websocket";
 
 export interface RootState {
   version?: string;
@@ -45,4 +46,8 @@ export interface MissionState {
   myMissionIDs: Set<number>;
   myUncheckedMissions: Array<Case>;
   currentMission: ICurrentMission;
+}
+
+export interface WebsocketState {
+  ws: Ws | null;
 }

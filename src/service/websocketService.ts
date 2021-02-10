@@ -27,7 +27,6 @@ const getLocation = () => {
  * @class WebsocketService
  */
 export default class WebsocketService {
-  ws: Ws | null = null;
   interval: number = 0;
 
   constructor() {
@@ -77,9 +76,9 @@ export default class WebsocketService {
   start = () => {
     if (this.interval) return;
     const volunteerId = store.getters.userInfo.id;
-    this.ws = new Ws();
-    this.ws.connect();
-    this.ws.subscribe(
+    store.commit(MutationTypes.SET_WS, new Ws());
+    store.getters.ws.connect();
+    store.getters.ws.subscribe(
       `/user/${volunteerId}/volunteer`,
       this.newUserInfoCallback
     );
@@ -99,7 +98,7 @@ export default class WebsocketService {
    */
   end = () => {
     console.log("Location reporter service ended.");
-    this.ws && this.ws.disconnect();
+    store.getters.ws && store.getters.ws.disconnect();
     clearInterval(this.interval);
     this.interval = 0;
   };
@@ -113,6 +112,6 @@ export default class WebsocketService {
    */
   sendMessage = (destination: string, data: Object | string) => {
     const message = data instanceof Object ? JSON.stringify(data) : data;
-    this.ws && this.ws.send(destination, message);
+    store.getters.ws && store.getters.ws.send(destination, message);
   };
 }
