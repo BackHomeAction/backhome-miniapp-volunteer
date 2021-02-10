@@ -98,14 +98,14 @@ http.interceptors.response.use(
           .catch(async (res) => {
             // 无法刷新 token，需要重新登录
             console.error("[request] Refresh token error =>", res);
-            // 退出登录
-            authService.logout();
             // 重定向到登录页面
             uni.showModal({
               title: "错误",
               content: "请重新登录",
               showCancel: false,
               success: () => {
+                // 退出登录
+                authService.logout();
                 reLaunch("/pages/me/index");
               },
             });
@@ -134,14 +134,14 @@ http.interceptors.response.use(
     if (state !== ResponseDataStateTypes.OK) {
       if (state === ResponseDataStateTypes.TOKEN_ERROR) {
         // token 错误
-        // 退出登录
-        authService.logout();
         // 重定向到登录页面
         uni.showModal({
           title: "错误",
           content: "请重新登录",
           showCancel: false,
           success: () => {
+            // 退出登录
+            authService.logout();
             reLaunch("/pages/me/index");
           },
         });
@@ -155,7 +155,7 @@ http.interceptors.response.use(
   },
   (response: any) => {
     /*  对响应错误做点什么 （statusCode !== 200）*/
-
+    showModalError("服务器错误");
     return Promise.reject(response);
   }
 );

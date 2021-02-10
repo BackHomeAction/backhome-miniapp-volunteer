@@ -38,11 +38,15 @@ const user: Module<UserState, RootState> = {
       return new Promise((resolve, reject) => {
         uni.login({
           success: async ({ code }) => {
-            const res = await requestLogin({ code });
-            res.data.token && setToken(res.data.token);
-            res.data.refreshToken && setRefreshToken(res.data.refreshToken);
-            commit(MutationTypes.SET_LOGIN, true);
-            resolve(res);
+            try {
+              const res = await requestLogin({ code });
+              res.data.token && setToken(res.data.token);
+              res.data.refreshToken && setRefreshToken(res.data.refreshToken);
+              commit(MutationTypes.SET_LOGIN, true);
+              resolve(res);
+            } catch (e) {
+              reject();
+            }
           },
           fail: (err) => {
             reject(err);

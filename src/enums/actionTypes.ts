@@ -10,4 +10,8 @@ export enum ActionTypes {
   getMyUncheckedMissions = "getMyUncheckedMissions",
   acceptMission = "acceptMission",
   refuseMission = "refuseMission",
+  initCurrentMission = "initCurrentMission",
+  clearCurrentMission = "clearCurrentMission",
+  getCurrentMissionInfo = "getCurrentMissionInfo",
+  getCurrentMissionMembers = "getCurrentMissionMembers",
 }

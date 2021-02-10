@@ -1,5 +1,11 @@
 import http from "@/utils/request";
-import { Case, JavaList, ResponseData, VolunteerCase } from "./types/models";
+import {
+  Case,
+  JavaList,
+  ResponseData,
+  Volunteer,
+  VolunteerCase,
+} from "./types/models";
 
 /**
  * 获取开启的案件数量
@@ -127,5 +133,20 @@ export const requestRefuseCase = (params: { caseId: number }) => {
       state: 2,
       ...params,
     },
+  });
+};
+
+/**
+ *  获取参与某任务的志愿者列表
+ *
+ * @param {{ caseId: number }} params
+ * @return {*}
+ */
+export const requestGetVolunteersInCase = (params: { caseId: number }) => {
+  return http.request<ResponseData<JavaList<Volunteer>>>({
+    url: `case/volunteer`,
+    method: "GET",
+    params: params,
+    data: {},
   });
 };

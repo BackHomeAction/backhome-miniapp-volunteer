@@ -34,9 +34,15 @@ export interface CommonState {
   };
 }
 
+export interface ICurrentMission {
+  missionInfo: null | Case;
+  teamMembers: Array<Volunteer>;
+  onlineTeamMembers: Array<Volunteer>;
+}
+
 export interface MissionState {
   myMissions: Array<Case>;
   myMissionIDs: Set<number>;
   myUncheckedMissions: Array<Case>;
-  currentMission: any;
+  currentMission: ICurrentMission;
 }

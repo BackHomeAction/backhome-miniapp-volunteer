@@ -5,8 +5,10 @@ import { MutationTypes } from "@/enums/mutationTypes";
 import { ActionTypes } from "@/enums/actionTypes";
 import {
   requestAcceptCase,
+  requestGetCases,
   requestGetMyCases,
   requestGetMyUncheckedCases,
+  requestGetVolunteersInCase,
   requestRefuseCase,
 } from "@/api/mission";
 
@@ -15,7 +17,11 @@ const Mission: Module<MissionState, RootState> = {
     myMissions: [],
     myMissionIDs: new Set(),
     myUncheckedMissions: [],
-    currentMission: {},
+    currentMission: {
+      missionInfo: null,
+      teamMembers: [],
+      onlineTeamMembers: [],
+    },
   },
 
   mutations: {
@@ -43,6 +49,23 @@ const Mission: Module<MissionState, RootState> = {
       currentMission: typeof state.currentMission
     ) => {
       state.currentMission = currentMission;
+      console.debug(state);
+    },
+    [MutationTypes.SET_CURRENT_MISSION_INFO]: (
+      state,
+      currentMissionInfo: typeof state.currentMission.missionInfo
+    ) => {
+      state.currentMission.missionInfo = currentMissionInfo;
+      console.debug(state);
+    },
+    [MutationTypes.SET_CURRENT_MISSION_MEMBERS]: (
+      state,
+      currentMissionMembers: typeof state.currentMission.teamMembers
+    ) => {
+      state.currentMission.teamMembers = currentMissionMembers;
+      state.currentMission.onlineTeamMembers = currentMissionMembers.filter(
+        (item) => item?.online
+      );
       console.debug(state);
     },
   },
@@ -113,6 +136,83 @@ const Mission: Module<MissionState, RootState> = {
           await Promise.all([
             dispatch(ActionTypes.getMyUncheckedMissions),
             dispatch(ActionTypes.getMyMissions),
+          ]);
+          resolve();
+        } catch (e) {
+          console.log(e);
+          reject();
+        }
+      });
+    },
+    [ActionTypes.getCurrentMissionInfo]: (
+      { commit },
+      params: { id: number }
+    ) => {
+      return new Promise<void>(async (resolve, reject) => {
+        try {
+          const res = await requestGetCases({
+            id: params.id,
+          });
+          if (res.data.data) {
+            commit(MutationTypes.SET_CURRENT_MISSION_INFO, res.data.data[0]);
+            resolve();
+          } else {
+            reject();
+          }
+        } catch (e) {
+          console.log(e);
+          reject();
+        }
+      });
+    },
+    [ActionTypes.getCurrentMissionMembers]: (
+      { commit },
+      params: { id: number }
+    ) => {
+      return new Promise<void>(async (resolve, reject) => {
+        try {
+          const res = await requestGetVolunteersInCase({
+            caseId: params.id,
+          });
+          if (res.data.data) {
+            commit(MutationTypes.SET_CURRENT_MISSION_MEMBERS, res.data.data);
+            resolve();
+          } else {
+            reject();
+          }
+        } catch (e) {
+          console.log(e);
+          reject();
+        }
+      });
+    },
+    [ActionTypes.clearCurrentMission]: ({ commit }) => {
+      return new Promise<void>(async (resolve, reject) => {
+        try {
+          commit(MutationTypes.SET_CURRENT_MISSION, {
+            missionInfo: null,
+            teamMembers: [],
+            onlineTeamMembers: [],
+          });
+          resolve();
+        } catch (e) {
+          console.log(e);
+          reject();
+        }
+      });
+    },
+    [ActionTypes.initCurrentMission]: (
+      { dispatch },
+      params: { id: number }
+    ) => {
+      return new Promise<void>(async (resolve, reject) => {
+        try {
+          // 清空选中的案件信息
+          await dispatch(ActionTypes.clearCurrentMission);
+          // 获取选中的案件信息
+          await Promise.all([
+            dispatch(ActionTypes.getCurrentMissionInfo, params),
+            dispatch(ActionTypes.getCurrentMissionMembers, params),
           ]);
           resolve();
         } catch (e) {
