@@ -65,7 +65,7 @@
             走失于 {{ data.place }}
           </view>
           <view
-            v-if="data.longitude && data.latitude"
+            v-if="currentLocation && currentLocation.longitude && currentLocation.latitude && data.longitude && data.latitude"
             class="description-row-distance"
           >
             距离 {{ (getDistanceFromMe([data.longitude, data.latitude], "km")).toFixed(1) }} km

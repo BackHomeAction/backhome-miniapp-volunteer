@@ -194,9 +194,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.body {
-  padding-bottom: 100rpx;
-}
+// .body {
+//   padding-bottom: 100rpx;
+// }
 
 .image {
   width: 100%;

@@ -3,6 +3,8 @@
     v-if="currentMissionInfo"
     class="map"
   >
+    <tabs @select="handleTabClick" />
+    
     <map
       id="map"
       class="map__content"
@@ -38,6 +40,20 @@
       v-model:value="showPlaceInfoModal"
       :place-data="placeInfoData"
     />
+
+    <u-popup
+      v-model:value="showPopup"
+      mode="bottom"
+      height="80%"
+      :border-radius="20"
+    >
+      <view class="popup-wrapper safe-area-inset-bottom">
+        <mission-information
+          v-if="popupName === 'info'"
+          :data="currentMissionInfo"
+        />
+      </view>
+    </u-popup>
   </view>
 </template>
 
@@ -62,6 +78,9 @@ import { navigateBack, showModal, showModalError } from "@/utils/helper";
 import { Volunteer } from "@/api/types/models";
 import { SocketStateTypes } from "@/enums/socketStateTypes";
 import { MutationTypes } from "@/enums/mutationTypes";
+import Tabs from "./components/Tabs/index.vue";
+import UPopup from "@/components/UPopup/index.vue";
+import MissionInformation from "@/components/MissionInformation/index.vue";
 
 let mapContext: any;
 
@@ -347,6 +366,18 @@ const useMap = () => {
   };
 };
 
+const usePopup = () => {
+  const showPopup = ref(false);
+  const popupName: Ref<"info" | "chat" | "face"> = ref("info");
+
+  const handleTabClick = (name: "info" | "chat" | "face") => {
+    popupName.value = name;
+    showPopup.value = true;
+  };
+
+  return { showPopup, popupName, handleTabClick };
+};
+
 /**
  * 案件订阅回调处理
  *
@@ -381,9 +412,12 @@ const newCaseInfoCallback = async (res: any) => {
 export default defineComponent({
   components: {
     PlaceInfoModal,
+    Tabs,
+    UPopup,
+    MissionInformation,
   },
   setup() {
-    return { ...useMap(), mapSettings };
+    return { ...useMap(), mapSettings, ...usePopup() };
   },
   onLoad(query: { id: string }) {
     caseId.value = parseInt(query.id, 10);
@@ -422,7 +456,7 @@ export default defineComponent({
 .map {
   width: 750rpx;
   height: 100vh;
-  position: absolute;
+  position: relative;
 
   &__content {
     width: 750rpx;
@@ -451,5 +485,9 @@ export default defineComponent({
       margin: 5rpx;
     }
   }
+}
+
+.popup-wrapper {
+  padding-top: 30rpx;
 }
 </style>

@@ -113,7 +113,7 @@ export const useLocation = () => {
   };
 
   return {
-    currentLocationWGS84: currentLocation,
+    currentLocation,
     // currentLocationGCJ02,
     transformWGS84ToGCJ02,
     transformGCJ02ToWGS84,

@@ -1,5 +1,5 @@
 <template>
-  <view class="body">
+  <view class="body safe-area-inset-bottom">
     <mission-information
       v-if="caseInfo"
       :data="caseInfo"
