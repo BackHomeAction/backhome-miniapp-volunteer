@@ -86,15 +86,19 @@ const useUpload = (caseId?: number) => {
     }
 
     isChecking.value = true;
-    const imgUrl = await uploadImage(imagePath.value);
-    const res = await requestFaceIdentification({
-      caseId: caseId?.toString(),
-      imgUrl,
-    });
-    if (!res.data.data) {
-      showModalError("人脸识别失败");
-    } else if (res.data.data < 0.8) {
-      showModal(`未通过","人脸比对未通过\n匹配率：${res.data.data}`);
+    try {
+      const imgUrl = await uploadImage(imagePath.value);
+      const res = await requestFaceIdentification({
+        caseId: caseId?.toString(),
+        imgUrl,
+      });
+      if (!res.data.data) {
+        showModalError("人脸识别失败");
+      } else if (res.data.data < 0.8) {
+        showModal(`未通过","人脸比对未通过\n匹配率：${res.data.data}`);
+      }
+    } catch (e) {
+      console.log(e);
     }
     isChecking.value = false;
   };
