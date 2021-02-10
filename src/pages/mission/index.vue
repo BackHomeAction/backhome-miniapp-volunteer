@@ -52,20 +52,17 @@
           v-if="popupName === 'info'"
           :data="currentMissionInfo"
         />
+        <face-recognition
+          v-if="popupName === 'face'"
+          :data="currentMissionInfo"
+        />
       </view>
     </u-popup>
   </view>
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  reactive,
-  Ref,
-  ref,
-} from "vue";
+import { computed, ComputedRef, defineComponent, Ref, ref } from "vue";
 import mapSettings from "@/config/map";
 import { searchPlacesNearby } from "@/api/tencentMap";
 import PlaceInfoModal from "./components/PlaceInfoModal/index.vue";
@@ -81,6 +78,7 @@ import { MutationTypes } from "@/enums/mutationTypes";
 import Tabs from "./components/Tabs/index.vue";
 import UPopup from "@/components/UPopup/index.vue";
 import MissionInformation from "@/components/MissionInformation/index.vue";
+import FaceRecognition from "./components/FaceRecognition/index.vue";
 
 let mapContext: any;
 
@@ -415,6 +413,7 @@ export default defineComponent({
     Tabs,
     UPopup,
     MissionInformation,
+    FaceRecognition,
   },
   setup() {
     return { ...useMap(), mapSettings, ...usePopup() };
