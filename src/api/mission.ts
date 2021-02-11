@@ -1,6 +1,7 @@
 import http from "@/utils/request";
 import {
   Case,
+  Face,
   FaceIdentification,
   JavaList,
   ResponseData,
@@ -164,5 +165,22 @@ export const requestFaceIdentification = (params: FaceIdentification) => {
     method: "POST",
     params: {},
     data: params,
+  });
+};
+
+/**
+ * 获取人脸识别历史记录
+ *
+ * @param {{ caseId: number }} params
+ * @return {*}
+ */
+export const requestGetFaceIdentificationRecords = (params: {
+  caseId: number;
+}) => {
+  return http.request<ResponseData<JavaList<Face>>>({
+    url: `case/face`,
+    method: "GET",
+    params: params,
+    data: {},
   });
 };

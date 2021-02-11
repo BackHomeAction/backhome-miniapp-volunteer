@@ -85,6 +85,11 @@
       "style": {
         "navigationBarTitleText": "设置订阅"
       }
+    }, {
+      "path": "pages/faceRecognitionHistory/index",
+      "style": {
+        "navigationBarTitleText": "人脸识别历史结果"
+      }
     }
   ],
   "globalStyle": {
@@ -163,6 +168,10 @@
         "name": "案件信息",
         "path": "pages/missionInformation/index",
         "query": "id=3"
+      }, {
+        "name": "人脸识别历史结果",
+        "path": "pages/faceRecognitionHistory/index",
+        "query": "id=7"
       }
     ]
   }

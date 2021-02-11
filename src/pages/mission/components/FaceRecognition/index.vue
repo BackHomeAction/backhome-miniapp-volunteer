@@ -37,6 +37,7 @@
         shadow
         shape="circle"
         custom-style="width: 280rpx;"
+        @click="handleClickHistory"
       >
         查看历史结果
       </u-button>
@@ -49,7 +50,12 @@ import { defineComponent, PropType, ref } from "vue";
 import UButton from "@/components/UButton/index.vue";
 import { Case } from "@/api/types/models";
 import { requestUploadImage } from "@/api/common";
-import { showModal, showModalError, showToast } from "@/utils/helper";
+import {
+  navigateTo,
+  showModal,
+  showModalError,
+  showToast,
+} from "@/utils/helper";
 import { requestFaceIdentification } from "@/api/mission";
 
 const useUpload = (caseId?: number) => {
@@ -103,7 +109,17 @@ const useUpload = (caseId?: number) => {
     isChecking.value = false;
   };
 
-  return { imagePath, handleSelectImage, checkFace, isChecking };
+  const handleClickHistory = () => {
+    navigateTo("/pages/faceRecognitionHistory/index", { id: caseId });
+  };
+
+  return {
+    imagePath,
+    handleSelectImage,
+    checkFace,
+    isChecking,
+    handleClickHistory,
+  };
 };
 
 export default defineComponent({
