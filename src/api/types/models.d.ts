@@ -64,7 +64,7 @@ export interface Face {
   time?: Timestamp; // 时间
 }
 export interface FaceIdentification {
-  caseId?: string; // 案件ID
+  caseId?: number; // 案件ID
   imgUrl?: string; // 照片地址
 }
 export interface Family {

@@ -33,14 +33,14 @@
           </view>
           <view
             class="table-item table-item-similarity"
-            :class="{red: item.result && item.result > 0.8}"
+            :class="{red: item.result && item.result > 80}"
           >
-            {{ item.result && `${Math.round(item.result * 100)}%` }}
+            {{ item.result && `${item.result.toFixed(1)}%` }}
           </view>
           <view
             class="table-item table-item-time"
           >
-            {{ item.time }}
+            {{ item.time && parseDateTime(item.time.toString()) }}
           </view>
         </view>
       </view>
@@ -53,6 +53,7 @@ import { requestGetFaceIdentificationRecords } from "@/api/mission";
 import { Face, JavaList } from "@/api/types/models";
 import { defineComponent, ref } from "vue";
 import Empty from "@/components/Empty/index.vue";
+import { useTime } from "@/uses/useTime";
 
 const isLoading = ref(true);
 const historyList = ref<JavaList<Face>>();
@@ -74,7 +75,7 @@ const getHistory = async (caseId: number) => {
 
 const handlePreviewImage = (path: string) => {
   uni.previewImage({
-    urls: path,
+    urls: [path],
   });
 };
 
@@ -85,6 +86,7 @@ export default defineComponent({
       isLoading,
       historyList,
       handlePreviewImage,
+      ...useTime(),
     };
   },
   onLoad(query: { id: string }) {
@@ -99,10 +101,11 @@ export default defineComponent({
   font-size: 32rpx;
 
   &-row {
-    height: 96rpx;
+    min-height: 96rpx;
     background-color: #ffffff;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
     &:nth-child(even) {
       background-color: #e4e4e4;
@@ -110,7 +113,7 @@ export default defineComponent({
   }
 
   &-item {
-    height: 96rpx;
+    min-height: 96rpx;
     line-height: 96rpx;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -119,7 +122,7 @@ export default defineComponent({
     justify-content: center;
 
     &-photo {
-      width: 240rpx;
+      width: 232rpx;
 
       .image {
         width: 200rpx;
@@ -129,7 +132,7 @@ export default defineComponent({
     }
 
     &-similarity {
-      min-width: 120rpx;
+      min-width: 60rpx;
       flex: 1;
 
       &.red {
@@ -138,7 +141,7 @@ export default defineComponent({
     }
 
     &-time {
-      width: 260rpx;
+      width: 350rpx;
     }
   }
 }

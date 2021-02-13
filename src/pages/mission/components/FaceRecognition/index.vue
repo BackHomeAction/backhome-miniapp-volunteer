@@ -95,13 +95,16 @@ const useUpload = (caseId?: number) => {
     try {
       const imgUrl = await uploadImage(imagePath.value);
       const res = await requestFaceIdentification({
-        caseId: caseId?.toString(),
+        caseId,
         imgUrl,
       });
       if (!res.data.data) {
         showModalError("人脸识别失败");
-      } else if (res.data.data < 0.8) {
-        showModal(`未通过","人脸比对未通过\n匹配率：${res.data.data}`);
+      } else if (res.data.data < 80) {
+        showModal(
+          "未通过",
+          `人脸比对未通过，匹配率：${res.data.data.toFixed(1)}%`
+        );
       }
     } catch (e) {
       console.log(e);
