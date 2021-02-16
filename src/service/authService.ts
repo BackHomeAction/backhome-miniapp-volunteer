@@ -1,3 +1,4 @@
+import { requestGetTimUserSig } from "@/api/tim";
 import templateMessageSettings from "@/config/templateMessage";
 import { ActionTypes } from "@/enums/actionTypes";
 import store from "@/store";
@@ -8,6 +9,7 @@ import {
   showModalError,
   showToast,
 } from "@/utils/helper";
+import tim from "@/utils/tim";
 import WebsocketService from "./websocketService";
 
 let websocketService: WebsocketService | null = null;
@@ -17,6 +19,7 @@ const login = async (triggeredByButton = false) => {
   await store.dispatch(ActionTypes.login);
   await getUserInfo(); //获取个人信息
   await requestLocationPermission(); // 申请定位权限
+  await loginTIM(); // 登录 IM
 
   if (store.getters.hasVolunteerInfo) {
     showToast("登录成功", "success");
@@ -110,6 +113,24 @@ const checkPermissions = (triggeredByButton = false) => {
         reject();
       },
     });
+  });
+};
+
+const loginTIM = async () => {
+  const uid = store.getters.userInfo.id;
+  const userID = `volunteer_${uid}`;
+  if (
+    store.getters.tim.myInfo.userID &&
+    store.getters.tim.myInfo.userID === userID
+  ) {
+    // 说明已经登录 IM，无需重复登录
+    return;
+  }
+  const res = await requestGetTimUserSig();
+
+  tim.login({
+    userID,
+    userSig: res.data.data,
   });
 };
 

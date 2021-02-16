@@ -51,3 +51,15 @@ export interface MissionState {
 export interface WebsocketState {
   ws: Ws | null;
 }
+
+export interface TimState {
+  isSdkReady: boolean; // TIM SDK 初始化状态
+  myInfo: any; // 个人信息
+  allConversation: Array<any>; // 所有的conversation
+  currentConversationID: string; // 当前聊天对话ID
+  currentConversation: any; // 当前聊天对话信息
+  currentMessageList: Array<any>; // 当前聊天消息列表
+  nextReqMessageID: string; // 下一条消息标志
+  isCompleted: boolean; // 当前会话消息是否已经请求完毕
+  isLoading: boolean; // 是否正在请求
+}

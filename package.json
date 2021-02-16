@@ -65,6 +65,8 @@
     "gcoord": "^0.2.3",
     "husky": "^4.3.8",
     "regenerator-runtime": "^0.12.1",
+    "tim-upload-plugin": "^1.0.1",
+    "tim-wx-sdk": "^2.9.3",
     "vue": "^3.0.0",
     "vue-class-component": "^6.3.2",
     "vue-property-decorator": "^8.0.0",

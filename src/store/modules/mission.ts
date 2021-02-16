@@ -276,6 +276,7 @@ const Mission: Module<MissionState, RootState> = {
 
   getters: {
     myMissions: (state) => state.myMissions,
+    myMissionIDs: (state) => state.myMissionIDs,
     myUncheckedMissions: (state) => state.myUncheckedMissions,
     currentMission: (state) => state.currentMission,
   },
