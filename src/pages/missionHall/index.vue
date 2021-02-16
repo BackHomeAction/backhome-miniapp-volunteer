@@ -25,7 +25,7 @@
         v-for="item in taskList"
         :key="item.id"
         :data="item"
-        @tap="item.id && handleClickItem(item.id)"
+        @tap="handleClickItem(item.id ? item.id : 0)"
       />
     </view>
   </view>
