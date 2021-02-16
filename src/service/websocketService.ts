@@ -65,6 +65,7 @@ export default class WebsocketService {
     console.log("Websocket user subscription callback data:", data);
     if (data.status === SocketStateTypes.NEW_MISSION) {
       showModal("提示", "您有新的任务，请及时到任务列表查看");
+      store.dispatch(ActionTypes.getMyUncheckedMissions);
     }
   };
 
