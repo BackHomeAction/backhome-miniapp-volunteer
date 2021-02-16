@@ -40,6 +40,7 @@ import { Case } from "@/api/types/models";
 import Empty from "@/components/Empty/index.vue";
 import { navigateTo } from "@/utils/helper";
 import { useStore } from "vuex";
+import store from "@/store";
 
 // 下拉菜单选项
 const dropdownOptions = [
@@ -69,8 +70,6 @@ const isLoading = ref(true);
 
 // 搜索
 const search = async () => {
-  const store = useStore();
-
   uni.showNavigationBarLoading();
   isLoading.value = true;
 
