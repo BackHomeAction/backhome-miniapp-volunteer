@@ -4,7 +4,10 @@
       volunteers
     </view>
     <view class="edit">
-      <view class="image">
+      <view
+        class="image"
+        @tap="sendImageMessage"
+      >
         <view class="icon" />
       </view>
       <textarea
@@ -34,10 +37,12 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from "vue";
 import UButton from "@/components/UButton/index.vue";
-import tim from "@/utils/tim";
-import TIM from "tim-wx-sdk";
 import { Case } from "@/api/types/models";
-import { useStore } from "vuex";
+import {
+  sendGroupImageMessage,
+  sendGroupTextMessage,
+} from "@/service/timService";
+import { showModalError } from "@/utils/helper";
 
 const inputText = ref("");
 
@@ -54,20 +59,28 @@ const useInput = () => {
 };
 
 const useChat = (data: Case) => {
-  const store = useStore();
-
   const sendTextMessage = async () => {
-    const message = tim.createTextMessage({
-      to: store.getters.tim.groupIDsMap.get(`case_${data.id}`),
-      conversationType: TIM.TYPES.CONV_GROUP,
-      payload: {
-        text: inputText.value,
-      },
-    });
-    tim.sendMessage(message);
+    if (!data.id) return;
+
+    try {
+      await sendGroupTextMessage(data.id, inputText.value);
+      inputText.value = "";
+    } catch (e) {
+      showModalError("消息发送失败");
+    }
   };
 
-  return { sendTextMessage };
+  const sendImageMessage = async () => {
+    if (!data.id) return;
+
+    try {
+      await sendGroupImageMessage(data.id);
+    } catch (e) {
+      showModalError("消息发送失败");
+    }
+  };
+
+  return { sendTextMessage, sendImageMessage };
 };
 
 export default defineComponent({
