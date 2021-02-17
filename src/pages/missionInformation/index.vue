@@ -189,6 +189,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.body {
+  padding-bottom: 40rpx;
+}
+
 .action {
   margin-top: 30rpx;
   display: flex;
