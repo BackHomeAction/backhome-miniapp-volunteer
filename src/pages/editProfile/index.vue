@@ -4,13 +4,22 @@
       <u-cell-item
         title="头像"
         :value-style="{display: 'flex', flexDirection:'row-reverse', alignItems: 'center'}"
+        :arrow="false"
         @click="handleChooseAvatar"
       >
-        <image
-          :src="userInfo.avatarUrl"
-          mode="aspectFill"
-          style="width: 96rpx; height: 96rpx; border-radius: 100%;"
-        />
+        <view class="avatar">
+          <image
+            :src="userInfo.avatarUrl"
+            mode="aspectFill"
+            class="avatar-image"
+          />
+          <view class="avatar-icon">
+            <image
+              src="@/static/images/profile/camera.png"
+              class="avatar-icon-image"
+            />
+          </view>
+        </view>
       </u-cell-item>
       <u-cell-item
         title="姓名"
@@ -267,4 +276,34 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 100%;
+  overflow: hidden;
+  position: relative;
+
+  &-image {
+    width: 96rpx;
+    height: 96rpx;
+    border-radius: 100%;
+  }
+
+  &-icon {
+    position: absolute;
+    bottom: 0;
+    width: 96rpx;
+    height: 24rpx;
+    // background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &-image {
+      width: 24rpx;
+      height: 24rpx;
+    }
+  }
+}
+</style>
