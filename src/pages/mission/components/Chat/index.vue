@@ -6,40 +6,13 @@
       scroll-y
       scroll-anchoring
     >
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
-      <view>123</view>
+      <view
+        v-for="item in messageList"
+        :key="item.ID"
+        class="message"
+      >
+        <bubble :data="item" />
+      </view>
     </scroll-view>
     <view class="bottom">
       <bottom :data="data" />
@@ -49,11 +22,13 @@
 
 <script lang="ts">
 import { Case } from "@/api/types/models";
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, computed } from "vue";
+import { useStore } from "vuex";
 import Bottom from "./Bottom.vue";
+import Bubble from "./Bubble.vue";
 
 export default defineComponent({
-  components: { Bottom },
+  components: { Bottom, Bubble },
   props: {
     data: {
       type: Object as PropType<Case>,
@@ -61,9 +36,16 @@ export default defineComponent({
     },
   },
   setup() {
+    const store = useStore();
+
     const windowHeight = uni.getSystemInfoSync().windowHeight;
 
-    return { windowHeight };
+    const messageList = computed(() => {
+      console.log(store.getters.tim.currentMessageList);
+      return store.getters.tim.currentMessageList;
+    });
+
+    return { windowHeight, messageList };
   },
 });
 </script>

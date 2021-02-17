@@ -84,6 +84,7 @@ import UPopup from "@/components/UPopup/index.vue";
 import MissionInformation from "@/components/MissionInformation/index.vue";
 import FaceRecognition from "./components/FaceRecognition/index.vue";
 import Chat from "./components/Chat/index.vue";
+import { checkoutGroup, resetGroup } from "@/service/timService";
 
 let mapContext: any;
 
@@ -441,6 +442,8 @@ export default defineComponent({
       });
       // 启动 socket 订阅
       store.getters.ws.subscribe(`/case/${caseId.value}`, newCaseInfoCallback);
+      // 切换当前 TIM 群组到该任务
+      checkoutGroup(caseId.value);
     } catch (e) {
       console.log(e);
       showModalError("加载任务信息失败");
@@ -453,6 +456,8 @@ export default defineComponent({
     store.dispatch(ActionTypes.clearCurrentMission);
     // 取消 socket 订阅
     store.getters.ws.unsubscribe(`/case/${caseId.value}`);
+    // 重置当前 TIM 群组
+    resetGroup();
   },
 });
 </script>

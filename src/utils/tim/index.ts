@@ -32,7 +32,7 @@ function registerEvents(tim: any) {
   // tim.on(TIM.EVENT.KICKED_OUT, kickOut);
   // tim.on(TIM.EVENT.ERROR, onError);
 
-  // tim.on(TIM.EVENT.MESSAGE_RECEIVED, messageReceived);
+  tim.on(TIM.EVENT.MESSAGE_RECEIVED, messageReceived);
   tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, convListUpdate);
   tim.on(TIM.EVENT.GROUP_LIST_UPDATED, groupListUpdate);
   // tim.on(TIM.EVENT.BLACKLIST_UPDATED, blackListUpdate);
@@ -63,6 +63,10 @@ function groupListUpdate(event: { data: any }) {
 
 function convListUpdate(event: { data: any }) {
   store.commit(MutationTypes.SET_TIM_ALL_CONVERSATION, event.data);
+}
+
+function messageReceived(event: any) {
+  store.dispatch(ActionTypes.onMessageEvent, event);
 }
 
 export default tim;
