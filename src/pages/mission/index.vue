@@ -49,11 +49,15 @@
     >
       <view class="popup-wrapper safe-area-inset-bottom">
         <mission-information
-          v-if="popupName === 'info'"
+          v-show="popupName === 'info'"
+          :data="currentMissionInfo"
+        />
+        <chat
+          v-show="popupName === 'chat'"
           :data="currentMissionInfo"
         />
         <face-recognition
-          v-if="popupName === 'face'"
+          v-show="popupName === 'face'"
           :data="currentMissionInfo"
         />
       </view>
@@ -79,6 +83,7 @@ import Tabs from "./components/Tabs/index.vue";
 import UPopup from "@/components/UPopup/index.vue";
 import MissionInformation from "@/components/MissionInformation/index.vue";
 import FaceRecognition from "./components/FaceRecognition/index.vue";
+import Chat from "./components/Chat/index.vue";
 
 let mapContext: any;
 
@@ -414,6 +419,7 @@ export default defineComponent({
     UPopup,
     MissionInformation,
     FaceRecognition,
+    Chat,
   },
   setup() {
     return { ...useMap(), mapSettings, ...usePopup() };

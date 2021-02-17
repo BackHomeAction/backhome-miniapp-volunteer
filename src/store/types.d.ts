@@ -62,4 +62,5 @@ export interface TimState {
   nextReqMessageID: string; // 下一条消息标志
   isCompleted: boolean; // 当前会话消息是否已经请求完毕
   isLoading: boolean; // 是否正在请求
+  groupIDsMap: Map<string, string>; // 群名 -> 群 ID 的 Map
 }

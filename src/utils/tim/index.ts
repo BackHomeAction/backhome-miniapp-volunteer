@@ -3,6 +3,7 @@ import TIMUploadPlugin from "tim-upload-plugin";
 import timSettings from "@/config/tim";
 import store from "@/store";
 import { MutationTypes } from "@/enums/mutationTypes";
+import { ActionTypes } from "@/enums/actionTypes";
 
 const options = {
   SDKAppID: timSettings.SDKAppID, // 接入时需要将0替换为您的即时通信 IM 应用的 SDKAppID
@@ -32,8 +33,8 @@ function registerEvents(tim: any) {
   // tim.on(TIM.EVENT.ERROR, onError);
 
   // tim.on(TIM.EVENT.MESSAGE_RECEIVED, messageReceived);
-  // tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, convListUpdate);
-  // tim.on(TIM.EVENT.GROUP_LIST_UPDATED, groupListUpdate);
+  tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, convListUpdate);
+  tim.on(TIM.EVENT.GROUP_LIST_UPDATED, groupListUpdate);
   // tim.on(TIM.EVENT.BLACKLIST_UPDATED, blackListUpdate);
   // tim.on(TIM.EVENT.NET_STATE_CHANGE, netStateChange);
   // tim.on(TIM.EVENT.MESSAGE_READ_BY_PEER, onMessageReadByPeer);
@@ -42,15 +43,26 @@ function registerEvents(tim: any) {
 function onReadyStateUpdate(params: { name: string }) {
   const isSDKReady = params.name === TIM.EVENT.SDK_READY;
   if (isSDKReady) {
+    // 拉取个人资料
     tim.getMyProfile().then((res: { data: any }) => {
       console.log(res);
       store.commit(MutationTypes.SET_TIM_MY_INFO, res.data);
     });
+    // 拉取群组列表
+    tim.getGroupList();
     // wx.$app.getBlacklist().then((res) => {
     //   store.commit("setBlacklist", res.data);
     // });
   }
   store.commit(MutationTypes.SET_TIM_SDK_READY, isSDKReady);
+}
+
+function groupListUpdate(event: { data: any }) {
+  store.commit(MutationTypes.SET_TIM_MY_GROUPS, event.data);
+}
+
+function convListUpdate(event: { data: any }) {
+  store.commit(MutationTypes.SET_TIM_ALL_CONVERSATION, event.data);
 }
 
 export default tim;
