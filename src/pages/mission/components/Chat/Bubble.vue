@@ -10,6 +10,7 @@
         class="avatar-image"
         mode="aspectFill"
         :src="getUserAvatar()"
+        @tap.stop="handleClickAvatar"
       />
     </view>
     <view class="content">
@@ -67,48 +68,6 @@ const handlePreviewImage = (path: string) => {
   });
 };
 
-const useUserInformation = (data: any) => {
-  const store = useStore();
-
-  // 获取用户身份
-  const getUserRole = () => {
-    const imUserID = data.from;
-
-    if (imUserID.indexOf("volunteer") !== -1) {
-      return 1;
-    } else if (imUserID.indexOf("family") !== -1) {
-      return 2;
-    } else if (imUserID.indexOf("admin") !== -1) {
-      return 3;
-    }
-  };
-
-  // 获取用户 ID
-  const getUserID = () => {
-    const imUserID = data.from;
-    const idStr = imUserID.match(/_(.*)/)[1];
-
-    return parseInt(idStr, 10);
-  };
-
-  // 获取用户头像
-  const getUserAvatar = () => {
-    const role = getUserRole();
-
-    if (role === 1) {
-      const users = store.getters.currentMission.teamMembers;
-      for (let i = 0; i < users.length; i++) {
-        if (users[i].id === getUserID()) {
-          return users[i].avatarUrl;
-        }
-      }
-      return 1;
-    }
-  };
-
-  return { getUserRole, getUserID, getUserAvatar };
-};
-
 export default defineComponent({
   props: {
     data: {
@@ -116,8 +75,74 @@ export default defineComponent({
       default: null,
     },
   },
-  setup(props) {
-    return { TIM, handlePreviewImage, ...useUserInformation(props.data) };
+  emits: ["click-avatar"],
+  setup(props, { emit }) {
+    const store = useStore();
+
+    // 获取用户身份
+    const getUserRole = () => {
+      const imUserID = props.data.from;
+
+      if (imUserID.indexOf("volunteer") !== -1) {
+        return 1;
+      } else if (imUserID.indexOf("family") !== -1) {
+        return 2;
+      } else if (imUserID.indexOf("admin") !== -1) {
+        return 3;
+      }
+    };
+
+    // 获取用户 ID
+    const getUserID = () => {
+      const imUserID = props.data.from;
+      const idStr = imUserID.match(/_(.*)/)[1];
+
+      return parseInt(idStr, 10);
+    };
+
+    // 获取用户头像
+    const getUserAvatar = () => {
+      const role = getUserRole();
+
+      if (role === 1) {
+        const users = store.getters.currentMission.teamMembers;
+        for (let i = 0; i < users.length; i++) {
+          if (users[i].id === getUserID()) {
+            return users[i].avatarUrl;
+          }
+        }
+        return 1;
+      }
+    };
+
+    // 获取用户信息
+    const getUserInfo = () => {
+      const role = getUserRole();
+
+      if (role === 1) {
+        const users = store.getters.currentMission.teamMembers;
+        for (let i = 0; i < users.length; i++) {
+          if (users[i].id === getUserID()) {
+            return users[i];
+          }
+        }
+        return 1;
+      }
+    };
+
+    // 点击头像事件
+    const handleClickAvatar = () => {
+      emit("click-avatar", getUserInfo());
+    };
+
+    return {
+      TIM,
+      handlePreviewImage,
+      getUserRole,
+      getUserID,
+      getUserAvatar,
+      handleClickAvatar,
+    };
   },
 });
 </script>

@@ -76,7 +76,7 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    // 按钮的预置样式，default，primary，error，warning，success
+    // 按钮的预置样式，default，primary，error，warning，success, func
     type: {
       type: String,
       default: "default",
@@ -216,10 +216,12 @@ export default defineComponent({
       return hoverClass;
     });
 
-    // 在'primary', 'success', 'error', 'warning'类型下，不显示边框，否则会造成四角有毛刺现象
+    // 在'primary', 'success', 'error', 'warning', 'func'类型下，不显示边框，否则会造成四角有毛刺现象
     const showHairLineBorder = computed(() => {
       if (
-        ["primary", "success", "error", "warning"].indexOf(props.type) >= 0 &&
+        ["primary", "success", "error", "warning", "func"].indexOf(
+          props.type
+        ) >= 0 &&
         !props.plain
       ) {
         return "";
@@ -300,6 +302,12 @@ export default defineComponent({
     background-color: $u-type-warning;
   }
 
+  &--func {
+    color: #ffffff;
+    border-color: $u-type-func;
+    background-color: $u-type-func;
+  }
+
   &--default--disabled {
     color: $u-button-text-disabled;
     border-color: #e4e7ed;
@@ -330,6 +338,12 @@ export default defineComponent({
     background-color: $u-type-warning-disabled !important;
   }
 
+  &--func--disabled {
+    color: $u-button-text-disabled !important;
+    border-color: $u-type-func-disabled !important;
+    background-color: $u-type-func-disabled !important;
+  }
+
   &--primary--plain {
     color: $u-type-primary !important;
     border-color: $u-type-primary-disabled !important;
@@ -352,6 +366,12 @@ export default defineComponent({
     color: $u-type-warning !important;
     border-color: $u-type-warning-disabled !important;
     background-color: $u-type-warning-light !important;
+  }
+
+  &--func--plain {
+    color: $u-type-func !important;
+    border-color: $u-type-func-disabled !important;
+    background-color: $u-type-func-light !important;
   }
 }
 .u-hairline-border:after {

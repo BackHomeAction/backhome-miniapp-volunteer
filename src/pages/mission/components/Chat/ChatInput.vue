@@ -1,8 +1,5 @@
 <template>
-  <view class="bottom">
-    <view class="volunteers">
-      volunteers
-    </view>
+  <view class="input">
     <view class="edit">
       <view
         class="image"
@@ -24,7 +21,7 @@
         class="send"
         :disabled="!inputText"
         size="mini"
-        type="primary"
+        type="func"
         custom-style="height: 62rpx; line-height: 62rpx; padding: 0 24rpx; margin-left: 16rpx;"
         @click="sendTextMessage"
       >
@@ -94,18 +91,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.bottom {
-  padding-bottom: env(safe-area-inset-bottom);
-  background: #f8f8f8;
-}
-
-.volunteers {
-  width: 750rpx;
-  height: 100rpx;
-  background: #f8f8f8;
-  border-bottom: 1rpx solid #dddddd;
-}
-
 .edit {
   width: 750rpx;
   min-height: 80rpx;
@@ -114,6 +99,8 @@ export default defineComponent({
   padding: 10rpx 16rpx;
   box-sizing: border-box;
   align-items: flex-end;
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
 
   .image {
     box-sizing: border-box;
