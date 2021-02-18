@@ -56,7 +56,7 @@ export default defineComponent({
 
   .bottom {
     position: fixed;
-    bottom: env(safe-area-inset-bottom);
+    bottom: 0;
   }
 }
 </style>

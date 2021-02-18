@@ -98,17 +98,22 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+  background: #f8f8f8;
+}
+
 .volunteers {
   width: 750rpx;
   height: 100rpx;
   background: #f8f8f8;
+  border-bottom: 1rpx solid #dddddd;
 }
 
 .edit {
   width: 750rpx;
   min-height: 80rpx;
   background: #f8f8f8;
-  border: 1rpx solid #dddddd;
   display: flex;
   padding: 10rpx 16rpx;
   box-sizing: border-box;
