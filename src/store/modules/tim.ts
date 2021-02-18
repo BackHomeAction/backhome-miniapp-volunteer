@@ -165,11 +165,6 @@ const Tim: Module<TimState, RootState> = {
             reject("你拉的太快了");
           }
         } else {
-          uni.showToast({
-            title: "没有更多啦",
-            icon: "none",
-            duration: 1500,
-          });
           reject("没有更多啦");
         }
       });

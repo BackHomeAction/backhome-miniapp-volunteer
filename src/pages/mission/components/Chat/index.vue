@@ -103,11 +103,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .body {
-  position: relative;
-
-  .bottom {
-    position: fixed;
-    bottom: 0;
-  }
+  position: fixed;
+  bottom: 0;
 }
 </style>
