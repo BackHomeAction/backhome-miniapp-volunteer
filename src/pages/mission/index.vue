@@ -54,6 +54,7 @@
         />
         <chat
           v-show="popupName === 'chat'"
+          :show="showPopup && popupName === 'chat'"
           :data="currentMissionInfo"
         />
         <face-recognition

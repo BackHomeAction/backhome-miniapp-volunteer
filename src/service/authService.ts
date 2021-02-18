@@ -116,7 +116,7 @@ const checkPermissions = (triggeredByButton = false) => {
   });
 };
 
-const loginTIM = async () => {
+export const loginTIM = async () => {
   const uid = store.getters.userInfo.id;
   const userID = `volunteer_${uid}`;
   if (

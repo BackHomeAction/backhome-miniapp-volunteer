@@ -15,10 +15,10 @@
         class="input"
         placeholder="输入消息…"
         auto-height
-        confirm-type="send"
+        confirm-type="done"
         :maxlength="-1"
         disable-default-padding
-        @confirm="handleConfirmInput"
+        cursor-spacing="10"
       />
       <u-button
         class="send"
@@ -51,11 +51,7 @@ const useInput = () => {
     return uni.getSystemInfoSync().platform === "ios";
   };
 
-  const handleConfirmInput = (e: any) => {
-    console.log(e);
-  };
-
-  return { inputText, isIOS, handleConfirmInput };
+  return { inputText, isIOS };
 };
 
 const useChat = (data: Case) => {

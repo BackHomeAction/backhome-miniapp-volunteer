@@ -96,7 +96,7 @@ const Tim: Module<TimState, RootState> = {
     [MutationTypes.SEND_MESSAGE]: (state, message) => {
       let date = new Date(message.time * 1000);
       message.newtime = formatTime(date);
-      state.currentMessageList.push(message);
+      state.currentMessageList = [...state.currentMessageList, message];
     },
   },
 
@@ -119,54 +119,60 @@ const Tim: Module<TimState, RootState> = {
     },
     // 获取消息列表
     [ActionTypes.getMessageList]: (context) => {
-      const { currentConversationID, nextReqMessageID } = context.state;
-      // 判断是否拉完了，isCompleted 的话要报一下没有更多了
-      if (!context.state.isCompleted) {
-        // 如果请求还没回来，又拉，此时做一下防御
-        if (!context.state.isLoading) {
-          context.state.isLoading = true;
-          tim
-            .getMessageList({
-              conversationID: currentConversationID,
-              nextReqMessageID: nextReqMessageID,
-              count: 15,
-            })
-            .then(
-              (res: {
-                data: {
-                  nextReqMessageID: string;
-                  messageList: any;
-                  isCompleted: any;
-                };
-              }) => {
-                context.state.nextReqMessageID = res.data.nextReqMessageID;
-                context.commit(
-                  MutationTypes.UNSHIFT_MESSAGE_LIST,
-                  res.data.messageList
-                );
-                if (res.data.isCompleted) {
-                  context.state.isCompleted = true;
+      return new Promise((resolve, reject) => {
+        const { currentConversationID, nextReqMessageID } = context.state;
+        // 判断是否拉完了，isCompleted 的话要报一下没有更多了
+        if (!context.state.isCompleted) {
+          // 如果请求还没回来，又拉，此时做一下防御
+          if (!context.state.isLoading) {
+            context.state.isLoading = true;
+            tim
+              .getMessageList({
+                conversationID: currentConversationID,
+                nextReqMessageID: nextReqMessageID,
+                count: 15,
+              })
+              .then(
+                (res: {
+                  data: {
+                    nextReqMessageID: string;
+                    messageList: any;
+                    isCompleted: any;
+                  };
+                }) => {
+                  context.state.nextReqMessageID = res.data.nextReqMessageID;
+                  context.commit(
+                    MutationTypes.UNSHIFT_MESSAGE_LIST,
+                    res.data.messageList
+                  );
+                  if (res.data.isCompleted) {
+                    context.state.isCompleted = true;
+                  }
+                  context.state.isLoading = false;
+                  resolve(res);
                 }
-                context.state.isLoading = false;
-              }
-            )
-            .catch((err: any) => {
-              console.log(err);
+              )
+              .catch((err: any) => {
+                console.log(err);
+                reject(err);
+              });
+          } else {
+            uni.showToast({
+              title: "你拉的太快了",
+              icon: "none",
+              duration: 500,
             });
+            reject("你拉的太快了");
+          }
         } else {
           uni.showToast({
-            title: "你拉的太快了",
+            title: "没有更多啦",
             icon: "none",
-            duration: 500,
+            duration: 1500,
           });
+          reject("没有更多啦");
         }
-      } else {
-        uni.showToast({
-          title: "没有更多啦",
-          icon: "none",
-          duration: 1500,
-        });
-      }
+      });
     },
     [ActionTypes.checkoutConversation]: (context, conversationID) => {
       context.commit(MutationTypes.RESET_CURRENT_CONVERSATION);
