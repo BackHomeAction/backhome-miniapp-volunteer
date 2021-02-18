@@ -3,13 +3,13 @@
     <scroll-view
       v-if="messageList && messageList.length"
       class="conversation"
-      :style="{height: `calc(${windowHeight*0.8}px - env(safe-area-inset-bottom) - 130rpx - 30rpx)`}"
+      :style="{height: `calc(${windowHeight*0.8}px - env(safe-area-inset-bottom) - 130rpx - 30rpx - ${showVolunteerDetail ? '152rpx' : '0px'})`}"
       scroll-y
       scroll-anchoring
       scroll-with-animation
       :scroll-into-view="latestMessageID"
       @scrolltoupper="handleLoadPrevious"
-      @tap="showVolunteerDetail = false"
+      @tap.stop="handleHideVolunteerDetail"
     >
       <view style="padding: 24rpx 0; box-sizing: border-box;">
         <view
@@ -70,11 +70,26 @@ const useVolunteerDetail = () => {
   const volunteerInfo: Ref<Volunteer | null> = ref(null);
 
   const handleShowVolunteerDetail = (volunteer: Volunteer) => {
+    if (volunteerInfo.value && volunteerInfo.value === volunteer) {
+      // 点击的就是已展开的，则自动收回
+      handleHideVolunteerDetail();
+      return;
+    }
     volunteerInfo.value = volunteer;
     showVolunteerDetail.value = true;
   };
 
-  return { showVolunteerDetail, volunteerInfo, handleShowVolunteerDetail };
+  const handleHideVolunteerDetail = () => {
+    volunteerInfo.value = null;
+    showVolunteerDetail.value = false;
+  };
+
+  return {
+    showVolunteerDetail,
+    volunteerInfo,
+    handleShowVolunteerDetail,
+    handleHideVolunteerDetail,
+  };
 };
 
 export default defineComponent({
