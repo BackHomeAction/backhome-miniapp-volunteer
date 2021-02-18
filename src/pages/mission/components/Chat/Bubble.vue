@@ -214,6 +214,7 @@ export default defineComponent({
         font-size: 28rpx;
         font-weight: 400;
         line-height: 40rpx;
+        word-break: break-all;
       }
     }
   }
