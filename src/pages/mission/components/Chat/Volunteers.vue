@@ -1,13 +1,21 @@
 <template>
   <view>
     <view class="volunteers">
-      <image
+      <view
         v-for="item in teamMembers"
         :key="item.id"
-        :src="item.avatarUrl"
         class="item"
-        @tap="handleClickVolunteer(item)"
-      />
+      >
+        <image
+          :src="item.avatarUrl"
+          class="item-image"
+          @tap="handleClickVolunteer(item)"
+        />
+        <view
+          v-if="checkOnline(item)"
+          class="item-badge item-badge-online"
+        />
+      </view>
     </view>
   </view>
 </template>
@@ -20,11 +28,19 @@ import { useStore } from "vuex";
 const useList = () => {
   const store = useStore();
 
-  const teamMembers: ComputedRef<Volunteer> = computed(() => {
+  const teamMembers: ComputedRef<Array<Volunteer>> = computed(() => {
     return store.getters.currentMission.teamMembers;
   });
 
-  return { teamMembers };
+  const onlineTeamMembers: ComputedRef<Array<Volunteer>> = computed(() => {
+    return store.getters.currentMission.onlineTeamMembers;
+  });
+
+  const checkOnline = (volunteer: Volunteer) => {
+    return onlineTeamMembers.value.some((item) => item.id === volunteer.id);
+  };
+
+  return { teamMembers, checkOnline };
 };
 
 export default defineComponent({
@@ -58,7 +74,27 @@ export default defineComponent({
   .item {
     width: 60rpx;
     height: 60rpx;
-    border-radius: 100%;
+    position: relative;
+
+    &-image {
+      width: 60rpx;
+      height: 60rpx;
+      border-radius: 100%;
+    }
+
+    &-badge {
+      width: 16rpx;
+      height: 16rpx;
+      border-radius: 100%;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      z-index: 1;
+
+      &-online {
+        background-color: #73fe46;
+      }
+    }
   }
 }
 </style>
