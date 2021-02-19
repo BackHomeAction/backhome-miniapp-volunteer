@@ -14,6 +14,7 @@ export enum ActionTypes {
   clearCurrentMission = "clearCurrentMission",
   getCurrentMissionInfo = "getCurrentMissionInfo",
   getCurrentMissionMembers = "getCurrentMissionMembers",
+  getCurrentMissionFaceRecognitionHistories = "getCurrentMissionFaceRecognitionHistories",
   onMessageEvent = "onMessageEvent",
   getMessageList = "getMessageList",
   checkoutConversation = "checkoutConversation",

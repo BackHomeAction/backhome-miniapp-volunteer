@@ -39,12 +39,17 @@
       <view class="tabs-item-text">
         人脸识别
       </view>
+      <view
+        v-if="hasUnchekedSuccessFaceRecognitionRecord"
+        class="tabs-item-dot"
+      />
     </view>
   </view>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { Face, JavaList } from "@/api/types/models";
+import { computed, ComputedRef, defineComponent } from "vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
@@ -60,7 +65,20 @@ export default defineComponent({
       return store.getters.tim.unreadMessageNumber;
     });
 
-    return { handleClick, unreadMessageNumber };
+    const historyList: ComputedRef<JavaList<Face>> = computed(() => {
+      return store.getters.currentMission.faceRecognitionHistory;
+    });
+
+    // 是否有 >80 且家属未确认的人脸识别记录
+    const hasUnchekedSuccessFaceRecognitionRecord = computed(() => {
+      return historyList.value.some((item) => item.result && item.result > 80);
+    });
+
+    return {
+      handleClick,
+      unreadMessageNumber,
+      hasUnchekedSuccessFaceRecognitionRecord,
+    };
   },
 });
 </script>

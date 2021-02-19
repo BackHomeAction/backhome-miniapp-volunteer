@@ -49,26 +49,22 @@
 </template>
 
 <script lang="ts">
-import { requestGetFaceIdentificationRecords } from "@/api/mission";
 import { Face, JavaList } from "@/api/types/models";
-import { defineComponent, ref } from "vue";
+import { computed, ComputedRef, defineComponent, ref } from "vue";
 import Empty from "@/components/Empty/index.vue";
 import { useTime } from "@/uses/useTime";
+import store from "@/store";
+import { ActionTypes } from "@/enums/actionTypes";
+import { useStore } from "vuex";
 
 const isLoading = ref(true);
-const historyList = ref<JavaList<Face>>();
 
 const getHistory = async (caseId: number) => {
   isLoading.value = true;
   uni.showNavigationBarLoading();
-  try {
-    const res = await requestGetFaceIdentificationRecords({ caseId });
-    if (res.data.data) {
-      historyList.value = res.data.data;
-    }
-  } catch (e) {
-    console.log(e);
-  }
+  await store.dispatch(ActionTypes.getCurrentMissionFaceRecognitionHistories, {
+    id: caseId,
+  });
   isLoading.value = false;
   uni.hideNavigationBarLoading();
 };
@@ -82,6 +78,12 @@ const handlePreviewImage = (path: string) => {
 export default defineComponent({
   components: { Empty },
   setup() {
+    const store = useStore();
+
+    const historyList: ComputedRef<JavaList<Face>> = computed(() => {
+      return store.getters.currentMission.faceRecognitionHistory;
+    });
+
     return {
       isLoading,
       historyList,

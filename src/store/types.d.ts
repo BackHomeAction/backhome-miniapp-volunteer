@@ -1,4 +1,4 @@
-import { Volunteer, Notice, Banner, Case } from "@/api/types/models"
+import { Volunteer, Notice, Banner, Case, Face } from "@/api/types/models"
 import Ws from "../utils/websocket";
 
 export interface RootState {
@@ -39,6 +39,7 @@ export interface ICurrentMission {
   missionInfo: null | Case;
   teamMembers: Array<Volunteer>;
   onlineTeamMembers: Array<Volunteer>;
+  faceRecognitionHistory: Array<Face>;
 }
 
 export interface MissionState {

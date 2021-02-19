@@ -6,6 +6,7 @@ import { ActionTypes } from "@/enums/actionTypes";
 import {
   requestAcceptCase,
   requestGetCases,
+  requestGetFaceIdentificationRecords,
   requestGetMyCases,
   requestGetMyUncheckedCases,
   requestGetVolunteersInCase,
@@ -21,6 +22,7 @@ const Mission: Module<MissionState, RootState> = {
       missionInfo: null,
       teamMembers: [],
       onlineTeamMembers: [],
+      faceRecognitionHistory: [],
     },
   },
 
@@ -79,6 +81,7 @@ const Mission: Module<MissionState, RootState> = {
       if (index1 >= 0) {
         state.currentMission.teamMembers[index1].latitude = params.latitude;
         state.currentMission.teamMembers[index1].longitude = params.longitude;
+        state.currentMission.teamMembers[index1].online = 1;
         // 更新 onlineTeamMembers
         const index2 = state.currentMission.onlineTeamMembers.findIndex(
           (item) => item.id === params.volunteerId
@@ -88,6 +91,7 @@ const Mission: Module<MissionState, RootState> = {
             params.latitude;
           state.currentMission.onlineTeamMembers[index2].longitude =
             params.longitude;
+          state.currentMission.onlineTeamMembers[index2].online = 1;
         } else {
           // 如果没在 onlineTeamMembers 里找到，说明这个志愿者是新上线的，需要把他加入 onlineTeamMembers 中
           state.currentMission.onlineTeamMembers.push(
@@ -117,6 +121,13 @@ const Mission: Module<MissionState, RootState> = {
           state.currentMission.onlineTeamMembers.splice(index2);
         }
       }
+      console.debug(state);
+    },
+    [MutationTypes.SET_FACE_RECOGNITION_HISTORY]: (
+      state,
+      faceRecognitionHistory: typeof state.currentMission.faceRecognitionHistory
+    ) => {
+      state.currentMission.faceRecognitionHistory = faceRecognitionHistory;
       console.debug(state);
     },
   },
@@ -237,6 +248,27 @@ const Mission: Module<MissionState, RootState> = {
         }
       });
     },
+    [ActionTypes.getCurrentMissionFaceRecognitionHistories]: (
+      { commit },
+      params: { id: number }
+    ) => {
+      return new Promise<void>(async (resolve, reject) => {
+        try {
+          const res = await requestGetFaceIdentificationRecords({
+            caseId: params.id,
+          });
+          if (res.data.data) {
+            commit(MutationTypes.SET_FACE_RECOGNITION_HISTORY, res.data.data);
+            resolve();
+          } else {
+            reject();
+          }
+        } catch (e) {
+          console.log(e);
+          reject();
+        }
+      });
+    },
     [ActionTypes.clearCurrentMission]: ({ commit }) => {
       return new Promise<void>(async (resolve, reject) => {
         try {
@@ -244,6 +276,7 @@ const Mission: Module<MissionState, RootState> = {
             missionInfo: null,
             teamMembers: [],
             onlineTeamMembers: [],
+            faceRecognitionHistory: [],
           });
           resolve();
         } catch (e) {
@@ -264,6 +297,10 @@ const Mission: Module<MissionState, RootState> = {
           await Promise.all([
             dispatch(ActionTypes.getCurrentMissionInfo, params),
             dispatch(ActionTypes.getCurrentMissionMembers, params),
+            dispatch(
+              ActionTypes.getCurrentMissionFaceRecognitionHistories,
+              params
+            ),
           ]);
           resolve();
         } catch (e) {
