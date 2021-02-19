@@ -21,19 +21,24 @@
       @regionchange="handleRegionChange"
       @markertap="handleMarkerClick"
     />
-    <view class="map-action">
-      <view
-        class="map-action-button"
-        @click="handleBackToCurrentPosition"
-      >
-        B
+    <view class="map-bottom">
+      <view class="map-bottom-buttons">
+        <view class="map__control">
+          <view
+            class="map__control-item map__control-item-location-me"
+            :class="{'map__control-item--active': isMapRegionCenterIsCurrentPlace}"
+            @click.stop="handleToCurrentPosition"
+          />
+          <view
+            class="map__control-item map__control-item-location-lost"
+            :class="{'map__control-item--active': isMapRegionCenterIsLostPlace}"
+            @click.stop="handleToLostPosition"
+          />
+        </view>
+        <view class="map__util map__util-help" />
       </view>
-      <view
-        class="map-action-button"
-        @click="handleTestPosition"
-      >
-        T
-      </view>
+      
+      <man :data="currentMissionInfo" />
     </view>
 
     <place-info-modal
@@ -67,7 +72,14 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref } from "vue";
+import {
+  computed,
+  ComputedRef,
+  defineComponent,
+  Ref,
+  ref,
+  reactive,
+} from "vue";
 import mapSettings from "@/config/map";
 import { searchPlacesNearby } from "@/api/tencentMap";
 import PlaceInfoModal from "./components/PlaceInfoModal/index.vue";
@@ -90,6 +102,7 @@ import UPopup from "@/components/UPopup/index.vue";
 import MissionInformation from "@/components/MissionInformation/index.vue";
 import FaceRecognition from "./components/FaceRecognition/index.vue";
 import Chat from "./components/Chat/index.vue";
+import Man from "./components/Man/index.vue";
 import { checkoutGroup, resetGroup } from "@/service/timService";
 
 let mapContext: any;
@@ -105,9 +118,52 @@ const VOLUNTEER_MARKER_ID_START = 50000000;
 
 const caseId = ref(0); // 案件 ID
 
+// 用于比对经纬度（舍弃部分精度）
+function locationCompare(left: number, right: number) {
+  return Math.abs(left - right) < 0.0001;
+}
+
 const useMap = () => {
   const store = useStore();
   mapContext = uni.createMapContext("map");
+
+  // 地图的视区中心
+  const mapRegion = reactive({
+    latitude: 0,
+    longitude: 0,
+  });
+  // 视区中心是否为当前位置
+  const isMapRegionCenterIsCurrentPlace = computed(() => {
+    if (
+      !mapRegion.latitude ||
+      !mapRegion.longitude ||
+      !store.getters.location?.latitude ||
+      !store.getters.location?.longitude
+    ) {
+      return false;
+    }
+
+    return (
+      locationCompare(mapRegion.latitude, store.getters.location.latitude) &&
+      locationCompare(mapRegion.longitude, store.getters.location.longitude)
+    );
+  });
+  // 视区中心是否为走失位置
+  const isMapRegionCenterIsLostPlace = computed(() => {
+    if (
+      !mapRegion.latitude ||
+      !mapRegion.longitude ||
+      !currentMissionInfo.value?.latitude ||
+      !currentMissionInfo.value?.longitude
+    ) {
+      return false;
+    }
+
+    return (
+      locationCompare(mapRegion.latitude, currentMissionInfo.value.latitude) &&
+      locationCompare(mapRegion.longitude, currentMissionInfo.value.longitude)
+    );
+  });
 
   // 这个案件
   const currentMission: ComputedRef<ICurrentMission> = computed(() => {
@@ -178,11 +234,11 @@ const useMap = () => {
     console.info("map updated");
   };
   // 设置视野中心为自己的位置
-  const handleBackToCurrentPosition = () => {
+  const handleToCurrentPosition = () => {
     mapContext.moveToLocation();
   };
   // 设置视野中心为走失位置
-  const handleTestPosition = () => {
+  const handleToLostPosition = () => {
     mapContext.moveToLocation({
       longitude: lostPlace.value.longitude,
       latitude: lostPlace.value.latitude,
@@ -213,6 +269,8 @@ const useMap = () => {
         e.detail.centerLocation.latitude,
         e.detail.centerLocation.longitude
       );
+      mapRegion.latitude = e.detail.centerLocation.latitude;
+      mapRegion.longitude = e.detail.centerLocation.longitude;
     }
   };
   // 动态计算 markers
@@ -364,8 +422,8 @@ const useMap = () => {
 
   return {
     handleMapUpdated,
-    handleBackToCurrentPosition,
-    handleTestPosition,
+    handleToCurrentPosition,
+    handleToLostPosition,
     circles,
     markers,
     handleRegionChange,
@@ -373,6 +431,8 @@ const useMap = () => {
     showPlaceInfoModal,
     placeInfoData,
     currentMissionInfo,
+    isMapRegionCenterIsCurrentPlace,
+    isMapRegionCenterIsLostPlace,
   };
 };
 
@@ -418,7 +478,9 @@ const newCaseInfoCallback = async (res: any) => {
     });
   } else if (data.status === SocketStateTypes.FACE_PASS) {
     showToast("人脸比对成功，等待家属确认");
-    // TODO: 更新人脸历史数据store，加小红点
+    store.dispatch(ActionTypes.getCurrentMissionFaceRecognitionHistories, {
+      id: caseId.value,
+    });
   } else if (data.status === SocketStateTypes.MISSION_COMPLETED) {
     showModal("提示", "案件已成功结案！");
     navigateBack();
@@ -436,6 +498,7 @@ export default defineComponent({
     MissionInformation,
     FaceRecognition,
     Chat,
+    Man,
   },
   setup() {
     return { ...useMap(), mapSettings, ...usePopup() };
@@ -488,26 +551,91 @@ export default defineComponent({
     height: 100vh;
   }
 
-  &-action {
+  &-bottom {
+    width: 100vw;
     position: fixed;
-    left: 50rpx;
-    bottom: 80rpx;
+    bottom: calc(16rpx + env(safe-area-inset-bottom));
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 
-    &-button {
-      width: 100rpx;
-      height: 100rpx;
-      background-color: #ffffff;
-      border-radius: 100%;
-      border: 2px solid rgba(0, 0, 0, 0.3);
-      box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
+    &-buttons {
+      width: 716rpx;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 5rpx;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 36rpx;
+    }
+  }
+
+  &__control {
+    width: 80rpx;
+    height: 160rpx;
+    background: #ffffff;
+    box-shadow: 0rpx 4rpx 8rpx 0rpx rgba(0, 0, 0, 0.5);
+    border-radius: 10rpx;
+    padding: 10rpx;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &-item {
+      width: 60rpx;
+      height: 60rpx;
+      background-size: cover;
+      position: relative;
+
+      &-location-me {
+        background-image: url("@/static/images/map/control_place_me.png");
+
+        &.map__control-item--active {
+          background-image: url("@/static/images/map/control_place_me_active.png");
+        }
+      }
+
+      &-location-lost {
+        background-image: url("@/static/images/map/control_place_lost.png");
+
+        &.map__control-item--active {
+          background-image: url("@/static/images/map/control_place_lost_active.png");
+        }
+      }
+
+      & + & {
+        margin-top: 20rpx;
+
+        &::after {
+          position: absolute;
+          /* #ifndef APP-NVUE */
+          box-sizing: border-box;
+          content: " ";
+          pointer-events: none;
+          border-top: 1px solid #e4e4e4;
+          /* #endif */
+          right: 0;
+          left: 0;
+          top: -10rpx;
+          transform: scaleY(0.5);
+          margin: 0 -4rpx;
+        }
+      }
+    }
+  }
+
+  &__util {
+    width: 48rpx;
+    height: 48rpx;
+    opacity: 0.8;
+
+    & + & {
+      margin-top: 24rpx;
+    }
+
+    &-help {
+      background: url("@/static/images/map/help.png");
+      background-size: cover;
     }
   }
 }
