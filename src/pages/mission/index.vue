@@ -395,7 +395,7 @@ const useMap = () => {
           lng: placeData.longitude,
         },
         title: placeData.name,
-        type: "policeStation",
+        type: "offenPlace",
       };
       console.log(placeInfoData.value);
       showPlaceInfoModal.value = true;
