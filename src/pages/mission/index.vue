@@ -45,6 +45,10 @@
       v-model:value="showPlaceInfoModal"
       :place-data="placeInfoData"
     />
+    <volunteer-info-modal
+      v-model:value="showVolunteerInfoModal"
+      :volunteer-data="volunteerInfoData"
+    />
 
     <u-popup
       v-model:value="showPopup"
@@ -104,6 +108,7 @@ import FaceRecognition from "./components/FaceRecognition/index.vue";
 import Chat from "./components/Chat/index.vue";
 import Man from "./components/Man/index.vue";
 import { checkoutGroup, resetGroup } from "@/service/timService";
+import VolunteerInfoModal from "./components/VolunteerInfoModal/index.vue";
 
 let mapContext: any;
 
@@ -358,6 +363,9 @@ const useMap = () => {
 
   const showPlaceInfoModal = ref(false); // 是否展示地点信息弹框
   const placeInfoData: Ref<null | IPlaceInfo> = ref(null); // 地点信息数据
+  const showVolunteerInfoModal = ref(false); // 是否展示志愿者信息弹框
+  const volunteerInfoData: Ref<null | Volunteer> = ref(null); // 志愿者信息数据
+
   // markar 点击事件
   const handleMarkerClick = (e: any) => {
     const markerId = e.detail.markerId;
@@ -418,6 +426,15 @@ const useMap = () => {
       console.log(placeInfoData.value);
       showPlaceInfoModal.value = true;
     }
+    // 判断是否为在线的志愿者
+    if (
+      markerId >= VOLUNTEER_MARKER_ID_START &&
+      markerId < VOLUNTEER_MARKER_ID_START + 10000000
+    ) {
+      const index = markerId % VOLUNTEER_MARKER_ID_START;
+      volunteerInfoData.value = onlineVolunteers.value[index];
+      showVolunteerInfoModal.value = true;
+    }
   };
 
   return {
@@ -433,6 +450,8 @@ const useMap = () => {
     currentMissionInfo,
     isMapRegionCenterIsCurrentPlace,
     isMapRegionCenterIsLostPlace,
+    showVolunteerInfoModal,
+    volunteerInfoData,
   };
 };
 
@@ -452,7 +471,6 @@ const usePopup = () => {
  * 案件订阅回调处理
  *
  * @param {string} res
- * @memberof WebsocketService
  */
 const newCaseInfoCallback = async (res: any) => {
   const data = JSON.parse(res.body);
@@ -499,6 +517,7 @@ export default defineComponent({
     FaceRecognition,
     Chat,
     Man,
+    VolunteerInfoModal,
   },
   setup() {
     return { ...useMap(), mapSettings, ...usePopup() };
