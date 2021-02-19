@@ -467,7 +467,7 @@ const newCaseInfoCallback = async (res: any) => {
   } else if (data.status === SocketStateTypes.VOLUNTEER_OFFLINE) {
     store.commit(MutationTypes.UPDATE_MISSION_VOLUNTEER_OFFLINE, data.data);
   } else if (data.status === SocketStateTypes.MISSION_TIMEOUT) {
-    showModal("提示", "案件已超时！");
+    await showModal("提示", "案件已超时！");
     navigateBack();
   } else if (
     data.status === SocketStateTypes.VOLUNTEER_JOIN_MISSION ||
@@ -482,10 +482,10 @@ const newCaseInfoCallback = async (res: any) => {
       id: caseId.value,
     });
   } else if (data.status === SocketStateTypes.MISSION_COMPLETED) {
-    showModal("提示", "案件已成功结案！");
+    await showModal("提示", "案件已成功结案！");
     navigateBack();
   } else if (data.status === SocketStateTypes.MISSION_CANCELED) {
-    showModal("提示", "案件已被关闭！");
+    await showModal("提示", "案件已被关闭！");
     navigateBack();
   }
 };

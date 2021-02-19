@@ -34,11 +34,7 @@ export const switchTab = (url: string) => {
 };
 
 export const showModalError = (content = "未知错误") => {
-  uni.showModal({
-    title: "错误",
-    content,
-    showCancel: false,
-  });
+  return showModal("错误", content);
 };
 
 export const showModal = (
@@ -46,10 +42,19 @@ export const showModal = (
   content = "未知错误",
   showCancel = false
 ) => {
-  uni.showModal({
-    title: title,
-    content,
-    showCancel,
+  return new Promise<void>((resolve, reject) => {
+    uni.showModal({
+      title: title,
+      content,
+      showCancel,
+      success: function (res) {
+        if (res.confirm) {
+          resolve();
+        } else if (res.cancel) {
+          reject();
+        }
+      },
+    });
   });
 };
 
