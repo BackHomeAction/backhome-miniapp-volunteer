@@ -13,11 +13,17 @@
     >
       <view style="padding: 24rpx 0; box-sizing: border-box;">
         <view
-          v-for="item in messageList"
+          v-for="(item, index) in messageList"
           :id="`message-${item.ID.slice(10)}`"
           :key="item.ID"
           class="message"
         >
+          <view
+            v-if="index === 0 || item.newtime !== messageList[index - 1].newtime"
+            class="message-time"
+          >
+            {{ item.newtime }}
+          </view>
           <bubble
             :data="item"
             @click-avatar="handleShowVolunteerDetail"
@@ -155,6 +161,16 @@ export default defineComponent({
 .body {
   position: fixed;
   bottom: 0;
+
+  .message {
+    &-time {
+      display: flex;
+      justify-content: center;
+      font-size: 24rpx;
+      color: #999898;
+      margin-bottom: 36rpx;
+    }
+  }
 
   .bottom {
     background: #f8f8f8;

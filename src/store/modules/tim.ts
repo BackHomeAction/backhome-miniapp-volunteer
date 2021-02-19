@@ -7,12 +7,9 @@ import tim from "@/utils/tim";
 
 function formatTime(date: string | Date) {
   if (dayjs(date).isToday()) {
-    return dayjs(date)
-      .format("A HH:mm")
-      .replace("PM", "下午")
-      .replace("AM", "上午");
+    return dayjs(date).format("AHH:mm");
   }
-  return dayjs(date).format("MM-YY");
+  return dayjs(date).format("MM-DD AHH:mm");
 }
 
 const Tim: Module<TimState, RootState> = {
