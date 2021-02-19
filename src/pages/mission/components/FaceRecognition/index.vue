@@ -101,10 +101,15 @@ const useUpload = (caseId?: number) => {
       if (!res.data.data) {
         showModalError("人脸识别失败");
       } else if (res.data.data < 80) {
+        showModal("比对未通过", `人脸匹配率：${res.data.data.toFixed(1)}%`);
+      } else {
         showModal(
-          "未通过",
-          `人脸比对未通过，匹配率：${res.data.data.toFixed(1)}%`
+          "比对通过",
+          `人脸信息比对成功，等待家属确认。（匹配率：${res.data.data.toFixed(
+            1
+          )}%）`
         );
+        imagePath.value = "";
       }
     } catch (e) {
       console.log(e);

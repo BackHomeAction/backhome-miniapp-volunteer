@@ -76,7 +76,12 @@ import { useStore } from "vuex";
 import { ICurrentMission } from "@/store/types";
 import store from "@/store";
 import { ActionTypes } from "@/enums/actionTypes";
-import { navigateBack, showModal, showModalError } from "@/utils/helper";
+import {
+  navigateBack,
+  showModal,
+  showModalError,
+  showToast,
+} from "@/utils/helper";
 import { Volunteer } from "@/api/types/models";
 import { SocketStateTypes } from "@/enums/socketStateTypes";
 import { MutationTypes } from "@/enums/mutationTypes";
@@ -411,6 +416,15 @@ const newCaseInfoCallback = async (res: any) => {
     await store.dispatch(ActionTypes.getCurrentMissionMembers, {
       id: caseId.value,
     });
+  } else if (data.status === SocketStateTypes.FACE_PASS) {
+    showToast("人脸比对成功，等待家属确认");
+    // TODO: 更新人脸历史数据store，加小红点
+  } else if (data.status === SocketStateTypes.MISSION_COMPLETED) {
+    showModal("提示", "案件已成功结案！");
+    navigateBack();
+  } else if (data.status === SocketStateTypes.MISSION_CANCELED) {
+    showModal("提示", "案件已被关闭！");
+    navigateBack();
   }
 };
 
