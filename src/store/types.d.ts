@@ -59,6 +59,7 @@ export interface TimState {
   currentConversationID: string; // 当前聊天对话ID
   currentConversation: any; // 当前聊天对话信息
   currentMessageList: Array<any>; // 当前聊天消息列表
+  unreadMessageNumber: number; // 当前聊天的未读消息计数
   nextReqMessageID: string; // 下一条消息标志
   isCompleted: boolean; // 当前会话消息是否已经请求完毕
   isLoading: boolean; // 是否正在请求

@@ -2,7 +2,7 @@
   <view class="tabs">
     <view
       class="tabs-item"
-      @click="handleClick('info')"
+      @click.stop="handleClick('info')"
     >
       <image
         class="tabs-item-image"
@@ -14,7 +14,7 @@
     </view>
     <view
       class="tabs-item"
-      @click="handleClick('chat')"
+      @click.stop="handleClick('chat')"
     >
       <image
         class="tabs-item-image"
@@ -23,10 +23,14 @@
       <view class="tabs-item-text">
         队伍沟通
       </view>
+      <view
+        v-if="unreadMessageNumber"
+        class="tabs-item-dot"
+      />
     </view>
     <view
       class="tabs-item"
-      @click="handleClick('face')"
+      @click.stop="handleClick('face')"
     >
       <image
         class="tabs-item-image"
@@ -40,16 +44,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   emits: ["select"],
   setup(props, { emit }) {
+    const store = useStore();
+
     const handleClick = (name: string) => {
       emit("select", name);
     };
 
-    return { handleClick };
+    const unreadMessageNumber = computed(() => {
+      return store.getters.tim.unreadMessageNumber;
+    });
+
+    return { handleClick, unreadMessageNumber };
   },
 });
 </script>
@@ -76,6 +87,7 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     width: 90rpx;
+    position: relative;
 
     &-image {
       width: 90rpx;
@@ -88,6 +100,16 @@ export default defineComponent({
       font-size: 20rpx;
       color: #000000;
       line-height: 28rpx;
+    }
+
+    &-dot {
+      width: 30rpx;
+      height: 30rpx;
+      background: #f55449;
+      border-radius: 100%;
+      position: absolute;
+      top: 0;
+      right: 0;
     }
   }
 }

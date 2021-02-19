@@ -57,6 +57,7 @@ import Volunteers from "./Volunteers.vue";
 import VolunteerDetail from "./VolunteerDetail.vue";
 import ChatInput from "./ChatInput.vue";
 import Bubble from "./Bubble.vue";
+import { MutationTypes } from "@/enums/mutationTypes";
 
 const latestMessageID = ref("");
 
@@ -137,12 +138,21 @@ export default defineComponent({
       latestMessageID.value = `message-${messageList.value[
         messageList.value.length - 1
       ].ID.slice(10)}`;
+
+      // 如果当前状态是 show，则清空未读消息计数
+      if (props.show) {
+        store.commit(MutationTypes.CLEAR_UNREAD_MESSAGE_NUMBER);
+      }
     });
 
     watch(
       () => props.show,
       () => {
         scrollToBottom();
+        // 如果当前状态是 show，则清空未读消息计数
+        if (props.show) {
+          store.commit(MutationTypes.CLEAR_UNREAD_MESSAGE_NUMBER);
+        }
       }
     );
 

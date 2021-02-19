@@ -20,6 +20,7 @@ const Tim: Module<TimState, RootState> = {
     currentConversationID: "", // 当前聊天对话ID
     currentConversation: {}, // 当前聊天对话信息
     currentMessageList: [], // 当前聊天消息列表
+    unreadMessageNumber: 0,
     nextReqMessageID: "", // 下一条消息标志
     isCompleted: false, // 当前会话消息是否已经请求完毕
     isLoading: false, // 是否正在请求
@@ -95,6 +96,20 @@ const Tim: Module<TimState, RootState> = {
       message.newtime = formatTime(date);
       state.currentMessageList = [...state.currentMessageList, message];
     },
+    // 发送了消息
+    [MutationTypes.SEND_MESSAGE]: (state, message) => {
+      let date = new Date(message.time * 1000);
+      message.newtime = formatTime(date);
+      state.currentMessageList = [...state.currentMessageList, message];
+    },
+    // 增加未读消息数量
+    [MutationTypes.ADD_UNREAD_MESSAGE_NUMBER]: (state, delta = 1) => {
+      state.unreadMessageNumber += delta;
+    },
+    // 清空未读消息数量
+    [MutationTypes.CLEAR_UNREAD_MESSAGE_NUMBER]: (state) => {
+      state.unreadMessageNumber = 0;
+    },
   },
 
   actions: {
@@ -109,6 +124,7 @@ const Tim: Module<TimState, RootState> = {
         event.data.forEach((item: { conversationID: string }) => {
           if (item.conversationID === id) {
             list.push(item);
+            context.commit(MutationTypes.ADD_UNREAD_MESSAGE_NUMBER);
           }
         });
         context.commit(MutationTypes.RECEIVE_MESSAGE, list);
