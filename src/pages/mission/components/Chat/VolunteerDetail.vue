@@ -24,7 +24,10 @@
       <view class="detail-item-label">
         电话
       </view>
-      <view class="detail-item-value">
+      <view
+        v-if="volunteer"
+        class="detail-item-value"
+      >
         {{ volunteer.phone }}
       </view>
     </view>
