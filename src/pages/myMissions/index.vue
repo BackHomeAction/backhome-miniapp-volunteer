@@ -20,8 +20,11 @@
       <view
         v-if="!taskList || !taskList.length"
         class="box"
+        style="display: flex; justify-content: center; align-items: center"
       >
-        无进行中的任务
+        <empty
+          message="无任务，去任务大厅看看吧！"
+        />
       </view>
       <item
         v-for="item in myUncheckedTaskList"
@@ -46,6 +49,7 @@ import Item from "./components/Item/index.vue";
 import store from "@/store";
 import { ActionTypes } from "@/enums/actionTypes";
 import { useStore } from "vuex";
+import Empty from "@/components/Empty/index.vue";
 
 const useTaskList = () => {
   const store = useStore();
@@ -66,7 +70,7 @@ const useTaskList = () => {
 };
 
 export default defineComponent({
-  components: { Item },
+  components: { Item, Empty },
   setup() {
     return { ...useTop(), ...useTaskList() };
   },
