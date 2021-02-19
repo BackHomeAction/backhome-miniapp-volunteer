@@ -467,6 +467,10 @@ export default defineComponent({
   color: #ffffff !important;
   background: $u-type-info-dark !important;
 }
+.u-func-plain-hover {
+  color: #ffffff !important;
+  background: $u-type-func-dark !important;
+}
 .u-default-hover {
   color: $u-type-primary-dark !important;
   border-color: $u-type-primary-dark !important;
@@ -490,6 +494,10 @@ export default defineComponent({
 }
 .u-error-hover {
   background: $u-type-error-dark !important;
+  color: #fff;
+}
+.u-func-hover {
+  background: $u-type-func-dark !important;
   color: #fff;
 }
 .u-shadow {

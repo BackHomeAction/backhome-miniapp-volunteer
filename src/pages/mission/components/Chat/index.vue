@@ -174,8 +174,7 @@ export default defineComponent({
 
   .message {
     &-time {
-      display: flex;
-      justify-content: center;
+      text-align: center;
       font-size: 24rpx;
       color: #999898;
       margin-bottom: 36rpx;

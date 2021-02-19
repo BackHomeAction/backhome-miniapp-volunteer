@@ -234,7 +234,7 @@ export default defineComponent({
       border-radius: 30rpx 0 30rpx 30rpx;
 
       &-text {
-        background: #03a8e5;
+        background: #409eff;
         color: #ffffff;
       }
     }
