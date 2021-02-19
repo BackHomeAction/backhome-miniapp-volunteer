@@ -19,11 +19,13 @@
     <view class="list">
       <view
         v-if="!taskList || !taskList.length"
-        class="box"
-        style="display: flex; justify-content: center; align-items: center"
+        class="empty"
+        :style="{
+          marginTop: `calc(${menuTop}px + 250rpx)` ,
+        }"
       >
         <empty
-          message="无任务，去任务大厅看看吧！"
+          message="暂时还没有你的任务哦，去任务大厅看看吧～"
         />
       </view>
       <item
@@ -112,6 +114,12 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  .empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .box {
