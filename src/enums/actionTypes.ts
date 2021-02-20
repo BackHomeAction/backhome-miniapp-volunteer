@@ -8,6 +8,7 @@ export enum ActionTypes {
   getCount = "getCount",
   getMyMissions = "getMyMissions",
   getMyUncheckedMissions = "getMyUncheckedMissions",
+  getMyAllMissions = "getMyAllMissions",
   acceptMission = "acceptMission",
   refuseMission = "refuseMission",
   initCurrentMission = "initCurrentMission",

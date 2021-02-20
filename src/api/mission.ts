@@ -184,3 +184,18 @@ export const requestGetFaceIdentificationRecords = (params: {
     data: {},
   });
 };
+
+/**
+ * 查询志愿者参与的所有案件
+ *
+ * @param {{ volunteerId: number }} params
+ * @return {*}
+ */
+export const requestGetVolunteerCases = (params: { volunteerId: number }) => {
+  return http.request<ResponseData<JavaList<Case>>>({
+    url: `case/volunteer/all`,
+    method: "GET",
+    params: params,
+    data: {},
+  });
+};

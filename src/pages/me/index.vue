@@ -43,6 +43,8 @@ import VolunteerInformationBox from "@/components/VolunteerInformationBox/index.
 import { useStore } from "vuex";
 import authService from "@/service/authService";
 import { useTop } from "@/uses/useTop";
+import store from "@/store";
+import { ActionTypes } from "@/enums/actionTypes";
 
 export default defineComponent({
   components: { UButton, VolunteerInformationBox },
@@ -67,13 +69,18 @@ export default defineComponent({
 
     return { ...useTop(), logged, handleLogout, topStatus, myInfo };
   },
+  onShow() {
+    store.dispatch(ActionTypes.getMyAllMissions);
+  },
 });
 </script>
 
 <style lang="scss" scoped>
 .actions {
-  margin-top: 60px;
+  // margin-top: 60px;
   text-align: center;
+  margin-bottom: 60rpx;
+  box-sizing: border-box;
 }
 
 .top--title {

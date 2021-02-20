@@ -1,115 +1,211 @@
 <template>
-  <view
-    class="box"
-  >
-    <view class="left">
-      <view
-        class="avatar"
-        :class="{'avatar--nologin': status === 'unlogin' || !avatarUrl}"
-        :style="{backgroundImage: status !== 'unlogin' && avatarUrl ? `url(${avatarUrl})` : null}"
-      />
-      <view
-        v-if="status === 'unlogin'"
-        class="tag tag--nologin"
-      >
-        未登录
+  <view class="information">
+    <view
+      class="box"
+    >
+      <view class="left">
+        <view
+          class="avatar"
+          :class="{'avatar--nologin': status === 'unlogin' || !avatarUrl}"
+          :style="{backgroundImage: status !== 'unlogin' && avatarUrl ? `url(${avatarUrl})` : null}"
+        />
+        <view
+          v-if="status === 'unlogin'"
+          class="tag tag--nologin"
+        >
+          未登录
+        </view>
+        <view
+          v-if="status !== 'unlogin' && registerTimeFromNow"
+          class="tag tag--time"
+        >
+          {{ `加入 ${registerTimeFromNow}` }}
+        </view>
       </view>
-      <view
-        v-if="status !== 'unlogin' && registerTimeFromNow"
-        class="tag tag--time"
-      >
-        {{ `加入 ${registerTimeFromNow}` }}
+      <view class="right">
+        <view class="name">
+          {{ status !== 'unlogin' && name ? name : "志愿者" }}
+          <view
+            v-if="status !== 'unlogin'"
+            class="sex-icon"
+            :class="[sex === 1 ? 'sex-icon-man' : sex === 2 ? 'sex-icon-woman' : '']"
+          />
+        </view>
+        
+        <button
+          v-if="status === 'unlogin'"
+          class="action-btn"
+          hover-class="none"
+          @click="handleLogin"
+        >
+          <view class="action-btn-text">
+            去登录
+            <text
+              class="iconfont icon-arrow-right"
+            />
+          </view>
+        </button>
+        <button
+          v-if="status === 'user'"
+          class="action-btn"
+          @click="handleClickPhone"
+        >
+          <view class="action-btn-text">
+            TEL: {{ phone }}
+            <text
+              class="iconfont icon-arrow-right"
+            />
+          </view>
+        </button>
+        <button
+          v-if="status === 'me'"
+          class="action-btn"
+          @click="handleEditProfile"
+        >
+          <view class="action-btn-text">
+            修改个人信息
+            <text
+              class="iconfont icon-arrow-right"
+            />
+          </view>
+        </button>
+
+        <view class="divider" />
+        <view class="tasks">
+          <view
+            class="task"
+          >
+            <u-count-to
+              :end-val="doingMissionsNumber"
+              font-size="44"
+              line-height="60"
+              color="#000000"
+            />
+            <view class="task-description">
+              正在进行
+            </view>
+          </view>
+          <view class="task">
+            <u-count-to
+              :end-val="endedMissionsNumber"
+              font-size="44"
+              line-height="60"
+              color="#000000"
+            />
+            <view class="task-description">
+              历史任务
+            </view>
+          </view>
+          <view
+            v-if="status === 'me'"
+            class="task"
+          >
+            <u-count-to
+              :end-val="allMissionsNumber"
+              font-size="44"
+              line-height="60"
+              color="#000000"
+            />
+            <view class="task-description">
+              共计参与
+            </view>
+          </view>
+        </view>
       </view>
     </view>
-    <view class="right">
-      <view class="name">
-        {{ status !== 'unlogin' && name ? name : "志愿者" }}
-        <view
-          v-if="status !== 'unlogin'"
-          class="sex-icon"
-          :class="[sex === 1 ? 'sex-icon-man' : sex === 2 ? 'sex-icon-woman' : '']"
-        />
-      </view>
-        
-      <button
-        v-if="status === 'unlogin'"
-        class="action-btn"
-        hover-class="none"
-        @click="handleLogin"
-      >
-        <view class="action-btn-text">
-          去登录
-          <text
-            class="iconfont icon-arrow-right"
-          />
-        </view>
-      </button>
-      <button
-        v-if="status === 'user'"
-        class="action-btn"
-        @click="handleClickPhone"
-      >
-        <view class="action-btn-text">
-          TEL: {{ phone }}
-          <text
-            class="iconfont icon-arrow-right"
-          />
-        </view>
-      </button>
-      <button
-        v-if="status === 'me'"
-        class="action-btn"
-        @click="handleEditProfile"
-      >
-        <view class="action-btn-text">
-          修改个人信息
-          <text
-            class="iconfont icon-arrow-right"
-          />
-        </view>
-      </button>
 
-      <view class="divider" />
-      <view class="tasks">
+    <view
+      v-if="historyMissions"
+      class="list"
+    >
+      <view
+        v-for="item in historyMissions"
+        :key="item.id"
+        class="list-item"
+      >
         <view
-          class="task"
+          v-if="item.state === 1"
+          class="list-item-badge badge-running"
         >
-          <view class="task-number">
-            {{ logged ? "xx" : "0" }}
-          </view>
-          <view class="task-description">
-            正在进行
-          </view>
-        </view>
-        <view class="task">
-          <view class="task-number">
-            {{ logged ? "xx" : "0" }}
-          </view>
-          <view class="task-description">
-            历史任务
-          </view>
+          进行中
         </view>
         <view
-          v-if="status === 'me'"
-          class="task"
+          v-if="item.state === 2"
+          class="list-item-badge badge-complete"
         >
-          <view class="task-number">
-            {{ logged ? "xx" : "0" }}
-          </view>
-          <view class="task-description">
-            共计参与
+          已完成
+        </view>
+        <view
+          v-if="item.state === 3"
+          class="list-item-badge badge-timeout"
+        >
+          已超时
+        </view>
+        <view
+          v-if="item.state === 4"
+          class="list-item-badge badge-canceled"
+        >
+          已取消
+        </view>
+        <view class="list-item-content">
+          <image
+            v-if="item.oldMan"
+            class="list-item-content-photo"
+            :src="item.oldMan.identificationPhoto"
+            mode="aspectFill"
+          />
+          <view class="list-item-content-info">
+            <view class="list-item-content-info-title">
+              {{ item.district }}走失老人
+            </view>
+            <view
+              v-if="item.lostTime"
+              class="list-item-content-info-desc"
+            >
+              于 {{ item.lostTime }}
+            </view>
+            <view class="list-item-content-info-desc">
+              走失于{{ item.place }}附近
+            </view>
           </view>
         </view>
+        <view
+          v-if="item.state === 1"
+          class="list-item-icon icon-running"
+        />
+        <view
+          v-if="item.state === 2"
+          class="list-item-icon icon-complete"
+        />
+        <view
+          v-if="item.state === 3"
+          class="list-item-icon icon-timeout"
+        />
+        <view
+          v-if="item.state === 4"
+          class="list-item-icon icon-canceled"
+        />
       </view>
     </view>
   </view>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue";
+import {
+  computed,
+  Ref,
+  defineComponent,
+  PropType,
+  ref,
+  ComputedRef,
+} from "vue";
 import authService from "@/service/authService";
 import dayjs from "@/utils/dayjs";
 import { navigateTo } from "@/utils/helper";
+import UCountTo from "../UCountTo/index.vue";
+import { Case } from "@/api/types/models";
+import { requestGetVolunteerCases } from "@/api/mission";
+import { useStore } from "vuex";
 
 const useLogin = () => {
   const handleLogin = () => {
@@ -119,7 +215,60 @@ const useLogin = () => {
   return { handleLogin };
 };
 
+const useHistory = (status: "unlogin" | "me" | "user", info: any) => {
+  const store = useStore();
+  let userHistoryMissions: Ref<Array<Case>> = ref([]);
+
+  const getHistoryMissions = async () => {
+    if (status === "user" && (!info.volunteer || !info.volunteer.id)) return;
+
+    try {
+      const res = await requestGetVolunteerCases({
+        volunteerId: info.volunteer.id,
+      });
+      if (res.data.data) {
+        userHistoryMissions.value = res.data.data;
+      }
+      console.debug(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  if (status === "user") {
+    getHistoryMissions();
+  }
+
+  const historyMissions: ComputedRef<Array<Case>> = computed(() => {
+    return status === "me"
+      ? store.getters.myAllMissions.reverse()
+      : userHistoryMissions.value.reverse();
+  });
+
+  const doingMissionsNumber = computed(() => {
+    return historyMissions.value.filter((item) => item.state === 1).length;
+  });
+
+  const endedMissionsNumber = computed(() => {
+    return historyMissions.value.filter(
+      (item) => item.state === 2 || item.state === 3
+    ).length;
+  });
+
+  const allMissionsNumber = computed(() => {
+    return historyMissions.value.length;
+  });
+
+  return {
+    historyMissions,
+    doingMissionsNumber,
+    endedMissionsNumber,
+    allMissionsNumber,
+  };
+};
+
 export default defineComponent({
+  components: { UCountTo },
   props: {
     status: {
       type: String as PropType<"unlogin" | "me" | "user">,
@@ -183,6 +332,7 @@ export default defineComponent({
       phone,
       handleEditProfile,
       handleClickPhone,
+      ...useHistory(props.status, props.userInfo),
     };
   },
 });
@@ -312,15 +462,109 @@ export default defineComponent({
       flex-shrink: 1;
       width: 100%;
 
-      &-number {
-        font-size: 44rpx;
-        color: #000000;
-        line-height: 60rpx;
-      }
+      // &-number {
+      //   font-size: 44rpx;
+      //   color: #000000;
+      //   line-height: 60rpx;
+      // }
       &-description {
         font-size: 24rpx;
         color: #000000;
         line-height: 34rpx;
+      }
+    }
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 80rpx;
+
+  &-item {
+    width: 672rpx;
+    height: 176rpx;
+    background: #ffffff;
+    box-shadow: 0rpx 4rpx 8rpx 0rpx rgba(0, 0, 0, 0.5);
+    border-radius: 10rpx;
+    margin-bottom: 48rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24rpx 32rpx 24rpx 42rpx;
+    box-sizing: border-box;
+    position: relative;
+
+    &-content {
+      display: flex;
+
+      &-photo {
+        width: 128rpx;
+        height: 128rpx;
+        border-radius: 100%;
+      }
+
+      &-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-left: 40rpx;
+
+        &-title {
+          font-size: 36rpx;
+          font-weight: 400;
+          color: #000000;
+          line-height: 50rpx;
+          margin-bottom: 14rpx;
+        }
+
+        &-desc {
+          font-size: 20rpx;
+          font-weight: 400;
+          color: #303133;
+          line-height: 28rpx;
+        }
+      }
+    }
+
+    &-badge {
+      width: 96rpx;
+      height: 32rpx;
+      border-radius: 10rpx 10rpx 10rpx 0rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20rpx;
+      font-weight: 400;
+      line-height: 28rpx;
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      &.badge-running {
+        color: #303133;
+        background: #ffa36c;
+      }
+
+      &.badge-complete {
+        color: #303133;
+        background: #799351;
+      }
+    }
+
+    &-icon {
+      width: 60rpx;
+      height: 60rpx;
+      background-size: contain;
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+
+      &.icon-running {
+        background-image: url("@/static/images/icon/clock.png");
+      }
+      &.icon-complete {
+        background-image: url("@/static/images/icon/done.png");
       }
     }
   }

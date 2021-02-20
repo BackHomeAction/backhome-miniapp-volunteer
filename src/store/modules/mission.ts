@@ -9,6 +9,7 @@ import {
   requestGetFaceIdentificationRecords,
   requestGetMyCases,
   requestGetMyUncheckedCases,
+  requestGetVolunteerCases,
   requestGetVolunteersInCase,
   requestRefuseCase,
 } from "@/api/mission";
@@ -18,6 +19,7 @@ const Mission: Module<MissionState, RootState> = {
     myMissions: [],
     myMissionIDs: new Set(),
     myUncheckedMissions: [],
+    myAllMissions: [],
     currentMission: {
       missionInfo: null,
       teamMembers: [],
@@ -37,6 +39,13 @@ const Mission: Module<MissionState, RootState> = {
           state.myMissionIDs.add(item.id);
         }
       });
+      console.debug(state);
+    },
+    [MutationTypes.SET_MY_ALL_MISSIONS]: (
+      state,
+      myAllMissions: typeof state.myAllMissions
+    ) => {
+      state.myAllMissions = myAllMissions;
       console.debug(state);
     },
     [MutationTypes.SET_MY_UNCHECKED_MISSIONS]: (
@@ -139,6 +148,24 @@ const Mission: Module<MissionState, RootState> = {
           const res = await requestGetMyCases();
           if (res.data.data) {
             commit(MutationTypes.SET_MY_MISSIONS, res.data.data);
+          }
+          resolve();
+        } catch (e) {
+          console.log(e);
+          reject();
+        }
+      });
+    },
+    [ActionTypes.getMyAllMissions]: ({ commit, rootState }) => {
+      return new Promise<void>(async (resolve, reject) => {
+        try {
+          if (!rootState.user.userInfo?.id) return;
+
+          const res = await requestGetVolunteerCases({
+            volunteerId: rootState.user.userInfo.id,
+          });
+          if (res.data.data) {
+            commit(MutationTypes.SET_MY_ALL_MISSIONS, res.data.data);
           }
           resolve();
         } catch (e) {
@@ -315,6 +342,7 @@ const Mission: Module<MissionState, RootState> = {
     myMissions: (state) => state.myMissions,
     myMissionIDs: (state) => state.myMissionIDs,
     myUncheckedMissions: (state) => state.myUncheckedMissions,
+    myAllMissions: (state) => state.myAllMissions,
     currentMission: (state) => state.currentMission,
   },
 };

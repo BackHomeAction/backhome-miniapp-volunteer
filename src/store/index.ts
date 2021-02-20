@@ -10,9 +10,6 @@ import websocket from "./modules/websocket";
 import tim from "./modules/tim";
 
 export default createStore({
-  state: {},
-  mutations: {},
-  actions: {},
   modules: {
     user,
     avatarCropper,

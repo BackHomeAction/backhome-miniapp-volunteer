@@ -3,6 +3,14 @@ import Ws from "../utils/websocket";
 
 export interface RootState {
   version?: string;
+  user: UserState;
+  avatarCropper: AvatarCropperState;
+  announcement: AnnouncementState;
+  location: LocationState;
+  common: CommonState;
+  mission: MissionState;
+  websocket: WebsocketState;
+  tim: TimState;
 }
 
 export interface UserState {
@@ -46,6 +54,7 @@ export interface MissionState {
   myMissions: Array<Case>;
   myMissionIDs: Set<number>;
   myUncheckedMissions: Array<Case>;
+  myAllMissions: Array<Case>;
   currentMission: ICurrentMission;
 }
 
