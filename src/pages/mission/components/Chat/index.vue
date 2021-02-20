@@ -24,7 +24,12 @@
           >
             {{ item.newtime }}
           </view>
+          <bubble-notification
+            v-if="item.from === 'administrator'"
+            :data="item"
+          />
           <bubble
+            v-else
             :data="item"
             @click-avatar="handleShowVolunteerDetail"
           />
@@ -57,6 +62,7 @@ import Volunteers from "./Volunteers.vue";
 import VolunteerDetail from "./VolunteerDetail.vue";
 import ChatInput from "./ChatInput.vue";
 import Bubble from "./Bubble.vue";
+import BubbleNotification from "./BubbleNotification.vue";
 import { MutationTypes } from "@/enums/mutationTypes";
 
 const latestMessageID = ref("");
@@ -100,7 +106,13 @@ const useVolunteerDetail = () => {
 };
 
 export default defineComponent({
-  components: { Volunteers, VolunteerDetail, ChatInput, Bubble },
+  components: {
+    Volunteers,
+    VolunteerDetail,
+    ChatInput,
+    Bubble,
+    BubbleNotification,
+  },
   props: {
     data: {
       type: Object as PropType<Case>,
