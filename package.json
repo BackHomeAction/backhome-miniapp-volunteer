@@ -39,7 +39,9 @@
     "test:h5": "cross-env UNI_PLATFORM=h5 jest -i",
     "test:ios": "cross-env UNI_PLATFORM=app-plus UNI_OS_NAME=ios jest -i",
     "test:mp-baidu": "cross-env UNI_PLATFORM=mp-baidu jest -i",
-    "test:mp-weixin": "cross-env UNI_PLATFORM=mp-weixin jest -i"
+    "test:mp-weixin": "cross-env UNI_PLATFORM=mp-weixin jest -i",
+    "new:page": "plop page",
+    "new:component": "plop component"
   },
   "dependencies": {
     "@dcloudio/uni-app-plus": "^2.0.0-alpha-30820210112001",
@@ -55,14 +57,20 @@
     "@dcloudio/uni-quickapp-native": "^2.0.0-alpha-30820210112001",
     "@dcloudio/uni-quickapp-webview": "^2.0.0-alpha-30820210112001",
     "@dcloudio/uni-stat": "^2.0.0-alpha-30820210112001",
+    "@dcloudio/uni-ui": "^1.2.10",
     "@vue/shared": "^3.0.0",
     "core-js": "^3.6.5",
+    "dayjs": "^1.10.4",
     "flyio": "^0.6.2",
+    "gcoord": "^0.2.3",
+    "husky": "^4.3.8",
     "regenerator-runtime": "^0.12.1",
+    "tim-upload-plugin": "^1.0.1",
+    "tim-wx-sdk": "^2.9.3",
     "vue": "^3.0.0",
     "vue-class-component": "^6.3.2",
     "vue-property-decorator": "^8.0.0",
-    "vuex": "^3.2.0"
+    "vuex": "^4.0.0-rc.2"
   },
   "devDependencies": {
     "@babel/plugin-syntax-typescript": "^7.2.0",
@@ -90,13 +98,15 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-prettier-vue": "^3.0.0-alpha.2",
     "eslint-plugin-vue": "^7.4.1",
-    "husky": "^4.3.7",
     "jest": "^25.4.0",
     "lint-staged": "^10.5.3",
     "mini-types": "*",
     "miniprogram-api-typings": "*",
+    "plop": "^2.7.4",
     "postcss-comment": "^2.0.0",
     "prettier": "^2.2.1",
+    "sass": "^1.32.4",
+    "sass-loader": "^10.1.1",
     "typescript": "^3.0.0"
   },
   "browserslist": [

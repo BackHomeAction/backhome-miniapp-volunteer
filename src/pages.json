@@ -1,16 +1,178 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app"
-			}
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	}
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      // uni-ui 规则如下配置
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/me/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/test/index",
+      "style": {
+        "navigationBarTitleText": "测试页"
+      }
+    }, {
+      "path": "pages/register/index",
+      "style": {
+        "navigationBarTitleText": "完善个人信息"
+      }
+    }, {
+      "path": "pages/editProfile/index",
+      "style": {
+        "navigationBarTitleText": "修改个人信息"
+      }
+    }, {
+      "path": "pages/editPhoneNumber/index",
+      "style": {
+        "navigationBarTitleText": "修改手机号"
+      }
+    }, {
+      "path": "pages/UAvatarCropper/index",
+      "style": {
+        "navigationBarTitleText": "头像上传",
+        "navigationBarBackgroundColor": "#000000"
+      }
+    }, {
+      "path": "pages/announcement/index",
+      "style": {
+        "navigationBarTitleText": "公告详情"
+      }
+    }, {
+      "path": "pages/volunteerList/index",
+      "style": {
+        "navigationBarTitleText": "志愿者列表",
+        "navigationBarBackgroundColor": "#A20A0A",
+        "navigationBarTextStyle": "white"
+      }
+    }, {
+      "path": "pages/missionInformation/index",
+      "style": {
+        "navigationBarTitleText": "详细信息" // 案件详细信息
+      }
+    }, {
+      "path": "pages/volunteerInformation/index",
+      "style": {
+        "navigationBarTitleText": "详细信息" // 志愿者详细信息
+      }
+    }, {
+      "path": "pages/missionHall/index",
+      "style": {
+        "navigationBarTitleText": "任务大厅"
+      }
+    }, {
+      "path": "pages/myMissions/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/mission/index",
+      "style": {
+        "navigationBarTitleText": "寻人"
+      }
+    }, {
+      "path": "pages/requestSubscribeMessage/index",
+      "style": {
+        "navigationBarTitleText": "设置订阅"
+      }
+    }, {
+      "path": "pages/faceRecognitionHistory/index",
+      "style": {
+        "navigationBarTitleText": "人脸识别历史结果"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "归家行动志愿者端",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#f0f2f5"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#000000",
+    "backgroundColor": "#F8F8F8",
+    "list": [{
+      "pagePath": "pages/index/index",
+      "text": "主页",
+      "iconPath": "static/images/tabbar/home.png",
+      "selectedIconPath": "static/images/tabbar/home-active.png"
+    }, {
+      "pagePath": "pages/myMissions/index",
+      "text": "任务",
+      "iconPath": "static/images/tabbar/task.png",
+      "selectedIconPath": "static/images/tabbar/task-active.png"
+    }, {
+      "pagePath": "pages/me/index",
+      "text": "我的",
+      "iconPath": "static/images/tabbar/user.png",
+      "selectedIconPath": "static/images/tabbar/user-active.png"
+    }]
+  },
+  "condition": { //模式配置，仅开发期间生效
+    "current": 0, //当前激活的模式（list 的索引项）
+    "list": [{
+        "name": "首页",
+        "path": "pages/index/index"
+      },
+      {
+        "name": "测试页", //模式名称
+        "path": "pages/test/index", //启动页面，必选
+        "query": "" //启动参数，在页面的onLoad函数里面得到。
+      },
+      {
+        "name": "个人页",
+        "path": "pages/me/index",
+        "query": ""
+      },
+      {
+        "name": "完善个人信息",
+        "path": "pages/register/index",
+        "query": ""
+      },
+      {
+        "name": "修改个人信息",
+        "path": "pages/editProfile/index",
+        "query": ""
+      }, {
+        "name": "修改手机号",
+        "path": "pages/editPhoneNumber/index",
+        "query": ""
+      }, {
+        "name": "志愿者列表",
+        "path": "pages/volunteerList/index",
+        "query": ""
+      }, {
+        "name": "任务大厅",
+        "path": "pages/missionHall/index",
+        "query": ""
+      }, {
+        "name": "我的任务",
+        "path": "pages/myMissions/index",
+        "query": ""
+      }, {
+        "name": "寻人",
+        "path": "pages/mission/index",
+        "query": "id=7"
+      }, {
+        "name": "案件信息",
+        "path": "pages/missionInformation/index",
+        "query": "id=3"
+      }, {
+        "name": "人脸识别历史结果",
+        "path": "pages/faceRecognitionHistory/index",
+        "query": "id=7"
+      }
+    ]
+  }
 }

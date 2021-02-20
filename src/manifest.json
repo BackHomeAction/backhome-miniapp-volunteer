@@ -4,7 +4,7 @@
     "description": "",
     "versionName": "1.0.0",
     "versionCode": "100",
-	"transformPx":false,
+	  "transformPx":false,
     "app-plus": { /* 5+App特有相关 */
         "modules": { /* 模块配置 */
 
@@ -49,9 +49,24 @@
     },
     "mp-weixin": { /* 小程序特有相关 */
         "usingComponents":true,
-        "appid": "",
+        "appid": "wx96991be46e2a21d1",
         "setting" : {
-        	"urlCheck" : true
+          "urlCheck" : true
+        },
+        "permission": {
+          "scope.userLocation": {
+            "desc": "你的位置信息将用于小程序获取你的实时位置"
+          }
+        },
+        "plugins": {
+          "routePlan": {
+            "version": "1.0.11",
+            "provider": "wx50b5593e81dd937a"
+          },
+          "chooseLocation": {
+            "version": "1.0.5",
+            "provider": "wx76a9a06e5b4e693e"
+          }
         }
     },
     "mp-alipay" : {
