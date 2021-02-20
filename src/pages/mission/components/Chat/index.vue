@@ -147,9 +147,11 @@ export default defineComponent({
       console.debug(messageList);
       if (!messageList.value || !messageList.value.length) return;
 
-      latestMessageID.value = `message-${messageList.value[
-        messageList.value.length - 1
-      ].ID.slice(10)}`;
+      setTimeout(() => {
+        latestMessageID.value = `message-${messageList.value[
+          messageList.value.length - 1
+        ].ID.slice(10)}`;
+      }, 300);
 
       // 如果当前状态是 show，则清空未读消息计数
       if (props.show) {
