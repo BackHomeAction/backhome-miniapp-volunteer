@@ -75,7 +75,7 @@
         </view>
       </view>
     </view>
-    
+
     <!-- 存在多个其他进行中案件时的弹出选择器 -->
     <view
       v-if="mansWithoutSelected && mansWithoutSelected.length > 1"
@@ -327,6 +327,7 @@ export default defineComponent({
   opacity: 0;
   transform: scale(1, 0) translate(0, -70%);
   transition: all 0.2s ease-in-out;
+  filter: drop-shadow(2rpx 4rpx 8rpx rgba(0, 0, 0, 0.5));
 
   &.show {
     opacity: 1;
@@ -336,19 +337,61 @@ export default defineComponent({
 
   .other-mans {
     position: absolute;
-    bottom: 20rpx;
-    right: 29.5rpx;
+    bottom: 30rpx;
+    right: 21.5rpx;
     display: flex;
     flex-direction: column;
+    background: #ffffff;
+    border-radius: 10rpx;
+    padding: 16rpx 8rpx;
+    box-sizing: border-box;
 
     &-item {
-      margin-top: 20rpx;
+      width: 100rpx;
+      height: 100rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
 
       &-image {
         width: 100rpx;
         height: 100rpx;
         border-radius: 100%;
       }
+    }
+
+    .other-mans-item + .other-mans-item {
+      margin-top: 20rpx;
+
+      &::after {
+        position: absolute;
+        /* #ifndef APP-NVUE */
+        box-sizing: border-box;
+        content: " ";
+        pointer-events: none;
+        border-top: 1px solid #e4e4e4;
+        /* #endif */
+        right: 0;
+        left: 0;
+        top: -10rpx;
+        transform: scaleY(0.5);
+        margin: 0;
+      }
+    }
+
+    &::after {
+      content: " ";
+      margin: 0;
+      border-width: 26rpx 15rpx 0 15rpx;
+      border-style: solid;
+      border-color: #ffffff transparent transparent transparent;
+      padding: 0;
+      width: 0;
+      height: 0;
+      left: 44rpx;
+      bottom: -26rpx;
+      position: absolute;
     }
   }
 }
