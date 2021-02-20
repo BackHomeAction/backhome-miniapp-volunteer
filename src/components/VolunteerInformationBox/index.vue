@@ -551,6 +551,12 @@ export default defineComponent({
         color: #303133;
         background: #799351;
       }
+
+      &.badge-timeout,
+      &.badge-canceled {
+        color: #303133;
+        background: #b0b2b2;
+      }
     }
 
     &-icon {
