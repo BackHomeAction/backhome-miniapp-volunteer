@@ -86,13 +86,13 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .avatar {
-  padding: 8rpx 0;
+  padding: 16rpx 0;
   display: flex;
   justify-content: center;
 
   &-image {
-    width: 86rpx;
-    height: 86rpx;
+    width: 100rpx;
+    height: 100rpx;
     border-radius: 100%;
   }
 }

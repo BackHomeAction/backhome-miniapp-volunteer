@@ -38,9 +38,14 @@
         <view class="map__util map__util-help" />
       </view>
       
-      <man :data="currentMissionInfo" />
+      <man
+        :current="currentMissionInfo"
+        @show-more-info="handleTabClick('info')"
+        @select="handleChangeCase"
+      />
     </view>
 
+    <!-- popups below -->
     <place-info-modal
       v-model:value="showPlaceInfoModal"
       :place-data="placeInfoData"
@@ -93,12 +98,14 @@ import { ICurrentMission } from "@/store/types";
 import store from "@/store";
 import { ActionTypes } from "@/enums/actionTypes";
 import {
+  hideLoading,
   navigateBack,
+  showLoading,
   showModal,
   showModalError,
   showToast,
 } from "@/utils/helper";
-import { Volunteer } from "@/api/types/models";
+import { Case, Volunteer } from "@/api/types/models";
 import { SocketStateTypes } from "@/enums/socketStateTypes";
 import { MutationTypes } from "@/enums/mutationTypes";
 import Tabs from "./components/Tabs/index.vue";
@@ -508,6 +515,31 @@ const newCaseInfoCallback = async (res: any) => {
   }
 };
 
+// 初始化任务
+const init = async () => {
+  uni.showNavigationBarLoading();
+  // 初始化 store 数据
+  try {
+    await store.dispatch(ActionTypes.initCurrentMission, {
+      id: caseId.value,
+    });
+    // 设置视野中心为走失位置
+    mapContext.moveToLocation({
+      longitude: store.getters.currentMission.missionInfo.longitude,
+      latitude: store.getters.currentMission.missionInfo.latitude,
+    });
+    // 启动 socket 订阅
+    store.getters.ws.subscribe(`/case/${caseId.value}`, newCaseInfoCallback);
+    // 切换当前 TIM 群组到该任务
+    checkoutGroup(caseId.value);
+  } catch (e) {
+    console.log(e);
+    showModalError("加载任务信息失败");
+    navigateBack();
+  }
+  uni.hideNavigationBarLoading();
+};
+
 export default defineComponent({
   components: {
     PlaceInfoModal,
@@ -520,33 +552,22 @@ export default defineComponent({
     VolunteerInfoModal,
   },
   setup() {
-    return { ...useMap(), mapSettings, ...usePopup() };
+    const handleChangeCase = async (item: Case) => {
+      if (!item.id) return;
+
+      caseId.value = item.id;
+      showLoading("切换中");
+      await init();
+      hideLoading();
+    };
+
+    return { ...useMap(), mapSettings, ...usePopup(), handleChangeCase };
   },
   onLoad(query: { id: string }) {
     caseId.value = parseInt(query.id, 10);
   },
   async onReady() {
-    uni.showNavigationBarLoading();
-    // 初始化 store 数据
-    try {
-      await store.dispatch(ActionTypes.initCurrentMission, {
-        id: caseId.value,
-      });
-      // 设置视野中心为走失位置
-      mapContext.moveToLocation({
-        longitude: store.getters.currentMission.missionInfo.longitude,
-        latitude: store.getters.currentMission.missionInfo.latitude,
-      });
-      // 启动 socket 订阅
-      store.getters.ws.subscribe(`/case/${caseId.value}`, newCaseInfoCallback);
-      // 切换当前 TIM 群组到该任务
-      checkoutGroup(caseId.value);
-    } catch (e) {
-      console.log(e);
-      showModalError("加载任务信息失败");
-      navigateBack();
-    }
-    uni.hideNavigationBarLoading();
+    await init();
   },
   onUnload() {
     console.debug("map unload");
