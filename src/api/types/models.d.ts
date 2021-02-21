@@ -34,6 +34,10 @@ export interface BindVolunteerInformation {
   IDCard?: string; // 身份证号
   name?: string; // 姓名
 }
+export interface CancelCase {
+  caseId?: string; // 案件ID(int)
+  state?: string; // 结束案件状态
+}
 export interface Case {
   address?: string; // 详细地址
   city?: string; // 市
@@ -50,8 +54,12 @@ export interface Case {
   place?: string; // 位置名
   province?: string; // 省
   startTime?: string; // 案件开始时间
-  state?: number; // 案件状态（1为正在进行，2为已找到，3为已超时）
+  state?: number; // 案件状态（1为正在进行，2为已找到，3为已超时,4为已取消）
   volunteerCase?: VolunteerCase; // 志愿者-案件信息
+}
+export interface ConfirmResult {
+  faceId?: string; // 人脸记录ID
+  state?: string; // 确认结果，3为成功，4为失败
 }
 export interface DeleteOldManId {
   id?: string; // 老人信息ID
@@ -61,7 +69,9 @@ export interface Face {
   id?: number; // ID
   imgUrl?: string; // 照片地址
   result?: number; // 比对结果
+  state?: number; // 状态(1为比对结果小于80%，2为大于等于80%但家属未确认，3为确认成功，4为确认失败)
   time?: Timestamp; // 时间
+  volunteerId?: number; // 志愿者ID
 }
 export interface FaceIdentification {
   caseId?: number; // 案件ID

@@ -33,7 +33,7 @@
           </view>
           <view
             class="table-item table-item-similarity"
-            :class="{red: item.result && item.result > 80}"
+            :class="{red: item.result && item.result >= 80}"
           >
             {{ item.result && `${item.result.toFixed(1)}%` }}
           </view>
