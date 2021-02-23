@@ -11,6 +11,9 @@
         <view class="table-item table-item-time">
           上传时间
         </view>
+        <view class="table-item table-item-confirm">
+          家属确认
+        </view>
       </view>
       <empty
         v-if="!isLoading && (!historyList || !historyList.length)"
@@ -40,7 +43,10 @@
           <view
             class="table-item table-item-time"
           >
-            {{ item.time && parseDateTime(item.time.toString()) }}
+            {{ item.time && parseTime(item.time.toString()) }}
+          </view>
+          <view class="table-item table-item-confirm">
+            {{ item.state && getConfirmState(item.state) }}
           </view>
         </view>
       </view>
@@ -56,6 +62,7 @@ import { useTime } from "@/uses/useTime";
 import store from "@/store";
 import { ActionTypes } from "@/enums/actionTypes";
 import { useStore } from "vuex";
+import dayjs from "@/utils/dayjs";
 
 const isLoading = ref(true);
 
@@ -84,11 +91,29 @@ export default defineComponent({
       return store.getters.currentMission.faceRecognitionHistory;
     });
 
+    const parseTime = (time: string) => {
+      return dayjs(time).format("MM-DD HH:mm");
+    };
+
+    const getConfirmState = (state: number) => {
+      switch (state) {
+        case 1:
+          return "-";
+        case 2:
+          return "未确认";
+        case 3:
+          return "确认是";
+        case 4:
+          return "确认否";
+      }
+    };
+
     return {
       isLoading,
       historyList,
       handlePreviewImage,
-      ...useTime(),
+      parseTime,
+      getConfirmState,
     };
   },
   onLoad(query: { id: string }) {
@@ -143,7 +168,11 @@ export default defineComponent({
     }
 
     &-time {
-      width: 350rpx;
+      width: 230rpx;
+    }
+
+    &-confirm {
+      width: 180rpx;
     }
   }
 }
