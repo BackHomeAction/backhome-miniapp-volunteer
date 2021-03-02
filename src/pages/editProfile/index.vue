@@ -251,6 +251,10 @@ const uploadAvatar = async (path: string) => {
   }
 };
 
+const handleAvatarChange = (path: any) => {
+  uploadAvatar(path);
+};
+
 export default defineComponent({
   components: { UCellGroup, UCellItem },
   setup() {
@@ -267,9 +271,10 @@ export default defineComponent({
     };
   },
   onLoad() {
-    bus.on("uAvatarCropper", (path) => {
-      uploadAvatar(path);
-    });
+    bus.on("uAvatarCropper", handleAvatarChange);
+  },
+  onUnload() {
+    bus.off("uAvatarCropper", handleAvatarChange);
   },
 });
 </script>
