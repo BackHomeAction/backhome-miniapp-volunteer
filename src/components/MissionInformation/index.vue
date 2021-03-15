@@ -89,7 +89,7 @@
         />
         <u-cell-item
           title="残疾情况"
-          :value="data.oldMan.otherIllness ? data.oldMan.otherIllness : '暂无'"
+          :value="data.oldMan.disability ? data.oldMan.disability : '暂无'"
           :arrow="false"
           hover-class="none"
         />
