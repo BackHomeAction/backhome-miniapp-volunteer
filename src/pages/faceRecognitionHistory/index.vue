@@ -66,11 +66,11 @@ import dayjs from "@/utils/dayjs";
 
 const isLoading = ref(true);
 
-const getHistory = async (caseId: number) => {
+const getHistory = async (oldManId: number) => {
   isLoading.value = true;
   uni.showNavigationBarLoading();
   await store.dispatch(ActionTypes.getCurrentMissionFaceRecognitionHistories, {
-    id: caseId,
+    oldManId: oldManId,
   });
   isLoading.value = false;
   uni.hideNavigationBarLoading();
@@ -116,8 +116,8 @@ export default defineComponent({
       getConfirmState,
     };
   },
-  onLoad(query: { id: string }) {
-    getHistory(parseInt(query.id, 10));
+  onLoad(query: { oldManId: string }) {
+    getHistory(parseInt(query.oldManId, 10));
   },
 });
 </script>

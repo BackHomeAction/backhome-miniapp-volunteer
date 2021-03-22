@@ -117,16 +117,11 @@ const useUpload = (caseId?: number) => {
     isChecking.value = false;
   };
 
-  const handleClickHistory = () => {
-    navigateTo("/pages/faceRecognitionHistory/index", { id: caseId });
-  };
-
   return {
     imagePath,
     handleSelectImage,
     checkFace,
     isChecking,
-    handleClickHistory,
   };
 };
 
@@ -139,8 +134,17 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const handleClickHistory = () => {
+      if (!props.data?.oldMan?.id) return;
+
+      navigateTo("/pages/faceRecognitionHistory/index", {
+        oldManId: props.data.oldMan.id,
+      });
+    };
+
     return {
       ...useUpload(props.data.id),
+      handleClickHistory,
     };
   },
 });
