@@ -171,14 +171,14 @@ export const requestFaceIdentification = (params: FaceIdentification) => {
 /**
  * 获取人脸识别历史记录
  *
- * @param {{ caseId: number }} params
+ * @param {{ oldManId: number }} params
  * @return {*}
  */
 export const requestGetFaceIdentificationRecords = (params: {
-  caseId: number;
+  oldManId: number;
 }) => {
   return http.request<ResponseData<JavaList<Face>>>({
-    url: `case/face`,
+    url: `face`,
     method: "GET",
     params: params,
     data: {},
