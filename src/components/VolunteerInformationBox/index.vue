@@ -145,7 +145,7 @@
           v-if="item.state === 4"
           class="list-item-badge badge-canceled"
         >
-          已取消
+          已归档
         </view>
         <view class="list-item-content">
           <image
