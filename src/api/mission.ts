@@ -160,8 +160,8 @@ export const requestGetVolunteersInCase = (params: { caseId: number }) => {
  * @return {*}
  */
 export const requestFaceIdentification = (params: FaceIdentification) => {
-  return http.request<ResponseData<number>>({
-    url: `case/face`,
+  return http.request<ResponseData<Face>>({
+    url: `face`,
     method: "POST",
     params: {},
     data: params,
