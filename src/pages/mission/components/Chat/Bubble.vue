@@ -1,4 +1,3 @@
-<!-- TODO: 还须处理系统消息、管理员消息、家属消息 -->
 <template>
   <view
     v-if="data"
@@ -124,6 +123,10 @@ export default defineComponent({
             return users[i].avatarUrl;
           }
         }
+      }
+
+      if (props.data.avatar) {
+        return props.data.avatar;
       }
 
       return "/static/images/icon/user.png";
