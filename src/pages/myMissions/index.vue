@@ -57,13 +57,11 @@ const useTaskList = () => {
   const store = useStore();
 
   const myUncheckedTaskList = computed(() => {
-    return store.getters.myUncheckedMissions
-      ? store.getters.myUncheckedMissions.reverse()
-      : [];
+    return store.getters.myUncheckedMissions || [];
   });
 
   const myTaskList = computed(() => {
-    return store.getters.myMissions ? store.getters.myMissions.reverse() : [];
+    return store.getters.myMissions || [];
   });
 
   const taskList = computed(() => {
