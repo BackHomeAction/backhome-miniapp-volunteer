@@ -1,7 +1,7 @@
 <template>
   <view class="face">
     <view class="title">
-      请上传照片到此处
+      请点击下方区域上传照片
     </view>
     <view
       v-if="!imagePath"
@@ -29,7 +29,7 @@
         :loading="isChecking"
         @click="checkFace"
       >
-        上传
+        校验
       </u-button>
       <u-button
         class="button"
