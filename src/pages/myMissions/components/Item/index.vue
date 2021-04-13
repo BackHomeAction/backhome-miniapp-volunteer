@@ -4,10 +4,22 @@
       class="header"
     >
       <view
-        v-if="status === 'checked'"
-        class="badge"
+        v-if="status === 'checked' && getHoursFromTime(data.startTime) <= 24"
+        class="badge badge--red"
       >
-        进行中
+        紧急
+      </view>
+      <view
+        v-if="status === 'checked' && getHoursFromTime(data.startTime) > 24 && getHoursFromTime(data.startTime) <= 48"
+        class="badge badge--yellow"
+      >
+        优先
+      </view>
+      <view
+        v-if="status === 'checked' && getHoursFromTime(data.startTime) > 48"
+        class="badge badge--green"
+      >
+        正常
       </view>
     </view>
     <view
@@ -255,6 +267,11 @@ export default defineComponent({
       navigateTo("/pages/mission/index", { id: props.data.id });
     };
 
+    // 计算案发天数
+    const getHoursFromTime = (time: string) => {
+      return dayjs().diff(time, "hour");
+    };
+
     // 计算年龄
     const manAge = computed(() => {
       return parseInt(dayjs(props?.data?.oldMan?.birthDate).fromNow(), 10);
@@ -267,6 +284,7 @@ export default defineComponent({
       manAge,
       ...useTask(props.data),
       ...useLocation(),
+      getHoursFromTime,
     };
   },
 });
@@ -309,6 +327,17 @@ export default defineComponent({
     font-weight: 400;
     color: #303133;
     line-height: 28rpx;
+    color: #ffffff;
+
+    &--red {
+      background: #f5222d;
+    }
+    &--yellow {
+      background: #ffa36c;
+    }
+    &--green {
+      background: #5bb82c;
+    }
   }
 }
 
