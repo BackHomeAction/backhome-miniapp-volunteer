@@ -4,7 +4,6 @@ import Ws from "../utils/websocket";
 export interface RootState {
   version?: string;
   user: UserState;
-  avatarCropper: AvatarCropperState;
   announcement: AnnouncementState;
   location: LocationState;
   common: CommonState;
@@ -17,10 +16,6 @@ export interface UserState {
   logged: boolean;
   hasVolunteerInfo: boolean;
   userInfo?: null | Volunteer;
-}
-
-export interface AvatarCropperState {
-  path: string;
 }
 
 export interface AnnouncementState {

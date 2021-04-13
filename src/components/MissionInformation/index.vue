@@ -37,11 +37,13 @@
           hover-class="none"
         />
         <u-cell-item
+          v-if="data.oldMan.phone"
           title="家属联系方式"
           :value="data.oldMan.phone"
           @click="makePhoneCall(data.oldMan.phone)"
         />
         <u-cell-item
+          v-if="data.oldMan.idcard"
           title="身份证号"
           :value="data.oldMan.idcard"
           :arrow="false"
@@ -50,12 +52,14 @@
       </u-cell-group>
       <u-cell-group title=" ">
         <u-cell-item
+          v-if="data.oldMan.height"
           title="身高"
           :value="`${data.oldMan.height} cm`"
           :arrow="false"
           hover-class="none"
         />
         <u-cell-item
+          v-if="data.oldMan.weight"
           title="体重"
           :value="`${data.oldMan.weight} kg`"
           :arrow="false"
@@ -94,6 +98,14 @@
           hover-class="none"
         />
       </u-cell-group>
+      <u-cell-group title=" ">
+        <u-cell-item
+          title="其他走失信息"
+          :value="data.others || '暂无'"
+          :arrow="false"
+          hover-class="none"
+        />
+      </u-cell-group>
     </view>
 
     <places-popup
@@ -121,7 +133,7 @@ export default defineComponent({
   setup(props) {
     // 计算图片列表
     const images = computed(() => {
-      const lifePhotos = props?.data?.oldMan
+      const lifePhotos = props?.data?.oldMan?.lifePhotos
         ? JSON.parse(props.data.oldMan.lifePhoto)
         : [];
 
@@ -143,13 +155,13 @@ export default defineComponent({
 
     // 常去地点
     const offenPlace = computed(() => {
-      return props?.data?.oldMan
+      return props?.data?.oldMan?.offerPlace
         ? JSON.parse(props.data.oldMan.offerPlace)
         : [];
     });
     // 常去地点数量
     const offenPlaceNumber = computed(() => {
-      return props?.data?.oldMan
+      return props?.data?.oldMan?.offerPlace
         ? JSON.parse(props.data.oldMan.offerPlace).length
         : [];
     });

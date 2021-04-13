@@ -1,7 +1,7 @@
 <template>
   <view class="face">
     <view class="title">
-      请上传照片到此处
+      请点击下方区域上传照片
     </view>
     <view
       v-if="!imagePath"
@@ -29,7 +29,7 @@
         :loading="isChecking"
         @click="checkFace"
       >
-        上传
+        校验
       </u-button>
       <u-button
         class="button"
@@ -94,20 +94,20 @@ const useUpload = (caseId?: number) => {
     isChecking.value = true;
     try {
       const imgUrl = await uploadImage(imagePath.value);
-      const res = await requestFaceIdentification({
-        caseId,
-        imgUrl,
-      });
+      const res = await requestFaceIdentification({ imgUrl });
       if (!res.data.data) {
         showModalError("人脸识别失败");
-      } else if (res.data.data < 80) {
-        showModal("比对未通过", `人脸匹配率：${res.data.data.toFixed(1)}%`);
+      } else if (res.data.data.result! < 0.8) {
+        showModal(
+          "比对未通过",
+          `人脸匹配率：${(res.data.data.result! * 100).toFixed(1)}%`
+        );
       } else {
         showModal(
           "比对通过",
-          `人脸信息比对成功，等待家属确认。（匹配率：${res.data.data.toFixed(
-            1
-          )}%）`
+          `人脸信息比对成功，等待家属确认。（匹配率：${(
+            res.data.data.result! * 100
+          ).toFixed(1)}%）`
         );
         imagePath.value = "";
       }
@@ -117,16 +117,11 @@ const useUpload = (caseId?: number) => {
     isChecking.value = false;
   };
 
-  const handleClickHistory = () => {
-    navigateTo("/pages/faceRecognitionHistory/index", { id: caseId });
-  };
-
   return {
     imagePath,
     handleSelectImage,
     checkFace,
     isChecking,
-    handleClickHistory,
   };
 };
 
@@ -139,8 +134,17 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const handleClickHistory = () => {
+      if (!props.data?.oldMan?.id) return;
+
+      navigateTo("/pages/faceRecognitionHistory/index", {
+        oldManId: props.data.oldMan.id,
+      });
+    };
+
     return {
       ...useUpload(props.data.id),
+      handleClickHistory,
     };
   },
 });

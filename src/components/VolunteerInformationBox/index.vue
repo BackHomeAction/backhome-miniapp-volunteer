@@ -139,13 +139,13 @@
           v-if="item.state === 3"
           class="list-item-badge badge-timeout"
         >
-          已超时
+          已归档
         </view>
         <view
           v-if="item.state === 4"
           class="list-item-badge badge-canceled"
         >
-          已取消
+          已归档
         </view>
         <view class="list-item-content">
           <image

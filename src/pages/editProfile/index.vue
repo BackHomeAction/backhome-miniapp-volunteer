@@ -107,9 +107,8 @@ import {
   showToast,
 } from "@/utils/helper";
 import { VolunteerInformation } from "@/api/types/models";
-import store from "@/store";
-import { MutationTypes } from "@/enums/mutationTypes";
 import { requestUploadImage } from "@/api/common";
+import bus from "@/utils/bus";
 
 const editUserInfo = async (params: VolunteerInformation) => {
   showLoading("请稍候");
@@ -252,6 +251,10 @@ const uploadAvatar = async (path: string) => {
   }
 };
 
+const handleAvatarChange = (path: any) => {
+  uploadAvatar(path);
+};
+
 export default defineComponent({
   components: { UCellGroup, UCellItem },
   setup() {
@@ -267,11 +270,11 @@ export default defineComponent({
       handleEditPhoneNumber,
     };
   },
-  onShow() {
-    if (store.getters.avatarPath) {
-      uploadAvatar(store.getters.avatarPath);
-      store.commit(MutationTypes.SET_AVATAR_PATH, "");
-    }
+  onLoad() {
+    bus.on("uAvatarCropper", handleAvatarChange);
+  },
+  onUnload() {
+    bus.off("uAvatarCropper", handleAvatarChange);
   },
 });
 </script>

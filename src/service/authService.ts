@@ -1,6 +1,7 @@
 import { requestGetTimUserSig } from "@/api/tim";
 import templateMessageSettings from "@/config/templateMessage";
 import { ActionTypes } from "@/enums/actionTypes";
+import { MutationTypes } from "@/enums/mutationTypes";
 import store from "@/store";
 import {
   hideLoading,
@@ -33,6 +34,7 @@ const login = async (triggeredByButton = false) => {
       // 获取我的任务
       store.dispatch(ActionTypes.getMyUncheckedMissions);
       store.dispatch(ActionTypes.getMyMissions);
+      store.dispatch(ActionTypes.getMyAllMissions);
     } catch (e) {
       console.log(e);
     }
@@ -53,6 +55,8 @@ const logout = async () => {
 
   try {
     await store.dispatch(ActionTypes.logout);
+    await store.dispatch(ActionTypes.clearCurrentMission);
+    store.commit(MutationTypes.SET_MY_ALL_MISSIONS, []);
     websocketService && websocketService.end();
     showToast("退出成功", "success");
   } catch (e) {

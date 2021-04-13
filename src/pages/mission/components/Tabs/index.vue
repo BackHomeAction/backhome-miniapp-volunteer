@@ -69,9 +69,9 @@ export default defineComponent({
       return store.getters.currentMission.faceRecognitionHistory;
     });
 
-    // 是否有 >80 且家属未确认的人脸识别记录
+    // 是否有 >=80 且家属未确认的人脸识别记录
     const hasUnchekedSuccessFaceRecognitionRecord = computed(() => {
-      return historyList.value.some((item) => item.result && item.result > 80);
+      return historyList.value.some((item) => item.result && item.state === 2);
     });
 
     return {

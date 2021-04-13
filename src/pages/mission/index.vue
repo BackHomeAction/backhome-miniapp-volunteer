@@ -21,29 +21,32 @@
       @regionchange="handleRegionChange"
       @markertap="handleMarkerClick"
     />
+    
     <view class="map-bottom">
-      <view class="map-bottom-buttons">
-        <view class="map__control">
-          <view
-            class="map__control-item map__control-item-location-me"
-            :class="{'map__control-item--active': isMapRegionCenterIsCurrentPlace}"
-            @click.stop="handleToCurrentPosition"
-          />
-          <view
-            class="map__control-item map__control-item-location-lost"
-            :class="{'map__control-item--active': isMapRegionCenterIsLostPlace}"
-            @click.stop="handleToLostPosition"
-          />
-        </view>
-        <view class="map__util map__util-help" />
-      </view>
-      
       <man
         :current="currentMissionInfo"
         @show-more-info="handleTabClick('info')"
         @select="handleChangeCase"
       />
     </view>
+
+    <view class="map__control">
+      <view
+        class="map__control-item map__control-item-location-me"
+        :class="{'map__control-item--active': isMapRegionCenterIsCurrentPlace}"
+        @click.stop="handleToCurrentPosition"
+      />
+      <view
+        class="map__control-item map__control-item-location-lost"
+        :class="{'map__control-item--active': isMapRegionCenterIsLostPlace}"
+        @click.stop="handleToLostPosition"
+      />
+    </view>
+
+    <view
+      class="map__util map__util-help"
+      @click="handleClickTips"
+    />
 
     <!-- popups below -->
     <place-info-modal
@@ -100,6 +103,7 @@ import { ActionTypes } from "@/enums/actionTypes";
 import {
   hideLoading,
   navigateBack,
+  navigateTo,
   showLoading,
   showModal,
   showModalError,
@@ -561,7 +565,17 @@ export default defineComponent({
       hideLoading();
     };
 
-    return { ...useMap(), mapSettings, ...usePopup(), handleChangeCase };
+    const handleClickTips = () => {
+      navigateTo("/pages/tips/index");
+    };
+
+    return {
+      ...useMap(),
+      mapSettings,
+      ...usePopup(),
+      handleChangeCase,
+      handleClickTips,
+    };
   },
   onLoad(query: { id: string }) {
     caseId.value = parseInt(query.id, 10);
@@ -599,17 +613,12 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
-    &-buttons {
-      width: 716rpx;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 36rpx;
-    }
   }
 
   &__control {
+    position: fixed;
+    left: 17rpx;
+    bottom: calc(16rpx + 250rpx + 30rpx + env(safe-area-inset-bottom));
     width: 80rpx;
     height: 160rpx;
     background: #ffffff;
@@ -665,6 +674,9 @@ export default defineComponent({
   }
 
   &__util {
+    position: fixed;
+    right: 17rpx;
+    bottom: calc(16rpx + 250rpx + 30rpx + env(safe-area-inset-bottom));
     width: 48rpx;
     height: 48rpx;
     opacity: 0.8;

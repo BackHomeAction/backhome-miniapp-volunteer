@@ -1,4 +1,3 @@
-<!-- TODO: 还须处理系统消息、管理员消息、家属消息 -->
 <template>
   <view
     v-if="data"
@@ -34,7 +33,7 @@
           管理员
         </view>
         <view class="info-name">
-          {{ data.nick }}
+          {{ data.nick ? data.nick : getUserRoleName() }}
         </view>
       </view>
       <view>
@@ -92,6 +91,19 @@ export default defineComponent({
       }
     };
 
+    // 获取用户身份名
+    const getUserRoleName = () => {
+      const roleId = getUserRole();
+
+      if (roleId === 1) {
+        return "志愿者";
+      } else if (roleId === 2) {
+        return "家属";
+      } else if (roleId === 3) {
+        return "志愿者";
+      }
+    };
+
     // 获取用户 ID
     const getUserID = () => {
       const imUserID = props.data.from;
@@ -111,8 +123,13 @@ export default defineComponent({
             return users[i].avatarUrl;
           }
         }
-        return 1;
       }
+
+      if (props.data.avatar) {
+        return props.data.avatar;
+      }
+
+      return "/static/images/icon/user.png";
     };
 
     // 获取用户信息
@@ -139,6 +156,7 @@ export default defineComponent({
       TIM,
       handlePreviewImage,
       getUserRole,
+      getUserRoleName,
       getUserID,
       getUserAvatar,
       handleClickAvatar,

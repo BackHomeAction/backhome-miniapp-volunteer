@@ -604,12 +604,12 @@ export default defineComponent({
   /* #endif */
   flex-direction: row;
   align-items: center;
-  margin: 5px 0;
-  margin-right: 25px;
+  margin: 10rpx 0;
+  margin-right: 50rpx;
 }
 
 .checklist-text {
-  font-size: 14px;
+  font-size: 28rpx;
   color: #333;
   margin-left: 5px;
   transition: color 0.2s;
