@@ -336,7 +336,7 @@ export default defineComponent({
       background: #ffa36c;
     }
     &--green {
-      background: #5bb82c;
+      background: #799351;
     }
   }
 }

@@ -43,7 +43,10 @@
       />
     </view>
 
-    <view class="map__util map__util-help" />
+    <view
+      class="map__util map__util-help"
+      @click="handleClickTips"
+    />
 
     <!-- popups below -->
     <place-info-modal
@@ -100,6 +103,7 @@ import { ActionTypes } from "@/enums/actionTypes";
 import {
   hideLoading,
   navigateBack,
+  navigateTo,
   showLoading,
   showModal,
   showModalError,
@@ -561,7 +565,17 @@ export default defineComponent({
       hideLoading();
     };
 
-    return { ...useMap(), mapSettings, ...usePopup(), handleChangeCase };
+    const handleClickTips = () => {
+      navigateTo("/pages/tips/index");
+    };
+
+    return {
+      ...useMap(),
+      mapSettings,
+      ...usePopup(),
+      handleChangeCase,
+      handleClickTips,
+    };
   },
   onLoad(query: { id: string }) {
     caseId.value = parseInt(query.id, 10);

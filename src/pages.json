@@ -90,6 +90,11 @@
       "style": {
         "navigationBarTitleText": "人脸识别历史结果"
       }
+    }, {
+      "path": "pages/tips/index",
+      "style": {
+        "navigationBarTitleText": "救援流程"
+      }
     }
   ],
   "globalStyle": {
@@ -172,6 +177,10 @@
         "name": "人脸识别历史结果",
         "path": "pages/faceRecognitionHistory/index",
         "query": "id=7"
+      }, {
+        "name": "救援流程",
+        "path": "pages/tips/index",
+        "query": ""
       }
     ]
   }
