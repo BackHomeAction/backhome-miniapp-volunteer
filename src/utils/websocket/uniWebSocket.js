@@ -19,8 +19,6 @@ class UniWebSocket {
       complete: () => {},
     });
 
-    console.error(this.socket);
-
     // 连接开启
     this.socket.onOpen((res) => {
       this.onopen(res);
