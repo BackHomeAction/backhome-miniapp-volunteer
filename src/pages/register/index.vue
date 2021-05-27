@@ -130,7 +130,7 @@ export default defineComponent({
 
     const handleNextStep = async () => {
       const userInfo = await wx.getUserProfile({
-        desc: "业务需要",
+        desc: "获取您的用户名和头像",
       });
 
       isLoading.value = true;
