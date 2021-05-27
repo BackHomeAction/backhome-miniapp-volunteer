@@ -53,8 +53,7 @@
         shadow
         :disabled="!isAllowNextStep"
         :loading="isLoading"
-        open-type="getUserInfo"
-        @getuserinfo="handleNextStep"
+        @click="handleNextStep"
       >
         {{ step === 2 ? "确认提交" : "下一步" }}
       </u-button>
@@ -108,7 +107,7 @@ const useProfileVerify = () => {
     IDCard: "",
   });
 
-  const verifyProfile = async (userInfo: UniApp.GetUserInfoRes) => {
+  const verifyProfile = async (userInfo: any) => {
     await requestBindVolunteerInformation({
       name: profileForm.name,
       IDCard: profileForm.IDCard,
@@ -129,8 +128,10 @@ export default defineComponent({
     const profileVerify = useProfileVerify();
     const isLoading = ref(false);
 
-    const handleNextStep = async (userInfoRes: any) => {
-      const userInfo: UniApp.GetUserInfoRes = userInfoRes.detail;
+    const handleNextStep = async () => {
+      const userInfo = await wx.getUserProfile({
+        desc: "业务需要",
+      });
 
       isLoading.value = true;
       if (step.value === 1) {
@@ -165,6 +166,8 @@ export default defineComponent({
           profileVerify.profileForm.IDCard.length === 18
         );
       }
+
+      return false;
     });
 
     return {

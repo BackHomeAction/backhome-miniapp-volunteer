@@ -78,6 +78,7 @@ export default class WebsocketService {
     if (this.interval) return;
     const volunteerId = store.getters.userInfo.id;
     store.commit(MutationTypes.SET_WS, new Ws());
+    console.log(store.getters.ws);
     store.getters.ws.connect();
     store.getters.ws.subscribe(
       `/user/${volunteerId}/volunteer`,
