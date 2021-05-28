@@ -1,6 +1,19 @@
 import { Volunteer, Notice, Banner, Case, Face } from "@/api/types/models"
 import Ws from "../utils/websocket";
 
+export interface IPathRecord {
+  longitude: number;
+  latitude: number;
+  caseId: number;
+  volunteerId: number;
+  createAt: string;
+}
+
+export interface IPoint {
+  longitude: number;
+  latitude: number;
+}
+
 export interface RootState {
   version?: string;
   user: UserState;
@@ -28,6 +41,9 @@ export interface LocationState {
     longitude: number;
     latitude: number;
   };
+  record: {
+    isRecording: boolean;
+  };
 }
 
 export interface CommonState {
@@ -43,6 +59,7 @@ export interface ICurrentMission {
   teamMembers: Array<Volunteer>;
   onlineTeamMembers: Array<Volunteer>;
   faceRecognitionHistory: Array<Face>;
+  paths: Map<number, Array<IPoint>>;
 }
 
 export interface MissionState {

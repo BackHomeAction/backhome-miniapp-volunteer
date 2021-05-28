@@ -1,6 +1,6 @@
 import { Case } from "@/api/types/models";
 import { Module } from "vuex";
-import { MissionState, RootState } from "../types";
+import { IPathRecord, MissionState, RootState } from "../types";
 import { MutationTypes } from "@/enums/mutationTypes";
 import { ActionTypes } from "@/enums/actionTypes";
 import {
@@ -9,10 +9,14 @@ import {
   requestGetFaceIdentificationRecords,
   requestGetMyCases,
   requestGetMyUncheckedCases,
+  requestGetTrace,
   requestGetVolunteerCases,
   requestGetVolunteersInCase,
   requestRefuseCase,
 } from "@/api/mission";
+import simplify from "simplify-js";
+
+const SIMPLIFY_TOLERANCE = 0.00001;
 
 const Mission: Module<MissionState, RootState> = {
   state: {
@@ -25,6 +29,7 @@ const Mission: Module<MissionState, RootState> = {
       teamMembers: [],
       onlineTeamMembers: [],
       faceRecognitionHistory: [],
+      paths: new Map(),
     },
   },
 
@@ -138,6 +143,70 @@ const Mission: Module<MissionState, RootState> = {
     ) => {
       state.currentMission.faceRecognitionHistory = faceRecognitionHistory;
       console.debug(state);
+    },
+    [MutationTypes.SET_CURRENT_MISSION_PATH]: (
+      state,
+      data: Array<{
+        caseId: number;
+        nowCase: number;
+        trackPoints: Array<IPathRecord>;
+        volunteerId: number;
+      }>
+    ) => {
+      state.currentMission.paths.clear();
+      data.map((ele) => {
+        // 对路径进行压缩
+        const arr = simplify(
+          ele.trackPoints.map((p) => {
+            return { x: p.longitude, y: p.latitude };
+          }),
+          SIMPLIFY_TOLERANCE
+        );
+        state.currentMission.paths.set(
+          ele.volunteerId,
+          arr.map((p) => {
+            return { longitude: p.x, latitude: p.y };
+          })
+        );
+      });
+      console.debug(state);
+    },
+    [MutationTypes.UPDATE_CURRENT_MISSION_PATH]: (
+      state,
+      paths: Array<IPathRecord>
+    ) => {
+      // 找出数组中存在的 id
+      const volunteerIds: Array<number> = [];
+      paths.map((path) => {
+        if (volunteerIds.indexOf(path.volunteerId) !== -1) {
+          volunteerIds.push(path.volunteerId);
+        }
+      });
+      const tempMap: Map<number, Array<any>> = new Map();
+      // 将对应 id 的数据写入临时数组并进行压缩
+      paths.map((path) => {
+        if (tempMap.has(path.volunteerId)) {
+          tempMap.get(path.volunteerId)?.push(path);
+        } else {
+          tempMap.set(path.volunteerId, [path]);
+        }
+      });
+      tempMap.forEach((paths, id) => {
+        const arr = simplify(
+          paths.map((p) => {
+            return { x: p.longitude, y: p.latitude };
+          }),
+          SIMPLIFY_TOLERANCE
+        );
+        state.currentMission.paths.set(
+          id,
+          arr.map((p) => {
+            return { longitude: p.x, latitude: p.y };
+          })
+        );
+      });
+      console.debug(state);
+      // state.currentMission.paths = paths;
     },
   },
 
@@ -304,6 +373,7 @@ const Mission: Module<MissionState, RootState> = {
             teamMembers: [],
             onlineTeamMembers: [],
             faceRecognitionHistory: [],
+            paths: new Map(),
           });
           resolve();
         } catch (e) {
@@ -311,6 +381,18 @@ const Mission: Module<MissionState, RootState> = {
           reject();
         }
       });
+    },
+    [ActionTypes.getCurrentMissionPaths]: async (
+      { commit },
+      params: { id: number }
+    ) => {
+      const res = await requestGetTrace({
+        caseId: params.id,
+      });
+      if (res.data.data) {
+        console.log(res.data.data);
+        commit(MutationTypes.SET_CURRENT_MISSION_PATH, res.data.data);
+      }
     },
     [ActionTypes.initCurrentMission]: (
       { state, dispatch },
@@ -324,6 +406,7 @@ const Mission: Module<MissionState, RootState> = {
           await Promise.all([
             dispatch(ActionTypes.getCurrentMissionInfo, params),
             dispatch(ActionTypes.getCurrentMissionMembers, params),
+            dispatch(ActionTypes.getCurrentMissionPaths, params),
           ]);
           await dispatch(
             ActionTypes.getCurrentMissionFaceRecognitionHistories,

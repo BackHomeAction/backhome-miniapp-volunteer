@@ -5,6 +5,7 @@ import {
   FaceIdentification,
   JavaList,
   ResponseData,
+  Track,
   Volunteer,
   VolunteerCase,
 } from "./types/models";
@@ -194,6 +195,24 @@ export const requestGetFaceIdentificationRecords = (params: {
 export const requestGetVolunteerCases = (params: { volunteerId: number }) => {
   return http.request<ResponseData<JavaList<Case>>>({
     url: `case/volunteer/all`,
+    method: "GET",
+    params: params,
+    data: {},
+  });
+};
+
+/**
+ * 查询轨迹（可通过caseId和volunteerId筛选）
+ *
+ * @param {{ caseId: number; volunteerId: number }} params
+ * @return {*}
+ */
+export const requestGetTrace = (params: {
+  caseId?: number;
+  volunteerId?: number;
+}) => {
+  return http.request<ResponseData<JavaList<Track>>>({
+    url: `track`,
     method: "GET",
     params: params,
     data: {},

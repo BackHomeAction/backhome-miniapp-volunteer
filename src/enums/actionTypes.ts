@@ -19,4 +19,5 @@ export enum ActionTypes {
   onMessageEvent = "onMessageEvent",
   getMessageList = "getMessageList",
   checkoutConversation = "checkoutConversation",
+  getCurrentMissionPaths = "getCurrentMissionPaths",
 }

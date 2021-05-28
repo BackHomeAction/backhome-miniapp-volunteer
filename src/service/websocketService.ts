@@ -50,6 +50,7 @@ export default class WebsocketService {
     this.sendMessage("/home/volunteer/place", {
       longitude: location.longitude,
       latitude: location.latitude,
+      isSave: store.getters.isRecordingPath ? 1 : 0,
     });
     console.debug("Location reporter triggered.", location);
   };

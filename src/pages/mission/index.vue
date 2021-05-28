@@ -17,6 +17,7 @@
       :subkey="mapSettings.key"
       :circles="circles"
       :markers="markers"
+      :polyline="polylines"
       @updated="handleMapUpdated"
       @regionchange="handleRegionChange"
       @markertap="handleMarkerClick"
@@ -32,6 +33,16 @@
 
     <view class="map__control">
       <view
+        class="map__control-item map__control-item-record-path"
+        :class="{'map__control-item--active': isUploadingPath}"
+        @click.stop="handleToggleUploadPath"
+      />
+      <view
+        class="map__control-item map__control-item-show-path"
+        :class="{'map__control-item--active': isShowPathTrace}"
+        @click.stop="isShowPathTrace = !isShowPathTrace"
+      />
+      <view
         class="map__control-item map__control-item-location-me"
         :class="{'map__control-item--active': isMapRegionCenterIsCurrentPlace}"
         @click.stop="handleToCurrentPosition"
@@ -43,9 +54,23 @@
       />
     </view>
 
+    <view class="map__tool">
+      <view
+        class="map__tool-item map__tool-item-mark"
+      />
+      <view
+        class="map__tool-item map__tool-item-note"
+      />
+    </view>
+
     <view
       class="map__util map__util-help"
       @click="handleClickTips"
+    />
+    
+    <team-info
+      :polylines="polylines"
+      @open="handleClickVolunteer"
     />
 
     <!-- popups below -->
@@ -91,6 +116,7 @@ import {
   Ref,
   ref,
   reactive,
+  provide,
 } from "vue";
 import mapSettings from "@/config/map";
 import { searchPlacesNearby } from "@/api/tencentMap";
@@ -120,6 +146,7 @@ import Chat from "./components/Chat/index.vue";
 import Man from "./components/Man/index.vue";
 import { checkoutGroup, resetGroup } from "@/service/timService";
 import VolunteerInfoModal from "./components/VolunteerInfoModal/index.vue";
+import TeamInfo from "./components/TeamInfo/index.vue";
 
 let mapContext: any;
 
@@ -131,6 +158,12 @@ const OFFEN_PLACE_MARKER_SIZE = 35;
 const OFFEN_PLACE_MARKER_ID_START = 40000000;
 const VOLUNTEER_MARKER_SIZE = 50;
 const VOLUNTEER_MARKER_ID_START = 50000000;
+
+import {
+  POLY_LINE_COLOR_LIST,
+  POLY_LINE_WIDTH,
+  POLY_LINE_BORDER_WIDTH,
+} from "@/config/mission";
 
 const caseId = ref(0); // 案件 ID
 
@@ -448,6 +481,49 @@ const useMap = () => {
     }
   };
 
+  const isUploadingPath = computed(() => {
+    return store.getters.isRecordingPath;
+  });
+
+  const handleToggleUploadPath = () => {
+    store.commit(MutationTypes.SET_PATH_RECORDING, !isUploadingPath.value);
+  };
+
+  const isShowPathTrace = ref(true);
+
+  const polylines = computed(() => {
+    if (!isShowPathTrace.value) {
+      return [];
+    }
+
+    const res: any = [];
+
+    const paths = currentMission.value.paths;
+    const colorNum = POLY_LINE_COLOR_LIST.length;
+    let i = 0;
+    paths.forEach((value, key) => {
+      res.push({
+        points: value.map((ele) => {
+          return { latitude: ele.latitude, longitude: ele.longitude };
+        }),
+        color: POLY_LINE_COLOR_LIST[i % colorNum].line,
+        width: POLY_LINE_WIDTH,
+        borderColor: POLY_LINE_COLOR_LIST[i % colorNum].border,
+        borderWidth: POLY_LINE_BORDER_WIDTH,
+        volunteerID: key,
+      });
+      i++;
+    });
+    // console.log(res);
+
+    return res;
+  });
+
+  const handleClickVolunteer = (data: Volunteer) => {
+    volunteerInfoData.value = data;
+    showVolunteerInfoModal.value = true;
+  };
+
   return {
     handleMapUpdated,
     handleToCurrentPosition,
@@ -463,6 +539,11 @@ const useMap = () => {
     isMapRegionCenterIsLostPlace,
     showVolunteerInfoModal,
     volunteerInfoData,
+    isUploadingPath,
+    handleToggleUploadPath,
+    isShowPathTrace,
+    polylines,
+    handleClickVolunteer,
   };
 };
 
@@ -493,6 +574,7 @@ const newCaseInfoCallback = async (res: any) => {
     showModal("提示", "案件信息发生变化，请您留意！");
   } else if (data.status === SocketStateTypes.VOLUNTEER_LOCATION_CHANGED) {
     store.commit(MutationTypes.UPDATE_MISSION_VOLUNTEER_LOCATION, data.data);
+    store.commit(MutationTypes.UPDATE_CURRENT_MISSION_PATH, data.data.track); // 更新轨迹信息
   } else if (data.status === SocketStateTypes.VOLUNTEER_OFFLINE) {
     store.commit(MutationTypes.UPDATE_MISSION_VOLUNTEER_OFFLINE, data.data);
   } else if (data.status === SocketStateTypes.MISSION_TIMEOUT) {
@@ -554,6 +636,7 @@ export default defineComponent({
     Chat,
     Man,
     VolunteerInfoModal,
+    TeamInfo,
   },
   setup() {
     const handleChangeCase = async (item: Case) => {
@@ -620,7 +703,7 @@ export default defineComponent({
     left: 17rpx;
     bottom: calc(16rpx + 250rpx + 30rpx + env(safe-area-inset-bottom));
     width: 80rpx;
-    height: 160rpx;
+    // height: 160rpx;
     background: #ffffff;
     box-shadow: 0rpx 4rpx 8rpx 0rpx rgba(0, 0, 0, 0.5);
     border-radius: 10rpx;
@@ -636,6 +719,22 @@ export default defineComponent({
       background-size: cover;
       position: relative;
 
+      &-record-path {
+        background-image: url("@/static/images/map/control_record.png");
+
+        &.map__control-item--active {
+          background-image: url("@/static/images/map/control_record_active.gif");
+        }
+      }
+
+      &-show-path {
+        background-image: url("@/static/images/map/control_trace.png");
+
+        &.map__control-item--active {
+          background-image: url("@/static/images/map/control_trace_active.png");
+        }
+      }
+
       &-location-me {
         background-image: url("@/static/images/map/control_place_me.png");
 
@@ -650,6 +749,56 @@ export default defineComponent({
         &.map__control-item--active {
           background-image: url("@/static/images/map/control_place_lost_active.png");
         }
+      }
+
+      & + & {
+        margin-top: 20rpx;
+
+        &::after {
+          position: absolute;
+          /* #ifndef APP-NVUE */
+          box-sizing: border-box;
+          content: " ";
+          pointer-events: none;
+          border-top: 1px solid #e4e4e4;
+          /* #endif */
+          right: 0;
+          left: 0;
+          top: -10rpx;
+          transform: scaleY(0.5);
+          margin: 0 -4rpx;
+        }
+      }
+    }
+  }
+
+  &__tool {
+    position: fixed;
+    left: 17rpx;
+    top: 240rpx;
+    width: 80rpx;
+    // height: 160rpx;
+    background: #ffffff;
+    box-shadow: 0rpx 4rpx 8rpx 0rpx rgba(0, 0, 0, 0.5);
+    border-radius: 10rpx;
+    padding: 10rpx;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &-item {
+      width: 60rpx;
+      height: 60rpx;
+      background-size: cover;
+      position: relative;
+
+      &-mark {
+        background-image: url("@/static/images/map/tool_mark.png");
+      }
+
+      &-note {
+        background-image: url("@/static/images/map/tool_note.png");
       }
 
       & + & {

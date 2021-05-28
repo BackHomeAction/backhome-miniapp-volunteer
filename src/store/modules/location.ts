@@ -8,11 +8,18 @@ const Location: Module<LocationState, RootState> = {
       latitude: 0,
       longitude: 0,
     },
+    record: {
+      isRecording: true,
+    },
   },
 
   mutations: {
     [MutationTypes.SET_LOCATION]: (state, location: typeof state.location) => {
       state.location = location;
+      console.debug(state);
+    },
+    [MutationTypes.SET_PATH_RECORDING]: (state, isRecording: boolean) => {
+      state.record.isRecording = isRecording;
       console.debug(state);
     },
   },
@@ -21,6 +28,7 @@ const Location: Module<LocationState, RootState> = {
 
   getters: {
     location: (state) => state.location,
+    isRecordingPath: (state) => state.record.isRecording,
   },
 };
 

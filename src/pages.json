@@ -168,7 +168,7 @@
       }, {
         "name": "寻人",
         "path": "pages/mission/index",
-        "query": "id=7"
+        "query": "id=82"
       }, {
         "name": "案件信息",
         "path": "pages/missionInformation/index",
