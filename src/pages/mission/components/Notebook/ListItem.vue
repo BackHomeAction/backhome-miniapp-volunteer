@@ -45,7 +45,12 @@
 import { requestDeleteMemo } from "@/api/mission";
 import { Memo } from "@/api/types/models";
 import { ActionTypes } from "@/enums/actionTypes";
-import { hideLoading, navigateTo, showLoading } from "@/utils/helper";
+import {
+  hideLoading,
+  navigateTo,
+  showLoading,
+  showToast,
+} from "@/utils/helper";
 import { computed, defineComponent, PropType } from "vue";
 import { useStore } from "vuex";
 
@@ -108,9 +113,10 @@ export default defineComponent({
       showLoading();
       try {
         await requestDeleteMemo({
-          id: props.data.id!,
+          memoId: props.data.id!,
         });
         store.dispatch(ActionTypes.getCurrentMissionNotes);
+        showToast("删除成功", "success");
       } catch (e) {
         console.error(e);
       }

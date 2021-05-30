@@ -235,7 +235,7 @@ export const requestGetMemo = (params: {
 };
 
 // 志愿者删除备忘录
-export const requestDeleteMemo = (params: { id: number }) => {
+export const requestDeleteMemo = (params: { memoId: number }) => {
   return http.request<ResponseData<Record<string | number | symbol, any>>>({
     url: `memo/volunteer`,
     method: "DELETE",
