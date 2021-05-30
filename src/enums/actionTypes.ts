@@ -20,4 +20,5 @@ export enum ActionTypes {
   getMessageList = "getMessageList",
   checkoutConversation = "checkoutConversation",
   getCurrentMissionPaths = "getCurrentMissionPaths",
+  getCurrentMissionNotes = "getCurrentMissionNotes",
 }

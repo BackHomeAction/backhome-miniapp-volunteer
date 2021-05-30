@@ -37,6 +37,10 @@ export const showModalError = (content = "未知错误") => {
   return showModal("错误", content);
 };
 
+export const showModalSuccess = (content = "操作成功") => {
+  return showModal("成功", content);
+};
+
 export const showModal = (
   title = "提示",
   content = "未知错误",

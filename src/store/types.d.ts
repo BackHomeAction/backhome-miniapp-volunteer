@@ -1,4 +1,4 @@
-import { Volunteer, Notice, Banner, Case, Face } from "@/api/types/models"
+import { Volunteer, Notice, Banner, Case, Face, Memo } from "@/api/types/models"
 import Ws from "../utils/websocket";
 
 export interface IPathRecord {
@@ -60,6 +60,7 @@ export interface ICurrentMission {
   onlineTeamMembers: Array<Volunteer>;
   faceRecognitionHistory: Array<Face>;
   paths: Map<number, Array<IPoint>>;
+  notes: Array<Memo>;
 }
 
 export interface MissionState {

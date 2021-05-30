@@ -4,19 +4,19 @@
       class="header"
     >
       <view
-        v-if="status === 'checked' && getHoursFromTime(data.startTime) <= 24"
+        v-if="getHoursFromTime(data.startTime) <= 24"
         class="badge badge--red"
       >
         紧急
       </view>
       <view
-        v-if="status === 'checked' && getHoursFromTime(data.startTime) > 24 && getHoursFromTime(data.startTime) <= 48"
+        v-if="getHoursFromTime(data.startTime) > 24 && getHoursFromTime(data.startTime) <= 48"
         class="badge badge--yellow"
       >
         优先
       </view>
       <view
-        v-if="status === 'checked' && getHoursFromTime(data.startTime) > 48"
+        v-if="getHoursFromTime(data.startTime) > 48"
         class="badge badge--green"
       >
         正常

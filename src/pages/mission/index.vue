@@ -60,6 +60,7 @@
       />
       <view
         class="map__tool-item map__tool-item-note"
+        @tap="handleTabClick('notebook')"
       />
     </view>
 
@@ -101,6 +102,10 @@
         />
         <face-recognition
           v-show="popupName === 'face'"
+          :data="currentMissionInfo"
+        />
+        <notebook
+          v-if="popupName === 'notebook'"
           :data="currentMissionInfo"
         />
       </view>
@@ -147,6 +152,7 @@ import Man from "./components/Man/index.vue";
 import { checkoutGroup, resetGroup } from "@/service/timService";
 import VolunteerInfoModal from "./components/VolunteerInfoModal/index.vue";
 import TeamInfo from "./components/TeamInfo/index.vue";
+import Notebook from "./components/Notebook/index.vue";
 
 let mapContext: any;
 
@@ -549,9 +555,9 @@ const useMap = () => {
 
 const usePopup = () => {
   const showPopup = ref(false);
-  const popupName: Ref<"info" | "chat" | "face"> = ref("info");
+  const popupName: Ref<"info" | "chat" | "face" | "notebook"> = ref("info");
 
-  const handleTabClick = (name: "info" | "chat" | "face") => {
+  const handleTabClick = (name: "info" | "chat" | "face" | "notebook") => {
     popupName.value = name;
     showPopup.value = true;
   };
@@ -637,6 +643,7 @@ export default defineComponent({
     Man,
     VolunteerInfoModal,
     TeamInfo,
+    Notebook,
   },
   setup() {
     const handleChangeCase = async (item: Case) => {

@@ -368,6 +368,8 @@ export interface Mark {
   name?: string;
   /** 标记者角色 */
   role?: string;
+  /** 类型 */
+  type?: number;
   /** 修改时间 */
   updateAt?: string;
   /** 标记者姓名 */
@@ -610,6 +612,8 @@ export interface TrackPoint {
   latitude?: number;
   /** 经度 */
   longitude?: number;
+  /** 位置 */
+  point?: string;
   /** 志愿者ID */
   volunteerId?: number;
 }

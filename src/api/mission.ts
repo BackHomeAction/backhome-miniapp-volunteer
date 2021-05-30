@@ -4,6 +4,7 @@ import {
   Face,
   FaceIdentification,
   JavaList,
+  Memo,
   ResponseData,
   Track,
   Volunteer,
@@ -216,5 +217,49 @@ export const requestGetTrace = (params: {
     method: "GET",
     params: params,
     data: {},
+  });
+};
+
+// 查询备忘录
+export const requestGetMemo = (params: {
+  id?: number;
+  caseId?: number;
+  includeGlobal?: number;
+}) => {
+  return http.request<ResponseData<JavaList<Memo>>>({
+    url: `memo`,
+    method: "GET",
+    params: params,
+    data: {},
+  });
+};
+
+// 志愿者删除备忘录
+export const requestDeleteMemo = (params: { id: number }) => {
+  return http.request<ResponseData<Record<string | number | symbol, any>>>({
+    url: `memo/volunteer`,
+    method: "DELETE",
+    params: params,
+    data: {},
+  });
+};
+
+// 志愿者添加备忘录
+export const requestAddMemo = (params: Memo) => {
+  return http.request<ResponseData<Record<string | number | symbol, any>>>({
+    url: `memo/volunteer`,
+    method: "POST",
+    params: {},
+    data: params,
+  });
+};
+
+// 志愿者修改备忘录
+export const requestEditMemo = (params: Memo) => {
+  return http.request<ResponseData<Record<string | number | symbol, any>>>({
+    url: `memo/volunteer`,
+    method: "PUT",
+    params: {},
+    data: params,
   });
 };

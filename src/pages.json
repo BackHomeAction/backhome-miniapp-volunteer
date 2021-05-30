@@ -95,6 +95,11 @@
       "style": {
         "navigationBarTitleText": "救援流程"
       }
+    }, {
+      "path": "pages/editNote/index",
+      "style": {
+        "navigationBarTitleText": "编辑工作簿"
+      }
     }
   ],
   "globalStyle": {
@@ -181,6 +186,10 @@
         "name": "救援流程",
         "path": "pages/tips/index",
         "query": ""
+      }, {
+        "name": "编辑工作簿",
+        "path": "pages/editNote/index",
+        "query": "id=2&caseID=83"
       }
     ]
   }

@@ -7,6 +7,7 @@ import {
   requestAcceptCase,
   requestGetCases,
   requestGetFaceIdentificationRecords,
+  requestGetMemo,
   requestGetMyCases,
   requestGetMyUncheckedCases,
   requestGetTrace,
@@ -30,6 +31,7 @@ const Mission: Module<MissionState, RootState> = {
       onlineTeamMembers: [],
       faceRecognitionHistory: [],
       paths: new Map(),
+      notes: [],
     },
   },
 
@@ -175,6 +177,8 @@ const Mission: Module<MissionState, RootState> = {
       state,
       paths: Array<IPathRecord>
     ) => {
+      if (!paths) return;
+
       // 找出数组中存在的 id
       const volunteerIds: Array<number> = [];
       paths.map((path) => {
@@ -207,6 +211,12 @@ const Mission: Module<MissionState, RootState> = {
       });
       console.debug(state);
       // state.currentMission.paths = paths;
+    },
+    [MutationTypes.SET_CURRENT_MISSION_NOTES]: (
+      state,
+      notes: typeof state.currentMission.notes
+    ) => {
+      state.currentMission.notes = notes;
     },
   },
 
@@ -374,6 +384,7 @@ const Mission: Module<MissionState, RootState> = {
             onlineTeamMembers: [],
             faceRecognitionHistory: [],
             paths: new Map(),
+            notes: [],
           });
           resolve();
         } catch (e) {
@@ -394,6 +405,19 @@ const Mission: Module<MissionState, RootState> = {
         commit(MutationTypes.SET_CURRENT_MISSION_PATH, res.data.data);
       }
     },
+    [ActionTypes.getCurrentMissionNotes]: async (
+      { state, commit },
+      params: { id: number }
+    ) => {
+      const res = await requestGetMemo({
+        caseId: (params && params.id) || state.currentMission.missionInfo!.id!,
+        includeGlobal: 1,
+      });
+      if (res.data.data) {
+        console.log(res.data.data);
+        commit(MutationTypes.SET_CURRENT_MISSION_NOTES, res.data.data);
+      }
+    },
     [ActionTypes.initCurrentMission]: (
       { state, dispatch },
       params: { id: number }
@@ -407,6 +431,7 @@ const Mission: Module<MissionState, RootState> = {
             dispatch(ActionTypes.getCurrentMissionInfo, params),
             dispatch(ActionTypes.getCurrentMissionMembers, params),
             dispatch(ActionTypes.getCurrentMissionPaths, params),
+            dispatch(ActionTypes.getCurrentMissionNotes, params),
           ]);
           await dispatch(
             ActionTypes.getCurrentMissionFaceRecognitionHistories,
