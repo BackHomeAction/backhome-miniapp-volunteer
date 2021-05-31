@@ -86,9 +86,9 @@ const getInfo = async () => {
     const res = await requestGetMemo({
       id: editingID.value,
     });
-    form.title = res.data.data[0].title;
-    form.content = res.data.data[0].content;
-    form.imgUrl = res.data.data[0].imgUrl;
+    form.title = res.data.data![0].title!;
+    form.content = res.data.data![0].content!;
+    form.imgUrl = res.data.data![0].imgUrl!;
   } catch (e) {
     console.log(e);
   }
